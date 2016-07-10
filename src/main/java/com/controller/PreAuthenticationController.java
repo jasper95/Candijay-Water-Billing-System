@@ -5,6 +5,9 @@
  */
 package com.controller;
 
+import com.dao.springdatajpa.UserRepository;
+import com.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +16,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  *
@@ -20,7 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class PreAuthenticationController {
-    
+
+    @Autowired
+    private UserRepository userRepo;
+
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "logout", required = false) String logout, ModelMap model){
@@ -56,5 +65,10 @@ public class PreAuthenticationController {
     @RequestMapping(value="/staff", method=RequestMethod.GET)
     public String staff(){
         return "staff";
+    }
+
+    @RequestMapping(value="/test", method=RequestMethod.GET)
+    public @ResponseBody List<User> test(){
+        return userRepo.findAll();
     }
 }
