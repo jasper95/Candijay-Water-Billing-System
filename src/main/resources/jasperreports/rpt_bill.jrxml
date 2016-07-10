@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="312" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="customerName" class="java.lang.String"/>
+	<field name="scheduleMonth" class="java.lang.String"/>
+	<field name="accountId" class="java.lang.Long"/>
+	<field name="billId" class="java.lang.Long"/>
+	<field name="readingCurrent" class="java.lang.Integer"/>
+	<field name="readingConsumption" class="java.lang.Integer"/>
+	<field name="billBasic" class="java.math.BigDecimal"/>
+	<field name="billSysLoss" class="java.math.BigDecimal"/>
+	<field name="billDepFund" class="java.math.BigDecimal"/>
+	<field name="billOthers" class="java.math.BigDecimal"/>
+	<field name="billArrears" class="java.math.BigDecimal"/>
+	<field name="billPenalty" class="java.math.BigDecimal"/>
+	<field name="billTotal" class="java.math.BigDecimal"/>
+	<field name="billDiscount" class="java.math.BigDecimal"/>
+	<field name="readingPrevious" class="java.lang.Integer"/>
+	<field name="accountAddress" class="java.lang.String"/>
+	<field name="dueDate" class="java.util.Date"/>
+	<group name="billid" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{billId}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="103" splitType="Stretch">
+			<staticText>
+				<reportElement x="231" y="0" width="127" height="18" uuid="6868a2c2-3bac-4cd3-b3d1-259858eebe04"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[WATER BILL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="18" width="127" height="16" uuid="e19a917a-bb82-4276-9cdb-d24f04168fc7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10"/>
+				</textElement>
+				<text><![CDATA[Municipality of Candijay]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="68" width="185" height="19" uuid="34703f4c-996b-4b8e-9b23-e70659d83321"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Name of Consumer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="68" width="176" height="19" uuid="ac883215-a2eb-4ec8-8604-00a6b63fc17a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Month Bill]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="65" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Due Date]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="48" width="185" height="20" uuid="3483b0a8-2423-4044-982f-60d79c6226f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="48" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{scheduleMonth}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="383" y="45" width="176" height="19" uuid="56bf8cd7-5dea-4b14-b325-0f1cf9e9937c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dueDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="126" splitType="Stretch">
+			<staticText>
+				<reportElement x="13" y="16" width="56" height="13" uuid="47c16780-d93e-46f0-912f-6007ebf5f445"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Acct. No.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="29" width="56" height="14" uuid="d1ed088f-a76a-4d00-bc86-c561ab94b1eb"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Transac No.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="12" width="84" height="13" uuid="613a0836-e75b-42a7-9afd-addff486e7c8"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Brgy & Zone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="25" width="84" height="14" uuid="aea4d366-aeab-416d-8368-10b4c3a25bd2"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Previous:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="39" width="84" height="11" uuid="7159d8f5-3912-4fc1-81d2-96025f6e2fc5"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Present:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="14" width="78" height="13" uuid="09ac231d-cdd4-4b69-9f33-200c472bd841"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Bill Rendered by:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="27" width="78" height="14" uuid="a889628d-3478-4789-9cd2-bb0de1a2040b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Sig. of Reader]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="41" width="78" height="12" uuid="2d1f4c05-a06f-4dc2-9b35-a5c4c5c59630"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Date Delivered]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="55" width="26" height="14" uuid="1443c0c7-450f-4c4c-bf54-38c197f96dbb"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Add:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="69" width="54" height="12" uuid="e9c0fd3f-5536-466d-9dcf-918bedcd117d"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Arrears:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="81" width="54" height="11" uuid="716600f2-6404-4f7e-9a3a-e56337f065e9"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Penalty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="92" width="54" height="11" uuid="c2c5552e-6da9-43c8-a7e8-609b7ab1cf07"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="103" width="54" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Others:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="115" width="54" height="11" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Total Due:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="71" y="16" width="68" height="13" uuid="36299d8e-efd5-4169-83b9-e8ba0e91deef"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ $F{accountId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="29" width="68" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ $F{billId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="12" width="90" height="13" uuid="edce5fb7-7e6e-4b80-b6ad-3422ee483abc"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{accountAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="26" width="90" height="14" uuid="cb081d5b-2798-4727-b715-bddb2ecf2294"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{readingPrevious}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="39" width="90" height="11" uuid="e8d07f0d-f615-43eb-ad9e-84464b98fc6f"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{readingCurrent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="69" width="70" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billArrears}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="81" width="70" height="14" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billPenalty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="92" width="70" height="11" uuid="ef23cb0e-700a-4b26-8b00-a57681015538"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billDiscount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="103" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billOthers}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="115" width="70" height="11" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billTotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="196" y="50" width="84" height="11" uuid="49569f5c-4bef-4c67-9508-606d214c8e34"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Consumed(Cu.M):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="60" width="84" height="11" uuid="bccca2f2-1ff7-4ac3-84c7-6715ab150725"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Basic:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="71" width="84" height="12" uuid="4742cc2f-b918-44d4-a1f7-e0d1f4f3b54b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Depreciation Fund:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="83" width="84" height="11" uuid="6ff26cda-54a9-4127-8cca-7216bad51b0d"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[System loss:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="282" y="50" width="90" height="11" uuid="e5294c2f-97b4-4b7f-94da-eb7fe22b32df"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{readingConsumption}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="282" y="60" width="90" height="11" uuid="3420a130-35a7-4c89-805a-a196f27b3df7"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billBasic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="71" width="90" height="12" uuid="18d494b2-ace2-4f8e-9bfc-33d1073dd84d"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billDepFund}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="83" width="90" height="11" uuid="a46169b5-4067-450a-9a87-610f178d87b7"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billSysLoss}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="11" uuid="a9976406-4def-4a10-a020-b58b9081f9d8"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[NOTICE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="21" width="383" height="22" uuid="9dd11829-18b3-4723-a1fa-a7953ca92ff8"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Please pay total amount in 10 days after hereof. Late charges will be added to your account and your service. Connection will be cut off without prior notice. If you settled the account please bring this with you.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

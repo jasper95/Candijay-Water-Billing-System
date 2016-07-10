@@ -1,0 +1,192 @@
+body{
+	background-color: #011b3c; 
+}
+
+body.cstm{
+	background-color: #fff; 
+}
+
+.navbar-fixed-top{
+	z-index: 1000;
+	background-color: #011b3c; 
+	border: 0;
+	padding-top: 40px; 	
+}
+
+.navbar-fixed-top-admin{
+	z-index: 1000;
+	background-color: #011b3c; 
+	border: 0;
+	border-radius: 0px;
+	width: 100%;
+}
+
+.collapse-nav{
+	float: right;
+	font-size: 10px;
+}
+
+.menu:hover{
+	background-color: #ea5e00;
+}
+
+.cnt-img{
+	width: 100%;
+	margin-top: 10px;
+}
+
+.ent-accnt-nmb{
+	font-size: 11px;
+	color:#5b5b5c;
+}
+
+.frm-ent-accnt-nmb{
+	margin-top: -15px;
+	border-radius: 3px;
+}
+
+.btn-cstm{
+	font-size: 12px;
+	color: #fff;
+	background-color: #152f50;
+	padding: 5px 170px 5px 170px;
+
+}
+.btn-cstm:hover{
+	color: #fff;
+	background-color: #ea5e00;
+}
+
+#crt-mr-found{
+    display: none
+}
+
+.opt-hm{
+	color: #555;
+	font-size: 11px;
+	width: 34%;
+}
+
+.rem:hover{
+	color: #ea5e00;
+}
+
+.fgt-cnt{
+	color: #555;
+	font-size: 11px;
+	float: right;
+	margin-top: 5px;
+}
+
+.fgt-cnt:hover{
+	color: #ea5e00;
+	text-decoration: none;
+}
+
+.log-cstm{
+	padding: 5px 80px 5px 80px;	
+	border-radius: 3px;
+}
+
+.log-pw, .log-un{
+	/*padding-left: 45px;*/
+	padding-left: 10px;
+	text-align: left;
+}
+
+.un-pw-img{
+	width: 34px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
+.fgt-log{
+	color: #555;
+	font-size: 11px;
+	margin-top: 5px;
+}
+
+.fgt-log:hover{
+	color: #ea5e00;
+	text-decoration: none;
+}
+
+footer.footer{
+	background-color: #000915;
+	z-index: 1000;
+	position: fixed;
+}
+
+.tab-bg{
+	width: 100%;
+}
+
+.faq-cstm{
+	width: 85%;
+	background-color: #fff;
+}
+
+.panel-cstm{
+	width: 100%;
+}
+
+.about-title{
+	margin-top: -220px;
+	z-index: 20;
+	color: #fff;
+	font-size: 20px;
+	background-color: #ea5e00;
+}
+
+.staff{
+	padding:50px 100px 50px 100px;
+	width: 100%;
+	background-color: #c7c7c7;
+}
+
+.staff-img{
+	margin-bottom: 10px;
+	border-radius: 100%;
+	border-width: 2px;
+}
+
+.error-form{
+	border: 2px solid #ff7171;
+}
+
+.error-msg{
+	color:red;
+	text-align: center;
+}
+
+.filt{
+	border-radius: 3px;	
+	text-align: left;
+	margin-bottom: 10px;
+}
+
+.filt-rs{
+	width: 100px;
+}
+
+.btn-input {
+   display: block;
+}
+
+.btn-input .btn.form-control {
+    text-align: left;
+}
+
+.btn-input .btn.form-control span:first-child {
+   left: 10px;
+   overflow: hidden;
+   position: absolute;
+   right: 25px;
+}
+
+.btn-input .btn.form-control .caret {
+   margin-top: -1px;
+   position: absolute;
+   right: 10px;
+   top: 50%;
+}

@@ -1,0 +1,13 @@
+{
+   "bundle" : "payment",
+   "assets": [
+        {
+            "name": "payment-extra",
+            "version": "0.0.1",
+            "type": "js",
+            "locations": {
+                "webapp": "/resources/js/datatables/payment-extra.js"
+            }
+        }
+    ]
+}
