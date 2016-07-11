@@ -2,4 +2,6 @@
 /.openshift/
 /target/
 /webapps/
+/src/main/resources/META-INF/persistence.xml
+/src/main/webapp/WEB-INF/jdbc.properties
 CWSOpenShift.iml
