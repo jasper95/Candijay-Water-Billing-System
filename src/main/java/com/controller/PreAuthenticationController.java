@@ -5,8 +5,8 @@
  */
 package com.controller;
 
-import com.dao.springdatajpa.UserRepository;
-import com.domain.User;
+import com.dao.springdatajpa.MeterReadingRepository;
+import com.domain.MeterReading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ import java.util.List;
 public class PreAuthenticationController {
 
     @Autowired
-    private UserRepository userRepo;
+    private MeterReadingRepository mrRepo;
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -68,7 +68,7 @@ public class PreAuthenticationController {
     }
 
     @RequestMapping(value="/test", method=RequestMethod.GET)
-    public @ResponseBody List<User> test(){
-        return userRepo.findAll();
+    public @ResponseBody List<MeterReading> test(){
+        return mrRepo.findAll();
     }
 }
