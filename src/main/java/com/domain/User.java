@@ -54,7 +54,7 @@ public class User  implements java.io.Serializable, UserDetails {
     private UserType type;
     @NotNull(message="Please select at least one role")
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="UsersAndRoles",
+    @JoinTable(name="usersandroles",
                 joinColumns=@JoinColumn(name="user_id"),
                 inverseJoinColumns=@JoinColumn(name="role_id"))
     private Set<Role> roles;
