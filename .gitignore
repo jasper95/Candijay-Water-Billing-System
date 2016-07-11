@@ -1,3 +1,5 @@
 /.idea/
 /.openshift/
+/target/
+/webapps/
 CWSOpenShift.iml
