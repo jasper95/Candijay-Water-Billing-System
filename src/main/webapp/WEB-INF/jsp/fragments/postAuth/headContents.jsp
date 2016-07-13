@@ -19,9 +19,9 @@
     <!-- Bootstrap core CSS -->
     <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="${STATIC_URL}css/stylesheet_gen.css" rel="stylesheet">
+    <!--link href="${STATIC_URL}css/stylesheet_gen.css" rel="stylesheet">
     <link href="${STATIC_URL}css/stylesheet_admin.css" rel="stylesheet">
-    <link href="${STATIC_URL}css/stylesheet_dashboard.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/stylesheet_dashboard.css" rel="stylesheet"-->
     <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
     <spring:url value="/webjars/jquery/2.0.3/jquery.js" var="jQuery"/>
     <script src="${jQuery}"></script>

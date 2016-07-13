@@ -22,7 +22,6 @@ body.cstm{
 }
 
 .collapse-nav{
-	float: right;
 	font-size: 10px;
 }
 
@@ -30,9 +29,8 @@ body.cstm{
 	background-color: #ea5e00;
 }
 
-.cnt-img{
+.cnt-img    {
 	width: 100%;
-	margin-top: 10px;
 }
 
 .ent-accnt-nmb{

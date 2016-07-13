@@ -20,14 +20,10 @@
     <spring:url value="/resources/css/bootstrap.min.css" var="bootstrapCss"/>
     <link href="${bootstrapCss}" rel="stylesheet">
     
-    <spring:url value="/resources/css/stylesheet_bg.css" var="cstmCss"/>
-    <link href="${cstmCss}" rel="stylesheet">
-    
     <!-- Custom styles for this template -->
     <spring:url value="/resources/css/stylesheet_gen.css" var="stylesheetCss"/>
     <link href="${stylesheetCss}" rel="stylesheet">
     <spring:url value="/resources/css/stylesheet_sticky-footer-navbar.css" var="stickyFooterNavbarCss"/>
     <link href="${stickyFooterNavbarCss}" rel="stylesheet">
     <sec:csrfMetaTags/>
-
 </head>

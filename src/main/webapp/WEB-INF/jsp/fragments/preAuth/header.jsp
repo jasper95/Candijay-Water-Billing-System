@@ -16,14 +16,14 @@
         </button>
         <a class="navbar-brand" href="#" style="color: #fff;">CANDIJAY WATER BILLING SYSTEM</a>
     </div>
-    <div class="collapse-nav navbar-collapse">
-        <ul id="" class="nav navbar-nav">
-            <li class="menu${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/index.jsp' ? ' active' : ''}"><a href="index.htm" style="color:#fff;">HOME</a></li>
-            <li class="menu${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/about.jsp' ? ' active' : ''}"><a href="about.htm" style="color:#fff;">ABOUT</a></li>
-            <li class="menu${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/staff.jsp' ? ' active' : ''}"><a href="staff.htm" style="color:#fff;">STAFF</a></li>
-            <li class="menu${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/contact.jsp' ? ' active' : ''}"><a href="contact.htm" style="color:#fff;">CONTACT</a></li>
-            <li class="menu${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/faq.jsp' ? ' active' : ''}"><a href="faq.htm" style="color:#fff;">FAQ</a>
-            <li class="menu ${pageContext.request.requestURI eq '/CWS/WEB-INF/jsp/login.jsp' ? ' active' : ''}"> 
+    <div id="navbar" class="collapse collapse-nav navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/index.jsp' ? ' active' : ''}"><a href="index.htm" style="color:#fff;">HOME</a></li>
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/about.jsp' ? ' active' : ''}"><a href="about.htm" style="color:#fff;">ABOUT</a></li>
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/staff.jsp' ? ' active' : ''}"><a href="staff.htm" style="color:#fff;">STAFF</a></li>
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/contact.jsp' ? ' active' : ''}"><a href="contact.htm" style="color:#fff;">CONTACT</a></li>
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/faq.jsp' ? ' active' : ''}"><a href="faq.htm" style="color:#fff;">FAQ</a>
+            <li class="menu ${pageContext.request.requestURI eq '/WEB-INF/jsp/login.jsp' ? ' active' : ''}">
                 <sec:authorize access="isAnonymous()">
                     <a href="login.htm" style="color:#fff;">LOGIN</a>
                 </sec:authorize>
