@@ -15,9 +15,8 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${customerForm.customer.id == null ? 'Create' : 'Update' } Customer</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_gen.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_admin.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_dashboard.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
@@ -25,58 +24,76 @@
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <link href="${WEB_JARS}jquery-ui/1.10.3/themes/base/jquery-ui.css" rel="stylesheet"/>
     </head>
-    <body class="cstm">
+    <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <c:set var="AddOrUpdate" value="${customerForm.customer.id == null ? 'Create' : 'Update' }"/>
-            <c:choose >
-                <c:when test="${customerForm.customer.id == null}">
-                    <c:set var="AddOrUpdate" value="Create"/>
-                    <c:url var="backUrl" value="/admin/customers"/>                    
-                </c:when>
-                <c:otherwise>
-                    <c:set var="AddOrUpdate" value="Update"/>
-                    <spring:url var="backUrl" value="/admin/customers/{customerId}">
-                        <spring:param name="customerId" value="${customerForm.customer.id}"/>
-                    </spring:url>
-                </c:otherwise>
-            </c:choose>
-            <h2 class="sub-header" style="margin-top:15px;"><a type="button" href="${backUrl}"><img src="${STATIC_URL}img/back.png" style="margin-bottom:5px;" class=""></a> ${AddOrUpdate} Customer</h2>
-            <form:form modelAttribute="customerForm" method="post" id="add-customer-form">
-                <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.customerForm'].allErrors}">
-                    <div class="alert alert-danger" style="border-radius:5px;"><br>
-                        <h4>Oh snap! You got an error!</h4><hr>
-                        <form:errors path="*" cssClass="error" />
+        <div id="wrapper">
+            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
+            <div id="page-content-wrapper">
+                <div class="page-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <c:set var="AddOrUpdate" value="${customerForm.customer.id == null ? 'Create' : 'Update' }"/>
+                            <c:choose >
+                                <c:when test="${customerForm.customer.id == null}">
+                                    <c:set var="AddOrUpdate" value="Create"/>
+                                    <c:url var="backUrl" value="/admin/customers"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="AddOrUpdate" value="Update"/>
+                                    <spring:url var="backUrl" value="/admin/customers/{customerId}">
+                                        <spring:param name="customerId" value="${customerForm.customer.id}"/>
+                                    </spring:url>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="col-sm-8 col-md-10">
+                                <h2>
+                                    <a type="button" href="${backUrl}">
+                                        <img src="${STATIC_URL}img/back.png">
+                                    </a> ${AddOrUpdate} Customer
+                                </h2>
+                            </div>
+                        </div>
+                        <form:form modelAttribute="customerForm" method="post" id="add-customer-form">
+                            <div class="form-wrapper">
+                                <h3 >Personal Information</h3>
+                                <div class="col-sm-12 form-group">
+                                    <cws:input id="cust-ln" name="customer.lastname" label="Lastname" icon="user" placeholder="Enter Lastname" required="true"/>
+                                    <cws:input id="cust-fn" name="customer.firstName" label="Firstname" icon="user" placeholder="Enter Firstname" required="true"/>
+                                    <cws:input id="cust-mn" name="customer.middleName" label="Middlename" icon="user" placeholder="Enter Middlename" required="true"/>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke"  required="true"/>
+                                    <cws:input id="cust-bd" name="customer.birthDate" label="Birth Date" icon="birthday-cake" placeholder="Enter birth date" required="true"/>
+                                    <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="false"/>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 10-digit #" required="false"/>
+                                    <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false"/>
+                                </div>
+                            </div>
+                        <c:if test="${customerForm.customer.id == null}">
+                            <div class="form-wrapper">
+                                <h3>Account Information</h3>
+                                <div class="col-sm-12 form-group">
+                                    <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true"/>
+                                    <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true"/>
+                                    <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true"/>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <cws:select id="ac-lc" name="address.locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true"/>
+                                </div>
+                            </div>
+                        </c:if>
+                            <button style="margin-right: 30px;" class="btn btn-primary btn-lg pull-right" type="submit">  Save  </button>
+                        </form:form>
                     </div>
-                </c:if>
-                <div class="table-stripedesponsive">
-                    <div class="navbar-form" >
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/un.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="customer.lastname" label="Last Name"/>
-                        <cws:inputField name="customer.firstName" label="First Name"/>
-                        <cws:inputField name="customer.middleName" label="Middle Name"/>
-                        <form:radiobutton path="customer.gender" value="M"/> Male
-                        <form:radiobutton path="customer.gender" value="F"/> Female
-                        </div>      
-                    </div>
-                    <div class="navbar-form" > 
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/birthdate.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="customer.birthDate" id="birthDate" label="Birthdate"/>            
-                        <cws:inputField name="customer.familyMembersCount" label="Household count"/>
-                    </div>
-                    <div class="navbar-form" >
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/mobile.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="customer.contactNumber" label="Contact Number"/>
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/occupation.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="customer.occupation" label="Occupation"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-            </form:form>
+            </div>
         </div>
- 
         <script>
             $(function () {
-                $("#birthDate").datepicker({ dateFormat: 'yy/mm/dd'});
+                $("#cust-bd").datepicker({ changeMonth: true, changeYear: true, yearRange : '-90:+0', dateFormat: 'yy/mm/dd'});
             });
         </script>
-        <jsp:include page="../fragments/footer.jsp"/>
     </body>
 </html>

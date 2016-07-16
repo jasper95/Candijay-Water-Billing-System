@@ -59,9 +59,9 @@ public class Customer  implements java.io.Serializable {
     @Digits(fraction = 0, integer = 10, message="Invalid contact number format (10 digits only)")
     @Column(name="contact_number")
     private String contactNumber;
-    @NotNull(message="Invalid members count")
+    @NotNull(message="Invalid members count") @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid members count")
     @Column(name="family_members_count", nullable=false)
-    private Integer familyMembersCount;
+    private String familyMembersCount;
     @NotBlank(message="Invalid occupation") @NotEmpty(message="Invalid occupation")
     @Column(name="occupation", nullable=false, length=45)
     private String occupation;  
@@ -71,7 +71,7 @@ public class Customer  implements java.io.Serializable {
     public Customer() { }
 
 	
-    public Customer(Long id, Date birthDate, String firstName, String lastname, String middleName, String gender, Integer familyMembersCount, String occupation, boolean active) {
+    public Customer(Long id, Date birthDate, String firstName, String lastname, String middleName, String gender, String familyMembersCount, String occupation, boolean active) {
         this.id = id;
         this.birthDate = birthDate;
         this.firstName = firstName;
@@ -81,7 +81,7 @@ public class Customer  implements java.io.Serializable {
         this.familyMembersCount = familyMembersCount;
         this.occupation = occupation;
     }
-    public Customer(Long id, Address address, Date birthDate, String firstName, String middleName, String gender, String contactNumber, Integer familyMembersCount, String occupation, Set<Account> accounts) {
+    public Customer(Long id, Address address, Date birthDate, String firstName, String middleName, String gender, String contactNumber, String familyMembersCount, String occupation, Set<Account> accounts) {
        this.id = id;
        this.birthDate = birthDate;
        this.firstName = firstName;
@@ -148,11 +148,11 @@ public class Customer  implements java.io.Serializable {
         this.contactNumber = contactNumber;
     }
 
-    public Integer getFamilyMembersCount() {
+    public String getFamilyMembersCount() {
         return this.familyMembersCount;
     }
     
-    public void setFamilyMembersCount(Integer familyMembersCount) {
+    public void setFamilyMembersCount(String familyMembersCount) {
         this.familyMembersCount = familyMembersCount;
     }
 

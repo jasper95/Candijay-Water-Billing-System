@@ -6,9 +6,13 @@
 package com.controller;
 
 import com.dao.springdatajpa.AccountRepository;
+import com.dao.springdatajpa.AddressRepository;
 import com.dao.springdatajpa.CustomerRepository;
+import com.dao.springdatajpa.DeviceRepository;
 import com.domain.Account;
+import com.domain.Address;
 import com.domain.Customer;
+import com.forms.AccountForm;
 import com.forms.CustomerForm;
 import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
@@ -16,7 +20,8 @@ import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
 import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import com.service.CustomerManagementService;
 import com.service.DataTableService;
-import java.util.List;
+
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,58 +47,66 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/customers")
-@SessionAttributes({"customerForm"})
+@SessionAttributes({"customerForm", "accountForm"})
 public class CustomerController {
-    
-    
+
     private CustomerManagementService custService;
     private CustomerRepository customerRepo;
     static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.customerForm";
     private DataTableService dataTableService;
     private AccountRepository accountRepo;
+    private AddressRepository addressRepo;
+    private DeviceRepository deviceRepo;
+
     @Autowired
     public CustomerController(CustomerManagementService custService, DataTableService dataTableService, 
-            CustomerRepository customerRepo, AccountRepository accountRepo) {
+            CustomerRepository customerRepo, AccountRepository accountRepo, AddressRepository addressRepo, DeviceRepository deviceRepo) {
         this.custService = custService;
         this.dataTableService = dataTableService;
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
+        this.addressRepo = addressRepo;
+        this.deviceRepo = deviceRepo;
     }
     
-    @InitBinder
+    @InitBinder({"customerForm", "accountForm"})
     public void initBinder(WebDataBinder binder){
-        binder.setDisallowedFields("customer.id", "occupation.id", "address.province",
-                                    "address.country", "customer.timestamp",
-                                    "address.timestamp");
+        binder.setAllowedFields("customer.lastname", "customer.firstName", "customer.middleName",
+                                    "customer.gender", "customer.timestamp", "customer.birthDate",
+                                    "customer.familyMembersCount", "customer.contactNumber",
+                                    "customer.occupation", "device.meterCode", "device.brand",
+                                    "address.brgy", "address.locationCode");
     }
-    
+
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String initCustomerForm(ModelMap model) {
-        //System.out.println("init form");
-        if(!model.containsAttribute(BINDING_RESULT_NAME)){
-            System.out.println("init customer");
-           model.addAttribute("customerForm", new CustomerForm());
-        }
+        HashMap<String, Collections> formOptions = custService.getCustomerFormOptions();
+        model.addAttribute("genderOptions", formOptions.get("gender"));
+        model.addAttribute("brgyOptions", formOptions.get("brgy"));
+        model.addAttribute("zoneOptions", formOptions.get("zone"));
+        if(!model.containsAttribute(BINDING_RESULT_NAME))
+            model.addAttribute("customerForm", new CustomerForm());
         return "customers/createOrUpdateCustomerForm";
     }
-    
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String processCustomerForm(@ModelAttribute("customerForm") @Valid CustomerForm customerForm,  
                                      BindingResult result,RedirectAttributes redirectAttributes,
                                      SessionStatus status) {
         Customer customer = null;
-        if(!result.hasErrors()){
-            try{
-                customer = custService.save(customerForm);
-            }catch(JpaOptimisticLockingFailureException e){
-                result.reject("","This record was modified by another user. Try refreshing the page.");
-            }
+        Address address = addressRepo.findByBrgyAndLocationCode(customerForm.getAddress().getBrgy(), customerForm.getAddress().getLocationCode());
+        if(address == null){
+            result.rejectValue("address.locationCode", "", "Invalid Zone for Barangay");
+        } else{
+            customerForm.setAddress(address);
         }
+        if(deviceRepo.findByMeterCode(customerForm.getDevice().getMeterCode().trim()) != null)
+            result.rejectValue("device.meterCode", "", "Metercode already exists");
+        if(!result.hasErrors())
+            customer = custService.createCustomer(customerForm);
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
             return "redirect:/admin/customers/new";
         }
-        System.out.println("success");
         status.setComplete();
         return "redirect:/admin/customers/"+customer.getId();
     }
@@ -111,12 +124,25 @@ public class CustomerController {
             model.put("message", "Please avoid retrieving admin pages via URL");
             return "errors";
         }
-        model.addAttribute("customer", customer);
+        CustomerForm customerForm  = new CustomerForm();
+        HashMap<String, Collections> formOptions = custService.getCustomerFormOptions();
+        customerForm.setCustomer(customer);
+        AccountForm accountForm = new AccountForm();
+        accountForm.setCustomerId(id);
+        model.addAttribute("accountForm", accountForm);
+        model.addAttribute("customerForm", customerForm);
+        model.addAttribute("genderOptions", formOptions.get("gender"));
+        model.addAttribute("brgyOptions", formOptions.get("brgy"));
+        model.addAttribute("zoneOptions", formOptions.get("zone"));
         return "customers/viewCustomer";
     }
     
     @RequestMapping(value="/{customerId}/update", method=RequestMethod.GET)
     public String initUpdateForm(@PathVariable("customerId") Long id, ModelMap model){
+        HashMap genderOptions = new HashMap();
+        genderOptions.put('M', "Male");
+        genderOptions.put('F', "Female");
+        model.addAttribute("genderOptions", genderOptions);
         if (!model.containsAttribute(BINDING_RESULT_NAME)){
             Customer customer = customerRepo.findOne(id);
             if (customer == null){
@@ -134,13 +160,13 @@ public class CustomerController {
     }
     @RequestMapping(value="/{customerId}/update", method=RequestMethod.POST)
     public String processUpdate(@ModelAttribute("customerForm") @Valid CustomerForm customerForm,  
-                                     BindingResult result,RedirectAttributes redirectAttributes,
-                                     HttpServletRequest request, SessionStatus status){
+                                     BindingResult result, RedirectAttributes redirectAttributes,
+                                     HttpServletRequest request, SessionStatus status, @PathVariable("customerId") Long id){
         if(!result.hasErrors()){
             try{
-                custService.save(customerForm);
+                custService.updateCustomer(customerForm);
             }catch(JpaOptimisticLockingFailureException e){
-                result.reject("","This record was modified by another user. Try refreshing the page.");
+                result.reject("","The data were modified by another user. Please reload the page.");
             }
         }
         if(result.hasErrors()){

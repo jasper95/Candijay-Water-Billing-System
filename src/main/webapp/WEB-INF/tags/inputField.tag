@@ -12,5 +12,5 @@
 
 <spring:bind path="${name}">
     <c:set var="cssGroup" value="form-control frm-ent-accnt-nmb log-un ${status.error ? 'error-form' : '' }"/>
-    <form:input cssStyle="${cssStyle}" class="${cssGroup}" path="${name}" id="${id}" placeholder="${label}" required="true" autofocus="true"/>     
+    <form:input cssStyle="${cssStyle}" class="${cssGroup}" path="${name}" id="${id}" placeholder="${label}" required="true" autofocus="true"/>
 </spring:bind>

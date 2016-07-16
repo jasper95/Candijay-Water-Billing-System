@@ -5,9 +5,9 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
-    
+
     <!-- We will be defining all security related configurations in this file -->
-    
+
     <http auto-config='true' use-expressions="true" disable-url-rewriting="true">
         <intercept-url pattern="/dandelion/**" access="permitAll"/>
         <!--intercept-url pattern="" access="permitAll"/-->

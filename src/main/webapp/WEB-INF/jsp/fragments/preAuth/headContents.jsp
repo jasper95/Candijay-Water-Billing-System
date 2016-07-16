@@ -19,11 +19,13 @@
     <!-- Bootstrap core CSS -->
     <spring:url value="/resources/css/bootstrap.min.css" var="bootstrapCss"/>
     <link href="${bootstrapCss}" rel="stylesheet">
-    
+
     <!-- Custom styles for this template -->
     <spring:url value="/resources/css/stylesheet_gen.css" var="stylesheetCss"/>
     <link href="${stylesheetCss}" rel="stylesheet">
     <spring:url value="/resources/css/stylesheet_sticky-footer-navbar.css" var="stickyFooterNavbarCss"/>
     <link href="${stickyFooterNavbarCss}" rel="stylesheet">
+    <spring:url value="/resources/" var="STATIC_URL"/>
+    <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
     <sec:csrfMetaTags/>
 </head>

@@ -5,8 +5,8 @@
  */
 package com.forms;
 
-import com.domain.Customer;
-import com.domain.Occupation;
+import com.domain.*;
+
 import javax.validation.Valid;
 
 /**
@@ -18,8 +18,12 @@ public class CustomerForm {
     private Customer customer;
     @Valid
     private Occupation occupation;
-    
-
+    @Valid
+    private Account account;
+    @Valid
+    private Device device;
+    @Valid
+    private Address address;
     public Customer getCustomer() {
         return customer;
     }
@@ -35,5 +39,16 @@ public class CustomerForm {
     public void setOccupation(Occupation occupation) {
         this.occupation = occupation;
     }
-    
+
+    public Account getAccount() { return account; }
+
+    public void setAccount(Account account) { this.account = account; }
+
+    public Device getDevice() { return device; }
+
+    public void setDevice(Device device) { this.device = device; }
+
+    public Address getAddress() { return address; }
+
+    public void setAddress(Address address) { this.address = address; }
 }

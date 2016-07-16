@@ -16,6 +16,7 @@ import com.domain.Device;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.Checkboxes;
+import com.forms.CustomerForm;
 import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
@@ -28,19 +29,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.inject.Model;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -50,7 +47,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/accounts")
-@SessionAttributes("accountForm")
+@SessionAttributes({"accountForm", "deviceForm"})
 public class AccountController {
     
     private DeviceRepository deviceRepo;
@@ -76,62 +73,41 @@ public class AccountController {
         this.addressRepo = addressRepo;
         this.invoicingService = invoicingService; 
     }
-    
+
+    @InitBinder({"accountForm", "deviceForm"})
+    public void initBinder(WebDataBinder binder){
+        binder.setAllowedFields("address.brgy", "address.locationCode", "meterCode", "brand",
+                                "device.meterCode", "device.brand");
+    }
+
     @RequestMapping(method=RequestMethod.GET)
     public String showAll(ModelMap model){
         model.addAttribute("checkboxes", new Checkboxes());
         return "accounts/accountList";
     }
-    
-    @RequestMapping(value="/{customer_id}/new", method=RequestMethod.GET)
-    public String initAccountForm(@PathVariable("customer_id") Long id, ModelMap model) {
-        Customer customer = customerRepo.findOne(id);
-        if (customer == null){
-            model.put("type", "Bad request URL");
-            model.put("message", "Please avoid retrieving admin pages via URL");
-            return "errors";
-        }
-        model.addAttribute("customer", customer);
-        if(!model.containsAttribute(BINDING_RESULT_NAME)){
-            AccountForm accountForm = new AccountForm();
-            accountForm.setCustomerId(id);
-            model.addAttribute("accountForm", accountForm);
-        }
-        return "accounts/createOrUpdateAccountForm";
-    }
-    
-    @RequestMapping(value = "/{customer_id}/new", method = RequestMethod.POST)
-    public String processAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,  
-                                     BindingResult result,@PathVariable("customer_id") Long id,
-                                     RedirectAttributes redirectAttributes,
-                                     SessionStatus status) {
-        Account account=null;
+
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public @ResponseBody HashMap processAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
+                                     BindingResult result) {
+
         Address address = addressRepo.findByBrgyAndLocationCode(accountForm.getAddress().getBrgy(), accountForm.getAddress().getLocationCode());
+        HashMap response = new HashMap();
         if(address == null){
-            result.rejectValue("address.locationCode", "", "Invalid Zone for Barangay");
+            result.rejectValue("address.locationCode", "locationCode", "Invalid Zone for Barangay");
         } else{
             accountForm.setAddress(address);
         }
-        if(deviceRepo.findByMeterCode(accountForm.getDevice().getMeterCode()) != null)
-            result.rejectValue("device.meterCode", "", "Meter code already exists");
+        if(deviceRepo.findByMeterCode(accountForm.getDevice().getMeterCode().trim()) != null)
+            result.rejectValue("device.meterCode", "meterCode", "Meter code already exists");
         if(!result.hasErrors()){
-            Account newAccount = new Account();
-            String number = address.getAddressGroup().getAccountPrefix() + "-" + String.format("%05d", address.getAddressGroup().getAccountsCount());
-            newAccount.setNumber(number);
-            accountForm.setAccount(newAccount);
-            try{
-                account = custService.save(accountForm);
-            }catch(JpaOptimisticLockingFailureException e){
-                result.reject("","This record was modified by another user. Try refreshing the page.");
-            }
+            response.put("result",custService.createAccount(accountForm));
+            return response;
         }
-        if(result.hasErrors()){
-            System.out.println(result.getAllErrors());
-            redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/accounts/"+id+"/new";
+        else{
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+            return response;
         }
-        status.setComplete();
-        return "redirect:/admin/accounts/"+account.getNumber();
     }
     
     @RequestMapping(value="/{accountNumber}")
@@ -142,49 +118,43 @@ public class AccountController {
             model.put("message", "Please avoid retrieving admin pages via URL");
             return "errors";
         }
-        model.addAttribute("account", account);
+        HashMap formOptions = custService.getCustomerFormOptions();
+        AccountForm accountForm = new AccountForm();
+        accountForm.setAccount(account);
+        accountForm.setAddress(account.getAddress());
+        accountForm.setCustomerId(account.getCustomer().getId());
+        model.addAttribute("accountForm", accountForm);
         model.addAttribute("deviceForm", new Device());
+        model.addAttribute("brgyOptions", formOptions.get("brgy"));
+        model.addAttribute("zoneOptions", formOptions.get("zone"));
         return "accounts/viewAccount";
     }
-    
-    @RequestMapping(value="/{accountNumber}/update")
-    public String updateAccount(@PathVariable("accountNumber") String number, ModelMap model){
-        Account account = accountRepo.findByNumber(number);
-        if ( account == null){
-            model.put("type", "Bad request URL");
-            model.put("message", "Please avoid retrieving admin page via URL");
-            return "errors";
-        } else {
-            AccountForm accountForm = new AccountForm();
-            accountForm.setAccount(account);
-            accountForm.setDevice(deviceRepo.findByOwnerAndActive(account, true));
-            accountForm.setAddress(account.getAddress());
-            accountForm.setCustomerId(account.getCustomer().getId());
-            model.addAttribute("customer", account.getCustomer());
-            model.addAttribute("accountForm", accountForm);
-            return "accounts/createOrUpdateAccountForm";
+
+    @RequestMapping(value="{accountNumber}/update", method=RequestMethod.POST)
+    public @ResponseBody HashMap processUpdateAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
+                                     BindingResult result,@PathVariable("accountNumber") String number) {
+        Address address = addressRepo.findByBrgyAndLocationCode(accountForm.getAddress().getBrgy(), accountForm.getAddress().getLocationCode());
+        HashMap response = new HashMap();
+        if(address == null){
+            result.rejectValue("address.locationCode", "locationCode", "Invalid Zone for Barangay");
+        } else{
+            accountForm.setAddress(address);
         }
-    }
-    
-    @RequestMapping(value="/{accountNumber}/update", method=RequestMethod.POST)
-    public String processUpdateAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,  
-                                     BindingResult result,@PathVariable("accountNumber") String number,
-                                     RedirectAttributes redirectAttributes,
-                                     SessionStatus status) {
         if(!result.hasErrors()){
             try{
-                custService.save(accountForm);
+                accountForm.setAccount(accountRepo.findByNumber(number));
+                response.put("result", custService.updateAccount(accountForm));
             }catch(JpaOptimisticLockingFailureException e){
-                result.reject("","This record was modified by another user. Try refreshing the page.");
+                result.reject("global","This record was modified by another user. Try refreshing the page.");
             }
         }
         if(result.hasErrors()){
-            redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/accounts/"+number+"/update";
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+            return response;
         }
-        status.setComplete();
-        redirectAttributes.addFlashAttribute("updateSuccess", 1);
-        return "redirect:/admin/accounts/"+number;
+        response.put("status", "SUCCESS");
+        return response;
     }
     
     @RequestMapping(value = "/datatable-search")
@@ -285,20 +255,40 @@ public class AccountController {
     @RequestMapping(value="/{accountNumber}/create-device", method=RequestMethod.POST)
     public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("accountNumber") String number){
         HashMap response = new HashMap();
-        if(deviceRepo.findByMeterCode(device.getMeterCode()) != null)
+        if(deviceRepo.findByMeterCode(device.getMeterCode().trim()) != null)
             result.rejectValue("meterCode", "", "Metercode already exists!");
         if(!result.hasErrors()){
-            custService.saveDevice(number, device);
+            custService.saveNewDevice(number, device);
             response.put("status", "SUCCESS");
         }
         else{
             response.put("status", "FAILURE");
-            response.put("errors", result.getAllErrors());
+            response.put("result", result.getAllErrors());
         }
         return response;
     }
-    @RequestMapping(value="/activate-device/{device_id}", method=RequestMethod.POST)
-    public @ResponseBody HashMap activateDevice(@PathVariable("device_id") Long id){
+    @RequestMapping(value="/{device_id}/edit-device", method=RequestMethod.POST)
+    public @ResponseBody HashMap updateDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("device_id") Long id) {
+        HashMap response = new HashMap();
+        Device origDevice = deviceRepo.findOne(id);
+        String meterCode = device.getMeterCode().trim();
+        if (origDevice == null)
+            result.reject("global", "Device does not exist");
+        else if(deviceRepo.findByMeterCode(meterCode) != null && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
+            result.rejectValue("meterCode", "", "Metercode already exists!");
+        }
+        if(!result.hasErrors()){
+            custService.updateDevice(id, device);
+            response.put("status", "SUCCESS");
+        }
+        else{
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+        }
+        return response;
+    }
+    @RequestMapping(value="/activate-device", method=RequestMethod.POST)
+    public @ResponseBody HashMap activateDevice(@RequestParam("device_id") Long id){
         HashMap response = new HashMap();
         Device device = deviceRepo.findOne(id);
         if(device != null){
@@ -325,6 +315,7 @@ public class AccountController {
         map.put("format", "pdf");
         return "rpt_disconnection_notice";
     }
+
     @RequestMapping(value="/warning", method=RequestMethod.POST)
     public @ResponseBody HashMap warningAccount(@RequestParam("accountId") Long id){
         HashMap response = new HashMap();
@@ -362,5 +353,9 @@ public class AccountController {
             } else response.put("status", "FAILURE");
         }else response.put("status", "FAILURE");
         return response;
+    }
+    @RequestMapping(value="/find-device", method = RequestMethod.POST)
+    public @ResponseBody Device find(@RequestParam("device_id") Long id){
+        return deviceRepo.findOne(id);
     }
 }

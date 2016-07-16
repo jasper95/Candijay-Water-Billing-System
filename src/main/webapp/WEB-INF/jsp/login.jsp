@@ -16,30 +16,35 @@
         <jsp:include page="fragments/preAuth/header.jsp"/>
         <!-- Page Content -->
         <div class="container">
-            <img class="cnt-img" src="${STATIC_URL}/img/center_piece.png">
-            <div style="text-align: center">
+            <img class="img-responsive center-block" src="${STATIC_URL}/img/center_piece.png">
             <c:if test="${not empty error}">
-                <div class="alert-danger" style="width:25%">${error}</div>
+                <div class="alert alert-danger alert-msg center-block">${error}</div>
             </c:if>
             <c:if test="${not empty msg}">
-                <div class="alert-success" style="width:25%">${msg}</div>
+                <div class="alert alert-success alert-msg center-block">${msg}</div>
             </c:if>
             <c:url value="/j_spring_security_check" var="loginUrl"/>
-                <form id="loginForm"  action="${loginUrl}" method="POST">
-                    <sec:csrfInput/>
-                    <div class="form-group">
-                        <input style="background-image: url('${STATIC_URL}img/un.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="j_username" type="text" class="form-control log-un" placeholder="Username" autocomplete="off" required autofocus/>
+            <form id="loginForm"  action="${loginUrl}" method="POST">
+                <sec:csrfInput/>
+                <div class="log-fields-wrapper center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                        <input name="j_username" type="text" class="form-control" placeholder="Username" autocomplete="off" required autofocus/>
                     </div>
-                    <div class="form-group">
-                        <input style="background-image: url('${STATIC_URL}img/pw.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" type="password" name="j_password" class="form-control log-un" placeholder="Password" required autofocus/>
+                </div>
+                <div class="log-fields-wrapper center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
+                        <input type="password" name="j_password" class="form-control" placeholder="Password" required autofocus/>
                     </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-sm btn-default btn-cstm log-cstm" value="LOG IN"/>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="center-block btn btn-md btn-default btn-cstm log-cstm" value="LOG IN"/>
+                </div>
+            </form>
         </div>
         <jsp:include page="fragments/footer.jsp"/>
         <jsp:include page="fragments/preAuth/jsBlock.jsp"/>
+        <script> history.pushState("", "", "${pageContext.servletContext.contextPath}/login")</script>
     </body>
 </html>

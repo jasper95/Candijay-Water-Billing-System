@@ -19,8 +19,9 @@ import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.CustomerForm;
 import com.service.CustomerManagementService;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,35 +53,47 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
              
     @Override
     @Transactional
-    public Customer save(Customer customer) {
-        return customerRepo.save(customer);
+    public Customer updateCustomer(CustomerForm customerForm) {
+        return customerRepo.save(customerForm.getCustomer());
     }   
 
     @Override
     @Transactional
-    public Customer save(CustomerForm customerForm) {
-        Customer c = customerForm.getCustomer();
-        return save(c);
+    public Customer createCustomer(CustomerForm customerForm) {
+        Customer customer = customerRepo.save(customerForm.getCustomer());
+        saveNewAccount(new Account(), customerForm.getDevice(), customerForm.getAddress(), customer);
+        return customer;
     }
 
     @Transactional
     @Override
-    public Account save(AccountForm accountForm) {
-        Customer customer = customerRepo.findOne(accountForm.getCustomerId());
-        Account account = accountForm.getAccount();
-        Device device = accountForm.getDevice();
+    public Account createAccount(AccountForm accountForm) {
+        return saveNewAccount(new Account(), accountForm.getDevice(), accountForm.getAddress(), customerRepo.findOne(accountForm.getCustomerId()));
+    }
+
+    private Account saveNewAccount(Account account, Device device, Address address, Customer customer){
+        account.setCustomer(customer);
+        String number = address.getAddressGroup().getAccountPrefix() + "-" + String.format("%05d", address.getAddressGroup().getAccountsCount());
+        account.setNumber(number);
+        account.setAddress(address);
         if(account.getId() == null)
             device.setStartDate(new Date());
         device.setActive(true);
-        Address address = accountForm.getAddress();
-        account.setAddress(address);
-        account.setCustomer(customer);
         account = accountRepo.save(account);
         device.setOwner(account);
         deviceRepo.save(device);
         address.getAddressGroup().setAccountsCount(address.getAddressGroup().getAccountsCount()+1);
         addressRepo.save(address);
         return account;
+
+    }
+
+    @Transactional
+    @Override
+    public Account updateAccount(AccountForm accountForm){
+        Account account = accountForm.getAccount();
+        account.setAddress(accountForm.getAddress());
+        return accountRepo.save(account);
     }
     
     @Transactional
@@ -92,9 +105,18 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
     
     @Transactional
     @Override
-    public Device saveDevice(String accountNumber, Device device) {
+    public Device saveNewDevice(String accountNumber, Device device) {
         device.setOwner(accountRepo.findByNumber(accountNumber));
         return deviceRepo.save(device);
+    }
+
+    @Transactional
+    @Override
+    public Device updateDevice(Long id,  Device device){
+        Device origDevice = deviceRepo.findOne(id);
+        origDevice.setBrand(device.getBrand());
+        origDevice.setMeterCode(device.getMeterCode());
+        return deviceRepo.save(origDevice);
     }
 
     @Override
@@ -107,5 +129,22 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
             deviceRepo.save(d);
         }
 
+    }
+
+    @Override
+    public HashMap<String, Collections > getCustomerFormOptions() {
+        HashMap<Character, String> genderOptions = new HashMap();
+        Set<String> brgyList = new HashSet(), zoneList = new HashSet();
+        genderOptions.put('M', "Male");
+        genderOptions.put('F', "Female");
+        for( Address address : addressRepo.findAll()){
+            brgyList.add(address.getBrgy());
+            zoneList.add(address.getLocationCode().toString());
+        }
+        HashMap allOptions = new HashMap();
+        allOptions.put("brgy", brgyList);
+        allOptions.put("gender", genderOptions);
+        allOptions.put("zone", zoneList);
+        return allOptions;
     }
 }
