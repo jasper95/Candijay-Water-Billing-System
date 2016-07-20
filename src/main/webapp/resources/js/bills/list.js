@@ -3,14 +3,16 @@ $(document).ready(function(){
         var chk = $(this).prop('checked');
         $('input', oTable_invoice.$('tr', {"filter": "applied"} )).prop('checked',chk);
     });
-    $('#form').on('submit', function(e){
+    $('#apply').on('click', function(e){
         e.preventDefault();
-        var form = $(this);
+        var data = $('#form').serialize();
+        var form = $('#form');
         $.post(form.attr('action')+'/print-check', form.serialize(), function(response){
             if(response.status === "SUCCESS")
                 openReport('POST', form.attr('action')+'/print', response.result, '_blank');
         })
     });
+    
     function openReport(verb, url, data, target){
         var form = document.createElement("form");
         form.action = url;

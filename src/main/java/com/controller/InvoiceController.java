@@ -58,9 +58,9 @@ public class InvoiceController {
         return "bills/billList";
     }
     
-    
+
     @RequestMapping(value="/print-check", method=RequestMethod.POST)
-    public @ResponseBody 
+    public @ResponseBody
     HashMap checkInvoiceIds(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         HashMap response = new HashMap();
         if(result.hasErrors()){
@@ -72,7 +72,7 @@ public class InvoiceController {
         }
         return response;
     }
-    
+
     @RequestMapping(value="/print", method=RequestMethod.POST)
     public String getBill(ModelMap modelMap, @ModelAttribute("checkboxes") Checkboxes checkboxes) {
         List<Invoice> invoices = new ArrayList();

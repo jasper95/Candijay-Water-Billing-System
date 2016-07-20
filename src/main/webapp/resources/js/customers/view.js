@@ -27,7 +27,7 @@ $(document).ready(function(){
     $('#acct-form').on('submit', function(e){
         e.preventDefault();
         $.post($('#context-path').val()+'/admin/accounts/new', $(this).serialize(), function(response){
-            cleanUpForm('#acct-form')
+            cleanUpFormMsgs('#acct-form')
             if (validateForm('#acct-form', response)) {
                 window.location = $('#context-path').val()+'/admin/accounts/'+response.result.number
             }

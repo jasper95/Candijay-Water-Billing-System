@@ -21,7 +21,7 @@ function checkbox(data, type, full){
     return '<input type="checkbox" name="checkboxValues" value="'+full.id+'" /> ';
 }
 function readingActions(data, type, full){
-    return '<a type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary">Edit</a>';
+    return '<a type="button" onclick="checkCanEdit('+ full.id +','+full.schedule.year+','+full.schedule.month+','+full.readingValue+')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 }
 function paidDate(data, type, full){
     return data.year+'/'+data.monthOfYear+'/'+data.dayOfMonth ;
@@ -42,6 +42,7 @@ function activateDevice(data, type, full){
 function editDevice(data, type, full){
     return '<a type="button" onClick="editDv('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>'
 }
+
 function activateAccount(data, type, full){
     //return (full.status === "ACTIVE" || full.status === "ACTIVE") ?  
     if(full.status === 'ACTIVE')
@@ -54,4 +55,11 @@ function activateAccount(data, type, full){
 
 function updateUser(data, type, full){
     return (full.username === $('#current-user').val()) ? '' : '<a type="button" href="'+$('#request-uri').val()+'/update/'+full.username+'" class="btn btn-xs btn-primary">Edit</a>';
+}
+
+function monthAndYear(data, type, full){
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+        "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+    ];
+    return monthNames[full.schedule.month -1]+ ' '+ full.schedule.year;
 }

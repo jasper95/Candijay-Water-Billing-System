@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface DataTableDao {
     public <T>List<T> findWithDataTablesCriteria(DatatablesCriterias criterias, Class<T> clazz);
-
+    public Long getFilteredCount(DatatablesCriterias criterias, Class clazz);
     /**
      *
      * @param clazz

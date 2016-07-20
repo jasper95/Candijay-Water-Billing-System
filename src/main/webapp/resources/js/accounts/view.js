@@ -18,9 +18,9 @@ $(document).ready(function(){
     $('#acct-form').on('submit', function(e){
         e.preventDefault();
         $.post($('#acct-base-url').val()+'/update', $(this).serialize(), function(response){
-            cleanUpForm()
+            cleanUpFormMsgs('#acct-form')
             if (validateForm('#acct-form', response)) {
-                cleanUpForm();
+                cleanUpFormMsgs('#acct-form');
                 $('#acct-bg').val(response.result.address.brgy)
                 $('#acct-lc').val(response.result.address.locationCode)
                 $('#close-acct-form').trigger('click')
@@ -30,9 +30,10 @@ $(document).ready(function(){
     $('#device-form').on('submit', function (e){
         e.preventDefault();
         $.post($('#device-action-url').val(), $(this).serialize(), function (response) {
-            cleanUpForm()
+            cleanUpFormMsgs('#device-form')
             if (validateForm('#device-form', response)) {
-                cleanUpForm()
+                cleanUpFormMsgs('#device-form')
+                cleanUpFormFields('#device-form')
                 $('#close-dv-form').trigger('click')
                 $('#reload').trigger('click');
             }

@@ -17,7 +17,6 @@ public class SearchForm {
     
     @NotBlank @NotEmpty
     private String accountNumber;
-    private boolean create;
 
     public SearchForm() {}
 
@@ -27,13 +26,5 @@ public class SearchForm {
 
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
-    }
-    
-    public boolean isCreate() {
-        return create;
-    }
-
-    public void setCreate(boolean create) {
-        this.create = create;
     }
 }

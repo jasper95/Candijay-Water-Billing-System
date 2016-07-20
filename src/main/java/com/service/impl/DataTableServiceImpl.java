@@ -33,7 +33,8 @@ public class DataTableServiceImpl implements DataTableService{
         Long count = dataTableQueryHelper.getTotalCount(clazz);
         if(criterias.hasOneFilteredColumn()){
             List<T> results = dataTableQueryHelper.findWithDataTablesCriteria(criterias, clazz);
-            Long countFiltered = Long.valueOf(results.size());
+            Long countFiltered = dataTableQueryHelper.getFilteredCount(criterias, clazz);
+            System.out.println(countFiltered);
             return new DataSet<T>(results, count, countFiltered);
         }
         else return new DataSet<T>(new ArrayList(), count, Long.valueOf(0));

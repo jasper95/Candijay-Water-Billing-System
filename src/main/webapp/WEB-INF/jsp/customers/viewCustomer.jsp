@@ -88,5 +88,5 @@
     <script src="${STATIC_URL}js/bootstrap.min.js"></script>
     <script src="${STATIC_URL}/js/form-validation.js"></script>
     <script src="${STATIC_URL}/js/customers/view.js"></script>
-    </body>
+</body>
 </html>

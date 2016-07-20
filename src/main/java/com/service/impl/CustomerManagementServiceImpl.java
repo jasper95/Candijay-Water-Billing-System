@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Bert
  */
+
 @Service
 public class CustomerManagementServiceImpl implements CustomerManagementService {
     
@@ -129,22 +130,5 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
             deviceRepo.save(d);
         }
 
-    }
-
-    @Override
-    public HashMap<String, Collections > getCustomerFormOptions() {
-        HashMap<Character, String> genderOptions = new HashMap();
-        Set<String> brgyList = new HashSet(), zoneList = new HashSet();
-        genderOptions.put('M', "Male");
-        genderOptions.put('F', "Female");
-        for( Address address : addressRepo.findAll()){
-            brgyList.add(address.getBrgy());
-            zoneList.add(address.getLocationCode().toString());
-        }
-        HashMap allOptions = new HashMap();
-        allOptions.put("brgy", brgyList);
-        allOptions.put("gender", genderOptions);
-        allOptions.put("zone", zoneList);
-        return allOptions;
     }
 }

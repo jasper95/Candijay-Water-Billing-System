@@ -31,5 +31,4 @@ public interface CustomerManagementService {
     public Account updateAccount(AccountForm accountForm);
     public void changeAccountStatus(Account account, AccountStatus status);
     public void activateDevice(Device device);
-    public HashMap<String,Collections> getCustomerFormOptions();
 }

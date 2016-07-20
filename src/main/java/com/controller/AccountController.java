@@ -21,10 +21,8 @@ import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
 import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
-import com.service.CustomerManagementService;
-import com.service.DataTableService;
-import com.service.InvoicingService;
-import com.service.PaymentService;
+import com.service.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,12 +56,14 @@ public class AccountController {
     private CustomerRepository customerRepo;
     private AddressRepository addressRepo;
     private InvoicingService invoicingService;
+    private FormOptionsService formOptionsService;
     static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.accountForm";
 
     @Autowired
     public AccountController(CustomerManagementService custService, DataTableService dataTableService, 
             PaymentService paymentService, DeviceRepository deviceRepo, AccountRepository accountRepo, 
-            CustomerRepository customerRepo, AddressRepository addressRepo, InvoicingService invoicingService) {
+            CustomerRepository customerRepo, AddressRepository addressRepo, InvoicingService invoicingService,
+             FormOptionsService formOptionsService) {
         this.custService = custService;
         this.dataTableService = dataTableService;
         this.paymentService = paymentService;
@@ -71,14 +71,16 @@ public class AccountController {
         this.accountRepo = accountRepo;
         this.customerRepo = customerRepo;
         this.addressRepo = addressRepo;
-        this.invoicingService = invoicingService; 
+        this.invoicingService = invoicingService;
+        this.formOptionsService = formOptionsService;
     }
 
     @InitBinder({"accountForm", "deviceForm"})
     public void initBinder(WebDataBinder binder){
         binder.setAllowedFields("address.brgy", "address.locationCode", "meterCode", "brand",
-                                "device.meterCode", "device.brand");
+                "device.meterCode", "device.brand");
     }
+
 
     @RequestMapping(method=RequestMethod.GET)
     public String showAll(ModelMap model){
@@ -118,7 +120,7 @@ public class AccountController {
             model.put("message", "Please avoid retrieving admin pages via URL");
             return "errors";
         }
-        HashMap formOptions = custService.getCustomerFormOptions();
+        HashMap formOptions = formOptionsService.getCustomerFormOptions();
         AccountForm accountForm = new AccountForm();
         accountForm.setAccount(account);
         accountForm.setAddress(account.getAddress());
@@ -273,7 +275,7 @@ public class AccountController {
         Device origDevice = deviceRepo.findOne(id);
         String meterCode = device.getMeterCode().trim();
         if (origDevice == null)
-            result.reject("global", "Device does not exist");
+            result.reject("Device does not exist");
         else if(deviceRepo.findByMeterCode(meterCode) != null && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
             result.rejectValue("meterCode", "", "Metercode already exists!");
         }

@@ -1,5 +1,5 @@
 function validateForm(form_id, response){
-    var fields = [], errors = []
+    var fields = [], field_errors = [], global_errors = []
     var result = response.result
     if(response.status === 'FAILURE'){
         $(form_id+' input, '+form_id+' select').each(
@@ -9,17 +9,24 @@ function validateForm(form_id, response){
                     fields[input.attr('name')] = input
             }
         );
-        for(var i=0; i<result.length; i++)
-            errors[result[i].field] = result[i].defaultMessage
-        for(var error_field in errors){
-            showError(fields[error_field], errors[error_field])
+        for(var i=0; i<result.length; i++) {
+            var field= result[i].field;
+            if(field == undefined && result[i].code === 'global'){
+                global_errors.push(result[i].defaultMessage);
+            }
+            else field_errors[field] = result[i].defaultMessage
         }
+        for(var error_field in field_errors){
+            showFieldError(fields[error_field], field_errors[error_field])
+        }
+        if(global_errors.length > 0)
+            showGlobalErrors(global_errors, form_id)
         return false
     }
     return true
 }
 
-function showError(element, message){
+function showFieldError(element, message){
     var errorHolder1 = element.parent()
     errorHolder1.append('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>')
     var errorHolder2 = errorHolder1.parent()
@@ -27,8 +34,30 @@ function showError(element, message){
     errorHolder2.append('<span class="field-error">'+message+'</span>')
 }
 
-function cleanUpForm(){
-    $('div.has-error').removeClass('has-error')
-    $('span.field-error').remove()
-    $('span.glyphicon-remove').remove()
+function showGlobalErrors(errors, form_id){
+    var errors_holder = $(form_id).find('div.global-errors')
+    for(var i=0; i<errors.length; i++){
+        errors_holder.append('<p class="hanging-indent"><i class="fa fa-remove fa-fw"></i>'+errors[i]+'</p>')
+    }
+    errors_holder.show()
+}
+
+function cleanUpFormMsgs(form_id){
+    $(form_id).find('div.has-error').removeClass('has-error')
+    $(form_id).find('span.field-error').remove()
+    $(form_id).find('span.glyphicon-remove').remove()
+    $(form_id).find('div.global-errors').hide();
+    $(form_id).find('div.global-errors p').remove()
+    $(form_id).find('div.success-msg').hide();
+    $(form_id).find('div.success-msg p').remove()
+}
+
+function cleanUpFormFields(form_id){
+    $(form_id+' input, '+form_id+' select').each(function(index){
+        $(this).val('')
+    })
+}
+
+function showSuccess(form_id, msg){
+    $(form_id).find('div.success-msg').append('<p>'+msg+'</p>').show();
 }

@@ -24,6 +24,8 @@ import com.service.DataTableService;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import com.service.FormOptionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
@@ -57,16 +59,19 @@ public class CustomerController {
     private AccountRepository accountRepo;
     private AddressRepository addressRepo;
     private DeviceRepository deviceRepo;
+    private FormOptionsService formOptionsService;
 
     @Autowired
     public CustomerController(CustomerManagementService custService, DataTableService dataTableService, 
-            CustomerRepository customerRepo, AccountRepository accountRepo, AddressRepository addressRepo, DeviceRepository deviceRepo) {
+            CustomerRepository customerRepo, AccountRepository accountRepo, AddressRepository addressRepo, DeviceRepository deviceRepo,
+              FormOptionsService formOptionsService) {
         this.custService = custService;
         this.dataTableService = dataTableService;
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
         this.addressRepo = addressRepo;
         this.deviceRepo = deviceRepo;
+        this.formOptionsService = formOptionsService;
     }
     
     @InitBinder({"customerForm", "accountForm"})
@@ -80,10 +85,10 @@ public class CustomerController {
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String initCustomerForm(ModelMap model) {
-        HashMap<String, Collections> formOptions = custService.getCustomerFormOptions();
-        model.addAttribute("genderOptions", formOptions.get("gender"));
-        model.addAttribute("brgyOptions", formOptions.get("brgy"));
-        model.addAttribute("zoneOptions", formOptions.get("zone"));
+        HashMap<String, Collections> options = formOptionsService.getCustomerFormOptions();
+        model.addAttribute("genderOptions", options.get("gender"));
+        model.addAttribute("brgyOptions", options.get("brgy"));
+        model.addAttribute("zoneOptions", options.get("zone"));
         if(!model.containsAttribute(BINDING_RESULT_NAME))
             model.addAttribute("customerForm", new CustomerForm());
         return "customers/createOrUpdateCustomerForm";
@@ -125,15 +130,15 @@ public class CustomerController {
             return "errors";
         }
         CustomerForm customerForm  = new CustomerForm();
-        HashMap<String, Collections> formOptions = custService.getCustomerFormOptions();
+        HashMap<String, Collections> options = formOptionsService.getCustomerFormOptions();
         customerForm.setCustomer(customer);
         AccountForm accountForm = new AccountForm();
         accountForm.setCustomerId(id);
         model.addAttribute("accountForm", accountForm);
         model.addAttribute("customerForm", customerForm);
-        model.addAttribute("genderOptions", formOptions.get("gender"));
-        model.addAttribute("brgyOptions", formOptions.get("brgy"));
-        model.addAttribute("zoneOptions", formOptions.get("zone"));
+        model.addAttribute("genderOptions", options.get("gender"));
+        model.addAttribute("brgyOptions", options.get("brgy"));
+        model.addAttribute("zoneOptions", options.get("zone"));
         return "customers/viewCustomer";
     }
     
@@ -166,7 +171,7 @@ public class CustomerController {
             try{
                 custService.updateCustomer(customerForm);
             }catch(JpaOptimisticLockingFailureException e){
-                result.reject("","The data were modified by another user. Please reload the page.");
+                result.reject("global", "The data were modified by another user. Please reload the page.");
             }
         }
         if(result.hasErrors()){

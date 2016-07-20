@@ -51,7 +51,15 @@ public class DataTableQueryHelper implements DataTableDao{
         query.setMaxResults(criterias.getLength());
         return query.getResultList();
     }
-   
+
+    @Override
+    public Long getFilteredCount(DatatablesCriterias criterias, Class clazz) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT p FROM "+ clazz.getName()+" p");
+        queryBuilder.append(DataTableDaoUtil.getFilterQuery(criterias));
+        Query query = entityManager.createQuery(queryBuilder.toString());
+        return Long.parseLong(String.valueOf(query.getResultList().size()));
+    }
+
     @Override
     public Long getTotalCount(Class clazz) {
         Query query = entityManager.createQuery("SELECT COUNT(p) FROM "+clazz.getName()+" p");
