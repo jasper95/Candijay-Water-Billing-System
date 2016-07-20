@@ -5,7 +5,7 @@ function validateForm(form_id, response){
         $(form_id+' input, '+form_id+' select').each(
             function(index){
                 var input = $(this);
-                if( (input.is('input') || input.is('select')) && name != undefined && name != '_csrf' )
+                if( (input.is('input') || input.is('select')) && input.attr('name') != undefined && input.attr('name') != '_csrf' )
                     fields[input.attr('name')] = input
             }
         );
@@ -54,7 +54,10 @@ function cleanUpFormMsgs(form_id){
 
 function cleanUpFormFields(form_id){
     $(form_id+' input, '+form_id+' select').each(function(index){
-        $(this).val('')
+        var  input = $(this)
+        if(input.attr('name') != undefined && input.attr('name') != '_csrf' &&
+            input.attr('name') != 'meterReading.schedule.month' && input.attr('name') != 'meterReading.schedule.year')
+            input.val('')
     })
 }
 

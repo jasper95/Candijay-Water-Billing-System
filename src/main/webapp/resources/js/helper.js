@@ -6,7 +6,7 @@ $(document).ready(function(){
         var account = response.account;
         var fullname =  account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
         var address = account.address.brgy+",  Zone "+account.address.locationCode;
-        var lastReading = "Last Reading:  "+response.device.lastReading;
+        var lastReading = "Last Reading:  "+response.last_reading;
         var status = $('#status');
         if(account.status === "ACTIVE"){
             status.removeClass().addClass("label label-success");
@@ -15,8 +15,8 @@ $(document).ready(function(){
         $('#full-name').text(fullname);
         $('#address').text(address);
         $('#last-reading').text(lastReading);
-        $('#yadcf-filter--recent-0').val(account.id);
-        $('#filtertable').trigger('click');
+        $('#yadcf-filter--reading-0').val(account.id);
+        $('#filterButton').click();
     }
     window.showAccount = function (data){
         if (data == undefined) {

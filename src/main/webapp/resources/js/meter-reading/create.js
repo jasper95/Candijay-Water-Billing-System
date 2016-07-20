@@ -33,9 +33,24 @@ $(document).ready(function(){
                 if (validateForm('#add-meterReading-form', response)) {
                     showSuccess('#add-meterReading-form', "Reading successfully added")
                     cleanUpFormFields('#add-meterReading-form')
-                    showAccount({accountNumber: response.result.account.number, create: true})
+                    $('#yadcf-filter--reading-0').val(response.result.account.id);
+                    $('#filterButton').trigger('click');
                 }
              }
         });
     });
+    $('#md-update-form').on('submit', function(e){
+        e.preventDefault();
+        var form = $(this);
+        cleanUpFormMsgs('#md-update-form')
+        $.post($('#reading-uri').val()+'update', form.serialize(), function(response){
+            if(validateForm('#md-update-form' ,response)){
+                showSuccess('#md-update-form', "Reading successfully updated")
+                var reading = response.result;
+                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(1)').text(months[reading.schedule.month]+" "+reading.schedule.year);
+                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(2)').text(reading.consumption);
+                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(3)').text(reading.readingValue)
+            }
+        })
+    })
 });

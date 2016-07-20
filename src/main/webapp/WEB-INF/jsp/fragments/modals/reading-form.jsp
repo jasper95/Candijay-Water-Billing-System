@@ -15,6 +15,7 @@
             </div>
             <div class="modal-body">
                 <form:form modelAttribute="meterReadingForm" method="post" id="md-update-form">
+                    <form:hidden id="ac-id" path="accountId"/>
                     <fieldset>
                         <div class="col-sm-6">
                             <h4 class="sub-header">Account Details</h4>
@@ -44,6 +45,8 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
+                            <div class="col-sm-12 alert alert-danger global-errors"></div>
+                            <div class="col-sm-12 alert alert-success success-msg"></div>
                             <h4 class="sub-header">Reading Form</h4>
                             <div class="col-sm-12 form-group">
                                 <cws:select id="rd-mn" name="meterReading.schedule.month" label="Reading Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="12"/>
@@ -59,7 +62,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <div class="pull-right">
-                                            <input type="submit" class="btn btn-primary" value="Submit">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>
                                 </div>

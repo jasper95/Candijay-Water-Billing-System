@@ -44,7 +44,7 @@
 			<staticText>
 				<reportElement x="231" y="18" width="127" height="16" uuid="e19a917a-bb82-4276-9cdb-d24f04168fc7"/>
 				<textElement textAlignment="Center">
-					<font fontName="Calibri" size="10"/>
+					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Municipality of Candijay]]></text>
 			</staticText>

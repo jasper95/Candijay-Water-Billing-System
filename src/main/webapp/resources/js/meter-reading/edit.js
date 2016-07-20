@@ -1,13 +1,16 @@
 $(document).ready(function(){
-    window.checkCanEdit = function (id, year, month, readingVal) {
+    window.checkCanEdit = function (id) {
         $.getJSON($('#reading-uri').val()+ id + "/check-paid", function(data) {
             if(data.status === "SUCCESS"){
+                cleanUpFormMsgs('#md-update-form');
+                var reading = data.reading;
                 $('#reading-form-modal').modal('show');
-                $('#rd-mn').val(month);
-                $('#rd-yr').val(year);
-                $('#reading-val').val(readingVal);
+                $('#rd-mn').val(reading.schedule.month);
+                $('#rd-yr').val(reading.schedule.year);
+                $('#reading-val').val(reading.readingVal);
                 $('#rd-id').val(id);
-                var account = data.account;
+                $('#ac-id').val(reading.account.id)
+                var account = reading.account;
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
                 var address = account.address.brgy+",  Zone "+account.address.locationCode;
                 var lastReading = "Last Reading:  "+data.last_reading;
@@ -23,15 +26,7 @@ $(document).ready(function(){
             else alert("You cannot edit a paid reading");
         });
     }
-    $('#md-update-form').on('submit', function(e){
-        e.preventDefault();
-        var form = $(this);
-        cleanUpFormMsgs('#md-update-form')
-        $.post(($('#reading-uri').val()+'update', form.serialize, function(response){
-            if(validateForm('#md-update-form' ,response)){
-                showSuccess('#md-update-form', "Reading successfully updated")
-                cleanUpFormFields('#md-update-form')
-            }
-        }))
-    })
+    $("#reading").on("click", "tr", function() {
+        $('#row-num').val($(this).index()+1)
+    });
 });

@@ -20,6 +20,7 @@
     color: #e1ffff;
     margin-left: -200px;
     left: 200px;
+    top: 51px;
 }
 .nav-side-menu .brand {
     background-color: #000915;
@@ -128,6 +129,7 @@
         position: relative;
         width: 100%;
         margin-bottom: 10px;
+        top: 0px;
     }
     #header {
         display: none;
@@ -273,4 +275,7 @@ p.hanging-indent{
 }
 .success-msg p{
     text-align: center;
+}
+.highlight{
+    background-color: #85DFF5;
 }

@@ -11,6 +11,13 @@ yadcf.init(oTable_reading, [
     {
         "externally_triggered": true,
         "filter_type": "text",
+        "filter_container_id": "reading-id",
+        "column_number": 0,
+        "filter_reset_button_text": false
+    },
+    {
+        "externally_triggered": true,
+        "filter_type": "text",
         "filter_container_id": "acct-no",
         "column_number": 1,
         "filter_reset_button_text": false

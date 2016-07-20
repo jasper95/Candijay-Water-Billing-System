@@ -21,7 +21,7 @@ function checkbox(data, type, full){
     return '<input type="checkbox" name="checkboxValues" value="'+full.id+'" /> ';
 }
 function readingActions(data, type, full){
-    return '<a type="button" onclick="checkCanEdit('+ full.id +','+full.schedule.year+','+full.schedule.month+','+full.readingValue+')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
+    return '<a type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 }
 function paidDate(data, type, full){
     return data.year+'/'+data.monthOfYear+'/'+data.dayOfMonth ;

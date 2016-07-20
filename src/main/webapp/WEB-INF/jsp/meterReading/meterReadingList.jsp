@@ -36,6 +36,7 @@
                             </div>
                         </div>
                         <div class="alert alert-info form-wrapper">
+                            <div id="reading-id" style="display:none"></div>
                             <div class="col-sm-12 form-group">
                                 <div class="col-md-3" id="acct-no">
                                     <label>Account Number</label>
@@ -80,8 +81,10 @@
                                         <datatables:column title="Status" name="invoice.status" property="invoice.status"/>
                                         <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                         <datatables:extraJs bundles="mreading" placeholder="before_end_document_ready"/>
+                                        <datatables:extraJs bundles="months" placeholder="after_all"/>
                                         <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>
+                                    <input type="hidden" id="row-num">
                                 </div>
                             </div>
                         </div>
@@ -92,6 +95,8 @@
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/form-validation.js"></script>
+        <script src="${STATIC_URL}js/meter-reading/list.js"></script>
         <script src="${STATIC_URL}js/meter-reading/edit.js"></script>
     </body>
 </html>
