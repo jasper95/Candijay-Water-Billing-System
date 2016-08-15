@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.jasper.spring_testttt_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
-    <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <class>com.domain.Account</class>
-    <class>com.domain.Address</class>
-    <class>com.domain.Customer</class>
-    <class>com.domain.Device</class>
-    <class>com.domain.Invoice</class>
-    <class>com.domain.MeterReading</class>
-    <class>com.domain.Occupation</class>
-    <class>com.domain.Payment</class>
-    <class>com.domain.Role</class>
-    <class>com.domain.Tax</class>
-    <class>com.domain.User</class>
-    <class>com.domain.Schedule</class>
-    <class>com.domain.Settings</class>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/revised_cws_db"/>
@@ -26,4 +13,5 @@
       <property name="hibernate.show_sql" value="true"/>
     </properties>
   </persistence-unit>
+
 </persistence>

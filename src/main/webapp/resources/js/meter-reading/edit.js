@@ -1,15 +1,22 @@
 $(document).ready(function(){
+    window.viewChanges = function(id){
+        $('#auditReading-id').find('input:first').val(id);
+        $('#filterButtonAuditTable').trigger('click');
+        $('#reading-info-modal').modal('show');
+    };
     window.checkCanEdit = function (id) {
-        $.getJSON($('#reading-uri').val()+ id + "/check-paid", function(data) {
+        $.getJSON($('#reading-uri').val()+ id + "/check-can-edit", function(data) {
             if(data.status === "SUCCESS"){
                 cleanUpFormMsgs('#md-update-form');
                 var reading = data.reading;
-                $('#reading-form-modal').modal('show');
+                //populate form
                 $('#rd-mn').val(reading.schedule.month);
                 $('#rd-yr').val(reading.schedule.year);
-                $('#reading-val').val(reading.readingVal);
+                $('#reading-val').val(reading.readingValue);
                 $('#rd-id').val(id);
-                $('#ac-id').val(reading.account.id)
+                $('#ac-id').val(reading.account.id);
+                $('#rd-vs').val(reading.version);
+                //populate account details
                 var account = reading.account;
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
                 var address = account.address.brgy+",  Zone "+account.address.locationCode;
@@ -22,10 +29,20 @@ $(document).ready(function(){
                 $('#md-full-name').text(fullname);
                 $('#md-address').text(address);
                 $('#md-last-reading').text(lastReading);
+                $('#reading-form-modal').modal('show');
             }
-            else alert("You cannot edit a paid reading");
+            else{
+                BootstrapDialog.alert({
+                    title: 'ACTION DENIED',
+                    message: 'Cannot edit a reading with finalized payment.',
+                    type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                    closable: true, // <-- Default value is false
+                    draggable: true, // <-- Default value is false
+                });
+
+            }
         });
-    }
+    };
     $("#reading").on("click", "tr", function() {
         $('#row-num').val($(this).index()+1)
     });

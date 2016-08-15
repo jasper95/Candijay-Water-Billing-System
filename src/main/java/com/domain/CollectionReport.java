@@ -12,20 +12,20 @@ import java.math.BigDecimal;
  * @author Bert
  */
 public class CollectionReport {
-    private Long accountNo;
+    private String accountNo;
     private BigDecimal amount;
     private Integer locationCode;
     private String firstName;
     private String lastName;
     private BigDecimal discount;
-    private Long orNumber;
+    private String orNumber;
     private BigDecimal due;
 
-    public Long getAccountNo() {
+    public String getAccountNo() {
         return accountNo;
     }
 
-    public void setAccountNo(Long accountNo) {
+    public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
 
@@ -69,11 +69,11 @@ public class CollectionReport {
         this.discount = discount;
     }
 
-    public Long getOrNumber() {
+    public String getOrNumber() {
         return orNumber;
     }
 
-    public void setOrNumber(Long orNumber) {
+    public void setOrNumber(String orNumber) {
         this.orNumber = orNumber;
     }
 

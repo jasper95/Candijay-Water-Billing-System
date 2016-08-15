@@ -3,9 +3,8 @@ package com.domain;
 
 
 import com.domain.enums.InvoiceStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +19,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +33,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name="invoice"
     ,catalog="revised_cws_db"
 )
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Invoice  implements java.io.Serializable {
 
     @Id @GeneratedValue(strategy=IDENTITY)
@@ -157,7 +160,7 @@ public class Invoice  implements java.io.Serializable {
     public void setStatus(InvoiceStatus status) {
         this.status = status;
     }
-    @JsonBackReference
+    //@JsonBackReference
     public Payment getPayment() {
         return this.payment;
     }
@@ -228,5 +231,27 @@ public class Invoice  implements java.io.Serializable {
 
     public void setDepreciationFund(BigDecimal depreciationFund) {
         this.depreciationFund = depreciationFund;
-    }    
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Invoice other = (Invoice) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
+    }
 }

@@ -14,39 +14,58 @@
         <meta name="author" content="">
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>Settings</title>
-
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_gen.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_admin.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_dashboard.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
-        <sec:csrfMetaTags/>
-        <spring:url value="/webjars/jquery/2.0.3/jquery.js" var="jQuery"/>
-        <script src="${jQuery}"></script>
-        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
     </head>
-    <body class="cstm">
+    <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="sub-header" style="margin-top:15px;">Update Settings</h2>
-            <c:if test="${updateSuccess == 1}">
-                 <div >
-                    <center><h4>Settings successfully updated!</h4></center>
+        <div id="wrapper">
+            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
+            <div id="page-content-wrapper">
+                <div class="page-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-10 ">
+                                <h2>Update Settings</h2>
+                            </div>
+                        </div>
+                        <c:if test="${updateSuccess == 1}">
+                            <div style="text-align: center" class="alert alert-success" style="border-radius:5px;"><br>
+                                <h4>Settings successfully updated!</h4>
+                            </div>
+                        </c:if>
+                        <form:form modelAttribute="settings" id="settingsForm" method="POST">
+                            <div class="form-wrapper">
+                                <div class="col-sm-12 form-group">
+                                    <cws:input id="s-penalty" name="penalty" label="Penalty" icon="money" placeholder="Enter penalty" required="true"/>
+                                    <cws:input id="s-basic" name="basic" label="Basic" icon="money" placeholder="Enter basic" required="true"/>
+                                    <cws:input id="s-pes" name="pes" label="PES" icon="money" placeholder="Enter pes" required="true"/>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <cws:input id="s-depFund" name="depreciationFund" label="Depreciation Fund" icon="money" placeholder="Enter depfund" required="true"/>
+                                    <cws:input id="s-sysloss" name="systemLoss" label="System Loss" icon="money" placeholder="Enter sysloss" required="true"/>
+                                    <cws:input id="s-debtsOK" name="debtsAllowed" label="Debts Allowed" icon="money" placeholder="Enter debts allowed" required="true"/>
+                                </div>
+                                <div class="col-sm-12 form-group">
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <div class="pull-right">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form:form>
+                    </div>
                 </div>
-            </c:if>
-            <form:form modelAttribute="settings" id="settingsForm" method="POST">
-            <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.settings'].allErrors}">
-                <form:errors path="*"/>
-            </c:if>
-                Penalty:<form:input path="penalty" /><br/>
-                Basic:<form:input path="basic"/><br/>
-                PES:<form:input path="pes"/><br/>
-                Depreciation Fund:<form:input path="depreciationFund"/><br/>
-                System loss:<form:input path="systemLoss"/><br/>
-                <input type="submit" value="Submit"/>
-            </form:form>
+            </div>
         </div>
-        <jsp:include page="../fragments/footer.jsp"/>   
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
     </body>
 </html>

@@ -8,6 +8,8 @@ package com.service;
 import com.domain.Account;
 import com.domain.Invoice;
 import com.domain.Schedule;
+
+import java.util.HashMap;
 import java.util.List;
 import net.sf.jasperreports.engine.JRDataSource;
 
@@ -22,4 +24,6 @@ public interface ReportService {
     public JRDataSource getDisconnectionNoticeDataSource(List<Account> accounts);
     public JRDataSource getCollectionCollectiblesChartDataSource(Integer year);
     public JRDataSource getConsumptionChartDataSource(Integer year);
+    public HashMap getCollectionCollectiblesExpenseDataSource(Integer year);
+    public HashMap getConsumptionDataSource(Integer year);
 }

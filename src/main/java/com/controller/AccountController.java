@@ -9,10 +9,7 @@ import com.dao.springdatajpa.AccountRepository;
 import com.dao.springdatajpa.AddressRepository;
 import com.dao.springdatajpa.CustomerRepository;
 import com.dao.springdatajpa.DeviceRepository;
-import com.domain.Account;
-import com.domain.Address;
-import com.domain.Customer;
-import com.domain.Device;
+import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.Checkboxes;
@@ -57,13 +54,14 @@ public class AccountController {
     private AddressRepository addressRepo;
     private InvoicingService invoicingService;
     private FormOptionsService formOptionsService;
+    private SettingsService settingsService;
     static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.accountForm";
 
     @Autowired
     public AccountController(CustomerManagementService custService, DataTableService dataTableService, 
             PaymentService paymentService, DeviceRepository deviceRepo, AccountRepository accountRepo, 
             CustomerRepository customerRepo, AddressRepository addressRepo, InvoicingService invoicingService,
-             FormOptionsService formOptionsService) {
+             FormOptionsService formOptionsService, SettingsService settingsService) {
         this.custService = custService;
         this.dataTableService = dataTableService;
         this.paymentService = paymentService;
@@ -73,6 +71,7 @@ public class AccountController {
         this.addressRepo = addressRepo;
         this.invoicingService = invoicingService;
         this.formOptionsService = formOptionsService;
+        this.settingsService = settingsService;
     }
 
     @InitBinder({"accountForm", "deviceForm"})
@@ -233,9 +232,10 @@ public class AccountController {
     public @ResponseBody HashMap warningAccounts(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         boolean success = false;
         if(!result.hasErrors()){
+            Settings currentSettings = settingsService.getCurrentSettings();
             for(Long id : checkboxes.getCheckboxValues()){
                 Account account = accountRepo.findOne(id);
-                if(paymentService.isAllowedToSetWarningToAccount(account)){
+                if(paymentService.isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
                     if(!success)
                         success = true;
                     custService.changeAccountStatus(account, AccountStatus.WARNING);
@@ -323,7 +323,8 @@ public class AccountController {
         HashMap response = new HashMap();
         Account account = accountRepo.findOne(id);
         if(account != null){
-            if(paymentService.isAllowedToSetWarningToAccount(account)){
+            Settings currentSettings = settingsService.getCurrentSettings();
+            if(paymentService.isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
                 custService.changeAccountStatus(account, AccountStatus.WARNING);
                 response.put("status", "SUCCESS");
             } else response.put("status", "FAILURE");

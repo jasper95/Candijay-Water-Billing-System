@@ -57,6 +57,7 @@
                             <div class="col-sm-12 form-group">
                                 <cws:input id="reading-val" name="meterReading.readingValue" label="Reading value" icon="tachometer" placeholder="Enter reading" required="true" size="12"/>
                             </div>
+                            <form:hidden path="meterReading.version" id="rd-vs"/>
                             <input type="hidden" name="readingId" id="rd-id"/>
                             <div class="col-sm-12 form-group">
                                 <div class="form-group">

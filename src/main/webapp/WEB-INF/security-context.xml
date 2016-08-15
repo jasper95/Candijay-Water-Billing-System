@@ -31,7 +31,7 @@
         <intercept-url pattern="/admin**" access="isAuthenticated()"/>
         <intercept-url pattern="/admin/**" access="isAuthenticated()"/>        
         <form-login login-page="/login" authentication-failure-url="/login?error" default-target-url="/admin.htm"/>
-        <logout logout-url="/logout.htm" logout-success-url="/login?logout" invalidate-session="true" /> <!-- the logout url we will use in JSP -->
+        <logout logout-url="/logout.htm" logout-success-url="/login?logout" invalidate-session="true" />
         <csrf/>
     </http>
    

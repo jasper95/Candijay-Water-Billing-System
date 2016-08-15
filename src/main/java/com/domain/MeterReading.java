@@ -4,6 +4,9 @@ package com.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Table(name="meter_reading"
     ,catalog="revised_cws_db"
 )
-public class MeterReading  implements java.io.Serializable {
+public class MeterReading extends AuditableEntity implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
@@ -106,5 +109,26 @@ public class MeterReading  implements java.io.Serializable {
     public void setConsumption(Integer consumption) {
         this.consumption = consumption;
     }
-     
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MeterReading other = (MeterReading) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
+    }
 }

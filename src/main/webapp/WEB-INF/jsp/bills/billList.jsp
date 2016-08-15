@@ -44,8 +44,8 @@
                         </div>
                     </div>
                     <div class="col-sm-12 form-group">
-                        <div class="col-md-3" id="bill-id">
-                            <label>Transaction Number</label>
+                        <div class="col-md-3" id="acct-zone">
+                            <label>Zone</label>
                         </div>
                         <div class="col-md-3" id="reading-month">
                             <label>Month</label>
@@ -54,15 +54,15 @@
                             <label>Year</label>
                         </div>
                         <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
-                            <a id="filterClearButton" type="button" class="btn btn-danger"><i class="fa fa-remove fa-fw"></i> Clear </a>
-                            <a id="filterButton" type="button" class="btn btn-primary"><i class="fa fa-search fa-fw"></i> Search </a>
+                            <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                            <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="pull-align-right col-sm-12 form-inline">
                         <div class="form-group">
-                            <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-eyedropper fa-fw"></i>Export Invoice as PDF</button>
+                            <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-file-text-o fa-fw"></i>Export Invoice as PDF</button>
                         </div>
                     </div>
                 </div>
@@ -70,28 +70,29 @@
                     <div class="col-md-12 main">
                         <div class="table-responsive">
                             <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${requestScope['javax.servlet.forward.request_uri']}">
-                                <datatables:table dom="ltipr" id="invoice" cssClass="table table-striped" url="/admin/bills/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                                <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="invoice" cssClass="table table-striped" url="/admin/bills/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                     <datatables:column title="Trans. #" name="bill-id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
-                                    <datatables:column title="Acct #" property="account.number"/>
-                                    <datatables:column visible="false" property="account.customer.lastname"/>
-                                    <datatables:column visible="false" property="account.customer.firstName"/>
-                                    <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
-                                    <datatables:column title="Year" name ="year" property="schedule.year"/>
-                                    <datatables:column title="Brgy" name="brgy" property="account.address.brgy" sortable="false"/>
-                                    <datatables:column title="Zone" name="zone" property="account.address.locationCode" sortable="false"/>
-                                    <datatables:column title="Arrears" name="arrears" property="arrears" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="Penalty" name="penalty" property="penalty" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="Basic" name="basic" property="basic" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="SysLoss" name="sysLoss" property="systemLoss" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="DepFund" name="depFund" property="depreciationFund" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="Others" name="others" property="others" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="Total" name="amount" property="netCharge" renderFunction="custom-rendering#toPeso"/>
-                                    <datatables:column title="Status" name="status" property="status" sortable="false"/>
                                     <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
                                         <datatables:columnHead>
                                             <input type="checkbox" id="master-checkbox" />
                                         </datatables:columnHead>
                                     </datatables:column>
+                                    <datatables:column title="Acct #" property="account.number" sortable="false"/>
+                                    <datatables:column title="Lastname" property="account.customer.lastname" sortable="false"/>
+                                    <datatables:column title="Firstname" property="account.customer.firstName" sortable="false"/>
+                                    <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
+                                    <datatables:column title="Year" name ="year" property="schedule.year"/>
+                                    <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
+                                    <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
+                                    <datatables:column title="Status" name="status" property="status" sortable="false"/>
+                                    <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                    <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                    <%--<datatables:column title="Basic" property="basic" sortable="false" />
+                                    <datatables:column title="Arrears" property="arrears" sortable="false" />
+                                    <datatables:column title="Penalty" property="penalty" sortable="false"/>
+                                    <datatables:column title="DepFund" property="depreciationFund" sortable="false"/>
+                                    <datatables:column title="SysLoss" property="systemLoss" sortable="false"/>
+                                    <datatables:column title="PES" property="others" sortable="false"/>--%>
                                     <dandelion:bundle excludes="jquery"/>
                                     <datatables:extraJs bundles="invoice" placeholder="before_end_document_ready" />
                                 </datatables:table>
@@ -105,6 +106,9 @@
 </div>
 <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
 <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+<script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+<script src="${STATIC_URL}js/global.js"></script>
+<script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
 <script src="${STATIC_URL}js/bills/list.js"></script>
 </body>
 </html>

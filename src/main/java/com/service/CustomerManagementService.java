@@ -5,16 +5,14 @@
  */
 package com.service;
 
-import com.domain.Account;
-import com.domain.Customer;
+import com.domain.*;
 import com.forms.AccountForm;
 import com.forms.CustomerForm;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import com.domain.Address;
-import com.domain.Device;
+
 import com.domain.enums.AccountStatus;
 
 
@@ -23,12 +21,15 @@ import com.domain.enums.AccountStatus;
  * @author Bert
  */
 public interface CustomerManagementService {
-    public Customer updateCustomer(CustomerForm customerForm);
-    public Customer createCustomer(CustomerForm customerForm);
-    public Device saveNewDevice(String accountNumber, Device device);
-    public Device updateDevice(Long id, Device device);
-    public Account createAccount(AccountForm accountForm);
-    public Account updateAccount(AccountForm accountForm);
-    public void changeAccountStatus(Account account, AccountStatus status);
-    public void activateDevice(Device device);
+    Customer updateCustomer(CustomerForm customerForm);
+    Customer createCustomer(CustomerForm customerForm);
+    Device saveNewDevice(String accountNumber, Device device);
+    Device updateDevice(Long id, Device device);
+    Account createAccount(AccountForm accountForm);
+    Account updateAccount(AccountForm accountForm);
+    void changeAccountStatus(Account account, AccountStatus status);
+    void activateDevice(Device device);
+    List<Account> getAllActiveAccounts();
+    List<Account> getAllNoReadingAccountForSchedule(Schedule sched);
+    List<Account> getAllNoPaymentAccountForSchedule(Schedule sched);
 }

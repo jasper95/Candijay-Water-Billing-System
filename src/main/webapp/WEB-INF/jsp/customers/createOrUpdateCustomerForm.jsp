@@ -18,10 +18,6 @@
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
-        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
-        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
-        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <link href="${WEB_JARS}jquery-ui/1.10.3/themes/base/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
@@ -63,7 +59,7 @@
                                 </div>
                                 <div class="col-sm-12 form-group">
                                     <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke"  required="true"/>
-                                    <cws:input id="cust-bd" name="customer.birthDate" label="Birth Date" icon="birthday-cake" placeholder="Enter birth date" required="true"/>
+                                    <cws:input id="cust-bd" name="customer.birthDate" label="Birth Date" icon="birthday-cake" placeholder="Enter birth date" readOnly="true" required="true"/>
                                     <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="false"/>
                                 </div>
                                 <div class="col-sm-12 form-group">
@@ -90,6 +86,12 @@
                 </div>
             </div>
         </div>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
+        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
         <script>
             $(function () {
                 $("#cust-bd").datepicker({ changeMonth: true, changeYear: true, yearRange : '-90:+0', dateFormat: 'yy/mm/dd'});

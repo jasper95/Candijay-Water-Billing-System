@@ -1,57 +1,73 @@
 $(document).ready(function(){
-    $('#payment-form').on('submit', function(e){
-       e.preventDefault();
-       $.post($(this).attr('action'), $(this).serialize(), function(response){
-           if(response.status === "SUCCESS")
-               paymentFormSuccess();
-           else paymentFormError(response.result);
-               
-       });
-    });
-    function paymentFormSuccess(){
-        $('#validation-success').html("Payment successfully updated");
-        $("#validation-success").show().delay(3000).fadeOut();
-        showAccount();
-    }
-    function paymentFormError(errors){
-        var errorMsg = "";
-        for(i=0;i<errors.length; i++){
-            if(errors[i].code === "typeMismatch" || errors[i].code === "NotNull"){
-                errorMsg += "<br>" + (i + 1) +".  Invalid " + getFieldError(errors[i].field);
+
+    $("#pm-date").datepicker({ dateFormat: 'yy/mm/dd'});
+
+    window.viewChanges = function(id){
+        $('#auditPayment-id').find('input:first').val(id);
+        $('#filterButtonAuditTable').trigger('click');
+        $('#payment-info-modal').modal('show');
+    };
+    window.checkCanEdit = function (id) {
+        $.getJSON($('#payments-uri').val()+ id + "/check-can-edit", function(data) {
+            if(data.status === "SUCCESS"){
+                cleanUpFormMsgs('#md-update-form');
+                var payment = data.payment;
+                var account = payment.account;
+                var date = payment.date;
+                $('#pm-paid').val(payment.amountPaid);
+                $('#pm-discount').val(payment.discount);
+                $('#pm-date').val(date.year+'/'+date.monthOfYear+'/'+date.dayOfMonth);
+                $('#pm-version').val(payment.version);
+                $('#pm-or').val(payment.receiptNumber)
+                $('#ac-id').val(account.id);
+                $('#pid').val(id);
+                $('#cr-time-audit').text(payment.creationTime);
+                $('#up-time-audit').text(payment.modificationTime);
+                $('#cr-user-audit').text(payment.createdByUser);
+                $('#up-user-audit').text(payment.modifiedByUser);
+                var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
+                var address = account.address.brgy+",  Zone "+account.address.locationCode;
+                var lastDue= "Last Due: &#8369; "+payment.invoice.netCharge;
+                var status = $('#md-status');
+                if(account.status === "ACTIVE"){
+                    status.removeClass().addClass("label label-success");
+                } else status.removeClass().addClass("label label-danger");
+                status.text(account.status);
+                $('#md-full-name').text(fullname);
+                $('#md-address').text(address);
+                $('#md-last-reading').html(lastDue);
+                $('#payment-form-modal').modal('show');
             }
-            else errorMsg += "<br>" + (i + 1) +". " + errors[i].code;
-        }
-        $('#validation-error').html('<br><h4>You got an error!</h4><hr>'+errorMsg);
-        $("#validation-error").show().delay(3000).fadeOut();
-    }
-    function getFieldError(field){
-       if(field === "payment.amountPaid"){
-           return "amount paid";
-       } else if(field === "payment.discount")
-           return "discount";
-    }
-    function showAccount(){
-        $.post($('#fetchAccount').attr('action')+'/fetchAccount', $('#fetchAccount').serialize(), function(response){
-            displayData(response.invoice);
-            $('#crt-mr-found').show();
+            else BootstrapDialog.alert({
+                title: 'ACTION DENIED',
+                message: 'You can only edit payments to latest invoice',
+                type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                closable: true, // <-- Default value is false
+                draggable: true, // <-- Default value is false
+            });
         });
     }
-    showAccount();
-    function displayData(invoice){
-        var account = invoice.account;
-        var fullname =  account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
-        var address = account.address.brgy+",  Zone "+account.address.locationCode;
-        var status = $('#status');
-        if(account.status === "ACTIVE"){
-            status.removeClass().addClass("label label-success");
-        } else status.removeClass().addClass("label label-danger");
-        status.text(account.status);
-        $('#full-name').text(fullname);
-        $('#address').text(address);
-        $("tbody",'#recent-readings').remove();
-        var dueDate = invoice.dueDate.year+"/"+invoice.dueDate.monthOfYear+"/"+invoice.dueDate.dayOfMonth;
-        var schedule = invoice.schedule.monthSymbol+" "+invoice.schedule.year;
-        var row = "<tr><td>"+invoice.id+"</td><td>"+schedule+"</td><td>"+dueDate+"</td><td> &#8369;"+invoice.netCharge+"</td><td>"+invoice.status+"</td></tr>";
-        $('#recent-readings').append(row);
-    }
+    $("#payment").on("click", "tr", function() {
+        $('#row-num').val($(this).index()+1)
+    });
+    $('#md-update-form').on('submit', function(e){
+        e.preventDefault();
+        var form = $(this);
+        cleanUpFormMsgs('#md-update-form')
+        $.post($('#payments-uri').val()+'save', form.serialize(), function(response){
+            if(validateForm('#md-update-form' ,response)){
+                showSuccess('#md-update-form', "Payment successfully updated")
+                var payment = response.result;
+                var invoice = payment.invoice;
+                var row = $('#payment tbody tr:nth-child('+$('#row-num').val()+')');
+                var sched = payment.date.year+'/'+payment.date.monthOfYear+'/'+payment.date.dayOfMonth;
+                row.find('.invoice-status').text(invoice.status);
+                row.find('.payment-discount').html('&#8369 '+payment.discount);
+                row.find('.payment-amount').html('&#8369 '+payment.amountPaid);
+                row.find('.payment-date').text(sched);
+                row.find('.or-number').text(payment.receiptNumber);
+                $('#pm-version').val(payment.version);
+            }
+        })
+    });
 });

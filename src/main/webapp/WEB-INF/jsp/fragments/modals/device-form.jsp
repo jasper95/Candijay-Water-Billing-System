@@ -16,6 +16,8 @@
             <div class="modal-body">
                 <form:form id="device-form" action="#" modelAttribute="deviceForm" role="form">
                     <fieldset>
+                        <div class="col-sm-12 alert alert-danger global-errors"></div>
+                        <div class="col-sm-12 alert alert-success success-msg"></div>
                         <div class="col-sm-12 form-group">
                             <cws:input id="acc-mc" name="meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="6"/>
                             <cws:input id="acc-mb" name="brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="6"/>

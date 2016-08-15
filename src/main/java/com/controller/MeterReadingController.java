@@ -10,10 +10,7 @@ import com.dao.springdatajpa.AccountRepository;
 import com.dao.springdatajpa.DeviceRepository;
 import com.dao.springdatajpa.MeterReadingRepository;
 import com.dao.springdatajpa.ScheduleRepository;
-import com.domain.Account;
-import com.domain.Device;
-import com.domain.MeterReading;
-import com.domain.Schedule;
+import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.MeterReadingForm;
 import com.forms.SearchForm;
@@ -56,7 +53,7 @@ public class MeterReadingController {
     @InitBinder
     public void initBinder(WebDataBinder binder){
         binder.setAllowedFields("meterReading.readingValue", "meterReading.schedule.month", "meterReading.schedule.year",
-                                "accountId","accountNumber");
+                                "meterReading.version", "accountId","accountNumber");
     }
 
     @Autowired
@@ -115,21 +112,16 @@ public class MeterReadingController {
             }
             else
                 meterReadingForm.getMeterReading().setSchedule(new Schedule(meterReadingForm.getMeterReading().getSchedule().getMonth(),meterReadingForm.getMeterReading().getSchedule().getYear()));
-            if(reading != null && !mrService.isReadingPaid(reading))
-                result.reject("global", "The bill for the previous reading was unpaid.");
+            if(!account.isStatusUpdated())
+                result.reject("global", "This account has not paid its previous bill. Please finalize the payment for "+account.getAddress().getBrgy()+", Zone "+account.getAddress().getLocationCode()+" before creating this reading.");
             if(device.getLastReading().compareTo(meterReadingForm.getMeterReading().getReadingValue()) >= 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
             if(!account.getStatus().equals(AccountStatus.ACTIVE))
                 result.reject("global", "You can add reading to ACTIVE accounts only");
         }
         //form is valid with transaction constraints
-        if(!result.hasErrors()){
-            try{
-                response.setResult(mrService.saveMeterReading(meterReadingForm));
-            }catch(JpaOptimisticLockingFailureException e){
-                result.reject("global", "This record was modified by another user. Try refreshing the page.");
-            }
-        }
+        if(!result.hasErrors())
+            response.setResult(mrService.saveMeterReading(meterReadingForm));
         if(result.hasErrors()){
             response.setStatus("FAILURE");
             response.setResult(result.getAllErrors());
@@ -138,22 +130,19 @@ public class MeterReadingController {
         response.setStatus("SUCCESS");
         return response;
     }
-    @RequestMapping(value="/{readingId}/check-paid")
+    @RequestMapping(value="/{readingId}/check-can-edit")
     public @ResponseBody HashMap updateMeterReading(@PathVariable("readingId") Long id){
         MeterReading reading = mrRepo.findOne(id);
         HashMap response = new HashMap();
-        try{
-            if(mrService.isReadingPaid(reading)){
-                response.put("status", "FAILED");
-                return response;
-            }
-        }catch(Exception e){
+        if(!reading.equals(mrService.findAccountLastMeterReading(reading.getAccount(), 1)) || reading.getAccount().isStatusUpdated()){
             response.put("status", "FAILED");
             return response;
         }
         response.put("status", "SUCCESS");
         response.put("reading", reading);
-        response.put("last_reading",  deviceRepo.findByOwnerAndActive(reading.getAccount(), true).getLastReading());
+        MeterReading lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 2);
+        int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() : 0;
+        response.put("last_reading",  lastReading);
         return response;
     }
 
@@ -169,8 +158,9 @@ public class MeterReadingController {
             formReading = mForm.getMeterReading();
             newSchedule = schedRepo.findByMonthAndYear(mForm.getMeterReading().getSchedule().getMonth(), mForm.getMeterReading().getSchedule().getYear());
             Account account = accountRepo.findOne(mForm.getAccountId());
-            Device device = deviceRepo.findByOwnerAndActive(account, true);
-            mForm.getMeterReading().setConsumption(mForm.getMeterReading().getReadingValue() - device.getLastReading());
+            MeterReading lastMeterReading = mrService.findAccountLastMeterReading(account, 2);
+            Integer lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() : 0;
+            mForm.getMeterReading().setConsumption(mForm.getMeterReading().getReadingValue() - lastReading);
             //check if reading is paid
             if(mrService.isReadingPaid(reading)){
                 result.reject("global","Cannot edit a paid reading.");
@@ -190,7 +180,7 @@ public class MeterReadingController {
                 result.reject("global", "Cannot use a period that is not used on existing records.");
             }
             //check if reading value is valid
-            if(device.getLastReading().compareTo(formReading.getReadingValue()) >= 0)
+            if(lastReading.compareTo(formReading.getReadingValue()) >= 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
             //check if account is active
             if(!account.getStatus().equals(AccountStatus.ACTIVE))
@@ -202,6 +192,7 @@ public class MeterReadingController {
                 reading.setReadingValue(formReading.getReadingValue());
                 reading.setSchedule(newSchedule);
                 reading.setConsumption(formReading.getConsumption());
+                reading.setVersion(formReading.getVersion());
                 mForm.setMeterReading(reading);
                 response.put("result", mrService.saveMeterReading(mForm));
             }catch(JpaOptimisticLockingFailureException e){
@@ -215,15 +206,16 @@ public class MeterReadingController {
         }
         response.put("status","SUCCESS");
         return response;
-                
     }
     
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
     @ResponseBody
     public HashMap fetchAccount(@ModelAttribute("searchForm") @Valid SearchForm searchForm, BindingResult result){
         HashMap response = new HashMap();
-        Account account = accountRepo.findByNumber(searchForm.getAccountNumber());
-        if(account == null) {
+        Account account = null;
+        if(!result.hasErrors())
+            account = accountRepo.findByNumber(searchForm.getAccountNumber());
+        if(result.hasErrors() || account == null ) {
             result.rejectValue("accountNumber", "", "Account does not exists");
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
@@ -241,5 +233,12 @@ public class MeterReadingController {
     DatatablesResponse<MeterReading> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
        DataSet<MeterReading> dataSet = dataTableService.findWithDataTableCriterias(criterias, MeterReading.class);
        return DatatablesResponse.build(dataSet, criterias);
+    }
+
+    @RequestMapping(value = "/modified/datatable-search")
+    public @ResponseBody
+    DatatablesResponse<ModifiedReading> findAllModifiedReading(@DatatablesParams DatatablesCriterias criterias) {
+        DataSet<ModifiedReading> dataSet = dataTableService.findWithDataTableCriterias(criterias, ModifiedReading.class);
+        return DatatablesResponse.build(dataSet, criterias);
     }
 }

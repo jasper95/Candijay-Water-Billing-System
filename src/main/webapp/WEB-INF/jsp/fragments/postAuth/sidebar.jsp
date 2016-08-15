@@ -1,8 +1,3 @@
-<%-- 
-    Document   : navbar
-    Created on : Apr 30, 2015, 8:21:05 AM
-    Author     : Bert
---%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <spring:url value="/resources/" var="STATIC_URL"/>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -14,7 +9,7 @@
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
     <div class="menu-list">
         <ul id="menu-content" class="menu-content collapse out">
-            <li>
+            <li >
                 <a href="${pageContext.servletContext.contextPath}/admin">
                     <i class="fa fa-home fa-lg"></i> Home
                 </a>
@@ -41,17 +36,31 @@
         <sec:authorize access="hasRole('METER_READING')">
             <li>
                 <a href="${pageContext.servletContext.contextPath}/admin/reading">
-                    <i class="fa fa-tachometer fa-lg"></i> Meter Reading
+                    <div>
+                        <i class="fa fa-tachometer fa-lg"></i> Meter Reading
+                    </div>
                 </a>
             </li>
         </sec:authorize>
         <sec:authorize access="hasRole('PAYMENTS')">
-            <li>
-                <a href="${pageContext.servletContext.contextPath}/admin/payments">
-                    <i class="fa fa-money fa-lg"></i> Payments
+            <li data-toggle="collapse" data-target="#transactions"  class="collapsed">
+                <a href="#">
+                    <i class="fa fa-bank fa-lg"></i> Transactions <span class="arrow"></span>
                 </a>
             </li>
         </sec:authorize>
+            <ul class="sub-menu collapse" id="transactions">
+                <li>
+                    <a style="display: block" href="${pageContext.servletContext.contextPath}/admin/payments">
+                        <i class="fa fa-money fa-lg"></i> Payments
+                    </a>
+                </li>
+                <li>
+                    <a style="display: block" href="${pageContext.servletContext.contextPath}/admin/expenses">
+                        <i class="fa fa-credit-card fa-lg"></i> Expenses
+                    </a>
+                </li>
+            </ul>
         <sec:authorize access="hasRole('BILLS_REPORTS')">
             <li data-toggle="collapse" data-target="#manage-rpt"  class="collapsed">
                 <a href="#">
@@ -73,7 +82,7 @@
             </ul>
         <sec:authorize access="hasRole('SYSTEM_USERS')">
             <li data-toggle="collapse" class="collapsed" data-target="#system-action">
-                <a href="${pageContext.servletContext.contextPath}/admin/system-users">
+                <a href="#">
                     <i class="fa fa-television fa-lg"></i> System <span class="arrow"></span>
                 </a>
             </li>
@@ -97,7 +106,7 @@
             </li>
             <ul id="user-prof-action" class="sub-menu collapse">
                 <li class="prof-action-menu">
-                    <a href="${pageContext.servletContext.contextPath}/admin/update-profile">
+                    <a href="#" id="update-profile-link2">
                         <i class="fa fa-edit fa-lg"></i> Update Profile
                     </a>
                 </li>

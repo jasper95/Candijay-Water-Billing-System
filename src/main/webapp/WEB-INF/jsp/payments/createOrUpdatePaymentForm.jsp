@@ -15,86 +15,153 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${createOrUpdate} Payment</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_gen.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_admin.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_dashboard.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
-        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
-        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
-        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <link href="${WEB_JARS}jquery-ui/1.10.3/themes/base/jquery-ui.css" rel="stylesheet"/>
     </head>
-    <body class="cstm">
+    <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="sub-header" style="margin-top:15px;"><a type="button" href="${pageContext.servletContext.contextPath}/admin/payments"><img src="<c:url value="/resources/img/back.png"/>"  style="margin-bottom:5px;" class=""></a>${createOrUpdate} Payment</h2>
-            <div style="display: ${createOrUpdate == 'Create' ? 'anything' : 'none'}"/> 
-                <form:form modelAttribute="searchForm" id="fetchAccount"  action="${pageContext.servletContext.contextPath}/admin/payments">
-                    <div id="search-error" class="alert alert-danger" style="border-radius:5px;display:none">Account does not exists</div>
-                    <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/un.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="accountNumber" label="Account Number"/><input type="submit" class="btn btn-ctm btn-primary" value="Find"/>    
-                </form:form>
-                <hr>
-            </div>
-            <div id="crt-mr-found">
-                <p><img class="un-pw-img" src="${STATIC_URL}img/un.png" style="margin-top:-5px;margin-right:9px;"><strong> <span id="full-name" ></span></strong></p>
-                <p><img class="un-pw-img" src="${STATIC_URL}img/address.PNG" style="margin-top:-5px; margin-right:10px;"><strong><span id="address"></span></strong></p>
-                <p><img class="un-pw-img" src="${STATIC_URL}img/status.png" style="margin-top:-5px; margin-right:10px;"><span id="status" style="font-size:15px;"></span></p>
-                <hr>
-                <p><strong>Latest Bill:</strong></p>
-                <div class="table-stripedesponsive">
-                  <table class="table table-striped" id="recent-readings">
-                    <thead>
-                        <tr>
-                            <th>Transaction No.</th>
-                            <th>Schedule</th>
-                            <th>Due Date</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>             
-                    </tbody>
-                  </table>
+        <div id="wrapper">
+            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
+            <div id="page-content-wrapper">
+                <div class="page-content">
+                    <div class="container-fluid">
+                        <h2>Create Payment</h2>
+                        <hr/>
+                        <form:form cssClass="row" action="${pageContext.servletContext.contextPath}/admin/payments" modelAttribute="searchForm" id="fetchAccount">
+                            <div class="col-sm-4">
+                                <div class="search-wrapper">
+                                    <div class="search-in-wrapper">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                            <form:input id="acc-nb" path="accountNumber" class="form-control" required="true" placeholder="Enter Account no." autocomplete="off"/>
+                                        </div>
+                                        <span class="field-error"></span>
+                                    </div>
+                                    <button id="search-btn"  class="btn btn-primary btn-search"><i class="fa fa-search fa-fw"></i> Search </button>
+                                </div>
+                            </div>
+                        </form:form>
+                        <hr/>
+                        <div id="crt-mr-found">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Account Details</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-sm-6">
+                                                <div class="info-wrapper">
+                                                    <img class="info-img" src="${STATIC_URL}img/un.png">
+                                                    <div class="info-text">
+                                                        <span id="full-name"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="info-wrapper">
+                                                    <img class="info-img" src="${STATIC_URL}img/address.PNG">
+                                                    <div class="info-text">
+                                                        <span id="address"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="info-wrapper">
+                                                    <img class="info-img" src="${STATIC_URL}img/standing_balance.png">
+                                                    <div class="info-text">
+                                                        <span id="last-reading"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="info-wrapper">
+                                                    <img class="info-img" src="${STATIC_URL}img/status.png">
+                                                    <div class="info-text">
+                                                        <span id="status"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Recent Bills</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <div id="acc-no" style="display: none;"></div>
+                                                <a id="filterButton"></a>
+                                                <datatables:table cssClass="table table-striped" id="payment" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/bills/datatable-search" displayLength="3" dom="tp" >
+                                                    <datatables:column property="account.id" filterable="true" visible="false" selector="acc-no"/>
+                                                    <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
+                                                    <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false" cssCellClass="schedule"/>
+                                                    <datatables:column title="Total Due" name="totalDue" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="invoice-due"/>
+                                                    <datatables:column title="OR number" property="payment.receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
+                                                    <datatables:column title="Discount" name="discount" property="payment.discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
+                                                    <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
+                                                    <datatables:column title="Payment Date" name="date" property="payment.date" renderFunction="custom-rendering#paidDate" cssCellClass="payment-date"/>
+                                                    <datatables:column title="Edit" renderFunction="custom-rendering#createPaymentAction" searchable="false" sortable="false"/>
+                                                    <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#auditPayment2"/>
+                                                    <datatables:extraJs bundles="months" placeholder="after_all"/>
+                                                    <dandelion:bundle excludes="jquery"/>
+                                                </datatables:table>
+                                                <input type="hidden" id="row-num">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Add Payment</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form:form modelAttribute="paymentForm" method="post" id="add-payment-form">
+                                                <div class="col-sm-12 alert alert-danger global-errors"></div>
+                                                <div class="col-sm-12 alert alert-success success-msg"></div>
+                                                <form:hidden path="accountId"/>
+                                                <div class="col-sm-12 form-group">
+                                                    <cws:input id="or-num" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="true" size="12"/>
+                                                </div>
+                                                <div class="col-sm-12 form-group">
+                                                    <cws:input id="amount-paid" name="payment.amountPaid" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>
+                                                </div>
+                                                <div class="col-sm-12 form-group">
+                                                    <cws:input id="discount" name="payment.discount" label="Discount" icon="money" placeholder="Enter discount" required="true" size="12"/>
+                                                </div>
+                                                <div class="col-sm-12 form-group">
+                                                    <cws:input id="date" name="payment.date" label="Date" icon="calendar" placeholder="Choose date" required="true" readOnly="true" size="12"/>
+                                                </div>
+                                                <div class="col-sm-12 form-group">
+                                                    <div class="form-group">
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <div class="pull-right">
+                                                                <button class="btn btn-primary" type="submit">Save</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form:form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <hr>
-                <p>
-                    <strong>${createOrUpdate} Payment</strong>
-                </p>
-                <form:form modelAttribute="paymentForm" method="POST" action="${pageContext.servletContext.contextPath}/admin/payments/process-payment" id="payment-form">
-                    <div id="validation-error" class="alert alert-danger" style="border-radius:5px; display: none;"></div>
-                    <div id="validation-success" class="alert alert-success" style="border-radius:5px; display: none;"></div>
-                    <form:hidden path="accountId"/>
-                    <c:if test="${createOrUpdate == 'Update'}"> 
-                        <form:hidden path="payment.id"/>
-                    </c:if>
-                    <div class="navbar-form">
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/date.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="payment.amountPaid" id="amount-paid" label="Amount"/>
-                    </div>
-                    <div class="navbar-form">
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/date.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="payment.discount" id="discount" label="Discount"/>
-                    </div>
-                    <div class="navbar-form" >
-                        <cws:inputField cssStyle="background-image: url('${STATIC_URL}img/date.png');background-size: contain; background-repeat:no-repeat; padding-left: 45px;" name="payment.date" id="date" label="Payment Date"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary">${createOrUpdate} Payment</button>
-                </form:form>
-            </div>          
+            </div>
         </div>
-        <jsp:include page="../fragments/footer.jsp"/>
-        <script>
-            $(function () {
-                $("#date").datepicker({ dateFormat: 'yy/mm/dd'});
-            });
-        </script>
-        <c:choose>
-            <c:when test="${createOrUpdate == 'Create'}">
-                <script src="${STATIC_URL}js/payments/create.js"></script>
-            </c:when>
-            <c:otherwise>
-                <script src="${STATIC_URL}js/payments/update.js"></script>
-            </c:otherwise>
-        </c:choose>
+        <jsp:include page="../fragments/modals/payment-form.jsp"/>
+        <jsp:include page="../fragments/modals/payment-info.jsp"/>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
+        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
+        <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
+        <script src="${STATIC_URL}js/helpers/search-helper.js"></script>
+        <script src="${STATIC_URL}js/payments/create.js"></script>
+        <script src="${STATIC_URL}js/payments/update.js"></script>
     </body>
 </html>

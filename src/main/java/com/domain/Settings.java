@@ -1,5 +1,8 @@
 package com.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +10,11 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
+
 /**
  *
  * @author Bert
@@ -20,26 +27,28 @@ public class Settings implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @NotNull @DecimalMin(value="0.01", message="System loss must be greater than zero")
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="system_loss", precision=7, nullable=false)
     private Double systemLoss;
-    @NotNull @DecimalMin(value="0.01", message="Dep fund must be greater than zero")
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="depreciation_fund",precision=7, nullable=false)
     private Double depreciationFund;
-    @NotNull @DecimalMin(value="0.01", message="PES must be greater than zero")
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="pes", nullable=false, precision=7)
     private Double pes;
-    @NotNull @DecimalMin(value="0.01", message="Penalty must be greater than zero")
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="penalty", nullable=false, precision=7)
     private Double penalty;
-    @NotNull @DecimalMin(value="0.01", message="Basic must be greater than zero")
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="basic", nullable=false, precision=7)
     private Double basic;
-    
+    @Min(value=1, message="Must be greater than zero") @Digits(integer=2,fraction = 0, message="Must be a number")
+    @Column(name="debts_allowed", nullable = false)
+    private Integer debtsAllowed;
+
     public Settings() { }
 
-    public Settings(Long id, Double systemLoss, Double depreciationFund, Double pes, Double penalty, Double basic) {
-        this.id = id;
+    public Settings(Double systemLoss, Double depreciationFund, Double pes, Double penalty, Double basic) {
         this.systemLoss = systemLoss;
         this.depreciationFund = depreciationFund;
         this.pes = pes;
@@ -93,5 +102,35 @@ public class Settings implements java.io.Serializable {
 
     public void setBasic(Double basic) {
         this.basic = basic;
+    }
+
+    public Integer getDebtsAllowed() {
+        return debtsAllowed;
+    }
+
+    public void setDebtsAllowed(Integer debtsAllowed) {
+        this.debtsAllowed = debtsAllowed;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Settings other = (Settings) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
     }
 }

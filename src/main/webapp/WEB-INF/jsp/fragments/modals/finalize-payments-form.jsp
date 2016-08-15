@@ -1,0 +1,30 @@
+<%@ include file="../postAuth/taglibs.jsp"%>
+<div class="modal fade" id="finalize-payments-form-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close-acct-form" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Finalize Payments</h4>
+            </div>
+            <div class="modal-body">
+                <form:form id="fn-pm-form" modelAttribute="addressForm" role="form">
+                    <fieldset>
+                        <div class="col-sm-12 alert alert-danger global-errors"></div>
+                        <div class="col-sm-12 alert alert-success success-msg"></div>
+                        <div class="col-sm-12 form-group">
+                            <cws:select id="acc-bg" name="brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="6"/>
+                            <cws:select id="ac-lc" name="locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" size="6"/>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="pull-right">
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form:form>
+            </div>
+        </div>
+    </div>
+</div>

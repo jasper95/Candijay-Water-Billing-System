@@ -6,12 +6,16 @@
 package com.dao.springdatajpa;
 
 import com.domain.User;
+import com.domain.enums.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  *
  * @author Bert
  */
 public interface UserRepository extends JpaRepository<User, Long>{
-    public User findByUsername(String username);
+    User findByUsername(String username);
+    List<User> findByStatus(UserStatus status);
 }

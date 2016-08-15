@@ -18,9 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("settingsService")
 public class SettingsServiceImpl implements SettingsService {
-    
-    @Autowired
+
     private SettingsRepository settingsRepo;
+
+    @Autowired
+    public SettingsServiceImpl(SettingsRepository settingsRepo){
+        this.settingsRepo = settingsRepo;
+    }
     
     @Transactional(readOnly=true)
     @Override

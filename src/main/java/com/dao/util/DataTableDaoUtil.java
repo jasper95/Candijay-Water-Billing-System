@@ -47,9 +47,8 @@ public class DataTableDaoUtil{
 		/**
 		 * Step 1.2: individual column filtering
 		 */
-		if (criterias.hasOneFilterableColumn() && criterias.hasOneFilteredColumn()) {
-                    paramList = new ArrayList<String>();
-			
+		if (hasFilteredColumn(criterias)) {
+			paramList = new ArrayList<String>();
 			if(!queryBuilder.toString().contains("WHERE")){
 				queryBuilder.append(" WHERE ");
 			}
@@ -78,25 +77,25 @@ public class DataTableDaoUtil{
 					}
 					
 					if(StringUtils.isNotBlank(columnDef.getSearch())) {
-                                                String[] q = columnDef.getName().split("\\.");
-                                                if(q[q.length-1].equalsIgnoreCase("date")){
-                                                    String[] ins = columnDef.getSearch().split("-yadcf_delim-");
-                                                    if(ins.length > 0){
-                                                        paramList.add("p." + columnDef.getName() + " >= '" + ins[0] + "'");
-                                                    }
-                                                    if(ins.length > 1){
-                                                        paramList.add("p." + columnDef.getName() + " < '" + ins[1] + "'");
-                                                    }
-                                                }
-//                                                else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year")){
-//                                                    paramList.add(" LOWER(p." + columnDef.getName()
-//                                                                    + ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
-//                                                }
-                                                else {    
-                                                    paramList.add(" LOWER(p." + columnDef.getName()
-                                                                    + ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
-                                                }
-                                        }
+						String[] q = columnDef.getName().split("\\.");
+						if(q[q.length-1].equalsIgnoreCase("date")){
+							String[] ins = columnDef.getSearch().split("-yadcf_delim-");
+							if(ins.length > 0){
+								paramList.add("p." + columnDef.getName() + " >= '" + ins[0] + "'");
+							}
+							if(ins.length > 1){
+								paramList.add("p." + columnDef.getName() + " < '" + ins[1] + "'");
+							}
+						}
+						/*else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year")){
+							paramList.add(" LOWER(p." + columnDef.getName()
+											+ ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
+						}*/
+						else {
+							paramList.add(" LOWER(p." + columnDef.getName()
+											+ ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
+						}
+					}
 				}
 			}
 			Iterator<String> itr = paramList.iterator();
@@ -108,5 +107,19 @@ public class DataTableDaoUtil{
 			}
 		}
 		return queryBuilder;
+	}
+	public static boolean hasFilteredColumn(DatatablesCriterias criterias){
+		for(ColumnDef column: criterias.getColumnDefs()) {
+			if (column.isFiltered()) {
+				String[] q = column.getName().split("\\.");
+				if (q[q.length - 1].equalsIgnoreCase("date")) {
+					String[] ins = column.getSearch().split("-yadcf_delim-");
+					if (ins.length > 0) {
+						return true;
+					}
+				} else return true;
+			}
+		}
+		return false;
 	}
 }

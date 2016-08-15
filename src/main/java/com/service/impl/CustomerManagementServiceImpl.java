@@ -6,15 +6,8 @@
 package com.service.impl;
 
 import com.dao.DataTableDao;
-import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.AddressRepository;
-import com.dao.springdatajpa.CustomerRepository;
-import com.dao.springdatajpa.DeviceRepository;
-import com.dao.springdatajpa.TaxRepository;
-import com.domain.Account;
-import com.domain.Address;
-import com.domain.Customer;
-import com.domain.Device;
+import com.dao.springdatajpa.*;
+import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.CustomerForm;
@@ -40,16 +33,21 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
     private AddressRepository addressRepo;
     private DataTableDao dataTableQueryHelper;
     private DeviceRepository deviceRepo;
+    private MeterReadingRepository mrRepo;
+    private PaymentRepository paymentRepo;
     
     @Autowired
     public CustomerManagementServiceImpl(CustomerRepository customerRepo, AccountRepository accountRepo, 
-            TaxRepository taxRepo, AddressRepository addressRepo, DataTableDao dataTableQueryHelper, DeviceRepository deviceRepo) {
+            TaxRepository taxRepo, AddressRepository addressRepo, DataTableDao dataTableQueryHelper, DeviceRepository deviceRepo,
+                                         MeterReadingRepository mrRepo, PaymentRepository paymentRepo) {
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
         this.taxRepo = taxRepo;
         this.addressRepo = addressRepo;
         this.dataTableQueryHelper = dataTableQueryHelper;
         this.deviceRepo = deviceRepo;
+        this.mrRepo = mrRepo;
+        this.paymentRepo = paymentRepo;
     }
              
     @Override
@@ -130,5 +128,38 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
             deviceRepo.save(d);
         }
 
+    }
+
+    @Override
+    public List<Account> getAllActiveAccounts() {
+        return accountRepo.findByStatus(AccountStatus.ACTIVE);
+    }
+
+    @Override
+    public List<Account> getAllNoReadingAccountForSchedule(Schedule sched) {
+        List<MeterReading> readings = mrRepo.findBySchedule(sched);
+        Set<Account> accountsWithReading = new HashSet<Account>();
+        for(MeterReading reading: readings)
+            accountsWithReading.add(reading.getAccount());
+        List<Account> allActiveAccounts = getAllActiveAccounts();
+        List<Account> accountsWithNoReading = new ArrayList<Account>();
+        for(Account account : allActiveAccounts)
+            if(!accountsWithReading.contains(account))
+                accountsWithNoReading.add(account);
+        return accountsWithNoReading;
+    }
+
+    @Override
+    public List<Account> getAllNoPaymentAccountForSchedule(Schedule sched) {
+        List<Payment> payments = paymentRepo.findByInvoice_Schedule(sched);
+        Set<Account> accountsWithPayment = new HashSet<Account>();
+        for(Payment payment: payments)
+            accountsWithPayment.add(payment.getAccount());
+        List<Account> allActiveAccounts = getAllActiveAccounts();
+        List<Account> accountsWithNoPayment = new ArrayList<Account>();
+        for(Account account : allActiveAccounts)
+            if(!accountsWithPayment.contains(account))
+                accountsWithNoPayment.add(account);
+        return accountsWithNoPayment;
     }
 }

@@ -21,4 +21,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     public List<Payment> findByInvoice_ScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
     public List<Payment> findByInvoice_Schedule(Schedule sched);
     public List<Payment> findTop3ByAccountOrderByIdDesc(Account account);
+    public Payment findByReceiptNumber(String receiptNumber);
 }

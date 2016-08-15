@@ -13,6 +13,7 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>Accounts</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
@@ -42,12 +43,15 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 form-group">
+                                <div class="col-md-3" id="acct-zone">
+                                    <label>Zone</label>
+                                </div>
                                 <div class="col-md-3" id="acct-status">
                                     <label>Status</label>
                                 </div>
-                                <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
-                                    <a id="filterClearButton" type="button" class="btn btn-danger"><i class="fa fa-remove fa-fw"></i> Clear </a>
-                                    <a id="filterButton" type="button" class="btn btn-primary"><i class="fa fa-search fa-fw"></i> Search </a>
+                                <div class="col-md-3 pull-align-right vertical-center filter-btn-wrapper">
+                                    <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                                    <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
                                 </div>
                             </div>
                         </div>
@@ -73,23 +77,23 @@
                         <div class="row">
                             <div class="col-md-12 main">
                                 <div class="table-responsive">
-                                    <form:form id="form"  modelAttribute="checkboxes" method="POST" action="${requestScope['javax.servlet.forward.request_uri']}">
-                                        <datatables:table dom="ltipr" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                                            <datatables:column renderFunction="custom-rendering#accountUrl" title="Acct No." name="number" filterable="true" property="number" sortable="false"/>
-                                            <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc"/>
-                                            <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc"/>
-                                            <datatables:column name="gender" title="Gender" property="customer.gender" sortable="false"/>
-                                            <datatables:column name="balance" title="Balance" property="accountStandingBalance" renderFunction="custom-rendering#toPeso"/>
-                                            <datatables:column name="contact" title="Contact" property="customer.contactNumber" sortable="false"/>
-                                            <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
-                                            <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
-                                            <datatables:column name="status" title="Status" property="status" sortable="false"/>
-                                            <datatables:column visible="false" property="id" />
+                                    <form:form id="form" modelAttribute="checkboxes" method="POST" action="${requestScope['javax.servlet.forward.request_uri']}">
+                                        <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                             <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
                                                 <datatables:columnHead>
                                                     <input type="checkbox" id="master-checkbox" />
                                                 </datatables:columnHead>
                                             </datatables:column>
+                                            <datatables:column renderFunction="custom-rendering#accountUrl" title="Acct No." name="number" filterable="true" property="number" sortable="false"/>
+                                            <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc"/>
+                                            <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc"/>
+                                            <datatables:column name="gender" title="Gender" property="customer.gender" sortable="false"/>
+                                            <datatables:column name="balance" title="Balance" property="accountStandingBalance" renderFunction="custom-rendering#toPeso" sortable="false"/>
+                                            <datatables:column name="contact" title="Contact" property="customer.contactNumber" sortable="false"/>
+                                            <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
+                                            <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
+                                            <datatables:column name="status" title="Status" property="status" sortable="false"/>
+                                            <datatables:column visible="false" property="id" />
                                             <dandelion:bundle excludes="jquery"/>
                                             <datatables:extraJs bundles="account" placeholder="before_end_document_ready" />
                                         </datatables:table>
@@ -103,6 +107,10 @@
         </div>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
+        <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
         <script src="${STATIC_URL}js/accounts/list.js"></script>
     </body>
 </html>

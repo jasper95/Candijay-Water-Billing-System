@@ -16,8 +16,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Bert
  */
 public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
-    public Invoice findByAccountAndSchedule(Account account, Schedule schedule);
-    public Invoice findTopByAccountOrderByIdDesc(Account account);
-    public List<Invoice> findByScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
-    public List<Invoice> findBySchedule(Schedule sched);
+    Invoice findByAccountAndSchedule(Account account, Schedule schedule);
+    Invoice findTopByAccountOrderByIdDesc(Account account);
+    List<Invoice> findByScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
+    List<Invoice> findBySchedule(Schedule sched);
+    List<Invoice> findTop5ByAccountOrderByIdDesc(Account account);
 }

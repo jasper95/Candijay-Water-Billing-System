@@ -17,7 +17,7 @@
         <label class="control-label" for="${id}">${label}</label>
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-${icon} fa-fw"></i></span>
-            <form:select id="${id}" path="${name}" class="form-control"  autocomplete="off" required="${required}" disabled="${disabled}">
+            <form:select id="${id}" path="${name}" class="form-control input-sm"  autocomplete="off" required="${required}" disabled="${disabled}">
                 <form:option value="" label="--${placeholder}--"/>
                     <c:choose>
                         <c:when test="${not empty items}">

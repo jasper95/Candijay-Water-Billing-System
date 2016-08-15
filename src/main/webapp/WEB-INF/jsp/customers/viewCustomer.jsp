@@ -86,7 +86,8 @@
     <jsp:include page="../fragments/modals/acct-form.jsp"/>
     <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
     <script src="${STATIC_URL}js/bootstrap.min.js"></script>
-    <script src="${STATIC_URL}/js/form-validation.js"></script>
+    <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+    <script src="${STATIC_URL}js/global.js"></script>
     <script src="${STATIC_URL}/js/customers/view.js"></script>
 </body>
 </html>

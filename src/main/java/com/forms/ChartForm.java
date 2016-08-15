@@ -13,9 +13,9 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author Bert
  */
 public class ChartForm {
-    @NotNull
+    @NotNull(message="Please select a year")
     private Integer year;
-    @NotNull
+    @NotNull(message="Please select a type")
     private Integer type;
 
     public Integer getYear() {

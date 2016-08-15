@@ -16,6 +16,8 @@
             <div class="modal-body">
                 <form:form id="acct-form" action="#" modelAttribute="accountForm" role="form">
                     <fieldset>
+                        <div class="col-sm-12 alert alert-danger global-errors"></div>
+                        <div class="col-sm-12 alert alert-success success-msg"></div>
                     <c:if test="${accountForm.account.id == null}">
                         <div class="col-sm-12 form-group">
                             <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="6"/>

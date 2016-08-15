@@ -23,12 +23,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Service("userService")
 public class SystemUserServiceImpl implements SystemUserService {
-    @Autowired
+
+
     private UserRepository userRepo;
-    @Autowired
     private RoleRepository roleRepo;
-    @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    public SystemUserServiceImpl(UserRepository userRepo, RoleRepository roleRepo, PasswordEncoder encoder){
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
+        this.encoder = encoder;
+    }
     
     @Override
     public List<User> getAllUsers() {
@@ -41,12 +47,11 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
     @Transactional
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         if(user.getRoles().size() < 5)
             user.setType(UserType.LIMITED);
         else user.setType(UserType.SUPERUSER);
-        //user.setPassword(encoder.encode(user.getPassword()));
-        userRepo.save(user);
+        return userRepo.save(user);
     }
 
     @Override
@@ -57,13 +62,5 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public Role findRoleById(Long id) {
         return roleRepo.findOne(id);
-    }
-
-    @Override
-    public void updateUser(User user) {
-        if(user.getRoles().size() < 5)
-            user.setType(UserType.LIMITED);
-        else user.setType(UserType.SUPERUSER);
-        userRepo.save(user);
     }
 }

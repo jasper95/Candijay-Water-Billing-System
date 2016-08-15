@@ -23,7 +23,7 @@ $(document).ready(function(){
                 cleanUpFormMsgs('#acct-form');
                 $('#acct-bg').val(response.result.address.brgy)
                 $('#acct-lc').val(response.result.address.locationCode)
-                $('#close-acct-form').trigger('click')
+                showSuccess('#acct-form', "Account successfully updated")
             }
         });
     });
@@ -34,20 +34,30 @@ $(document).ready(function(){
             if (validateForm('#device-form', response)) {
                 cleanUpFormMsgs('#device-form')
                 cleanUpFormFields('#device-form')
-                $('#close-dv-form').trigger('click')
+                var action;
+                if($('#device-action').text() == 'Add')
+                    action = "added"
+                else action = "updated"
+                showSuccess('#device-form', "Device successfully "+action)
                 $('#reload').trigger('click');
             }
         });
     });
-    $('#btn-add-dv').click(function (e){
+    $('#update-acct-btn').click(function(){
+        cleanUpFormMsgs('#acct-form')
+        $('#acct-form-modal').modal('show');
+    });
+    $('#btn-add-dv').click(function (){
         $('#device-action').empty().append('Add');
-        $('#acc-mc').val('')
-        $('#acc-mb').val('')
+        $('#device-form-modal').modal('show');
+        cleanUpFormFields('#device-form')
+        cleanUpFormMsgs('#device-form')
         $('#device-action-url').val($('#acct-base-url').val()+'/create-device')
     });
     window.editDv = function(device_id){
+        cleanUpFormMsgs('#device-form')
         populateDeviceForm(device_id)
-        $('#device-action').empty().append('Edit');
+        $('#device-action').empty().append('Update');
         $('#device-form-modal').modal('show');
         $('#device-action-url').val($('#all-acct-base-url').val()+'/'+device_id+'/edit-device')
     }

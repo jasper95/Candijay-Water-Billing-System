@@ -14,6 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Bert
  */
 public interface AddressRepository extends JpaRepository<Address, Long> {
-    public Address findByBrgyAndLocationCode(String brgy, Integer locationCode);
-    //public Address findTopByBrgyAndLocationCodeOrderByIdDesc(String brgy, Integer locationCode);
+    Address findByBrgyAndLocationCode(String brgy, Integer locationCode);
 }

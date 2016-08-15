@@ -4,31 +4,18 @@
  * and open the template in the editor.
  */
 package com.service.impl;
-import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.InvoiceRepository;
-import com.dao.springdatajpa.MeterReadingRepository;
-import com.dao.springdatajpa.PaymentRepository;
-import com.dao.springdatajpa.ScheduleRepository;
-import com.dao.springdatajpa.SettingsRepository;
+import com.dao.springdatajpa.*;
 import com.dao.util.EnglishNumberToWords;
-import com.domain.Account;
-import com.domain.CollectiblesReport;
-import com.domain.ChartData;
-import com.domain.CollectionReport;
-import com.domain.DisconnectionNotice;
-import com.domain.Invoice;
-import com.domain.InvoiceReport;
-import com.domain.MeterReading;
-import com.domain.Payment;
-import com.domain.Schedule;
-import com.domain.Settings;
+import com.domain.*;
 import com.domain.enums.InvoiceStatus;
 import com.service.InvoicingService;
+
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.DateTime;
@@ -43,18 +30,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("invoicingService")
 public class InvoicingServiceImpl implements InvoicingService {
 
-    @Autowired
     private InvoiceRepository invoiceRepo;
-    @Autowired
     private MeterReadingRepository mrRepo;
-    @Autowired
     private PaymentRepository paymentRepo;
-    @Autowired
     private SettingsRepository settingsRepo;
-    @Autowired
     private AccountRepository accountRepo;
-    @Autowired
     private ScheduleRepository schedRepo;
+    private ExpenseRepository expenseRepo;
+
+    @Autowired
+    public InvoicingServiceImpl(InvoiceRepository invoiceRepo, MeterReadingRepository mrRepo, PaymentRepository paymentRepo,
+                                SettingsRepository settingsRepo, AccountRepository accountRepo, ScheduleRepository schedRepo, ExpenseRepository expenseRepo){
+
+        this.invoiceRepo = invoiceRepo;
+        this.mrRepo = mrRepo;
+        this.paymentRepo = paymentRepo;
+        this.settingsRepo = settingsRepo;
+        this.accountRepo = accountRepo;
+        this.schedRepo = schedRepo;
+        this.expenseRepo = expenseRepo;
+    }
     
     @Override
     public void generateInvoiceMeterReading(MeterReading reading) {
@@ -75,22 +70,26 @@ public class InvoicingServiceImpl implements InvoicingService {
                                         0, 0);
         Invoice newInvoice = (reading.getInvoice() == null) ? new Invoice() : reading.getInvoice();
         newInvoice.setSchedule(reading.getSchedule());
-        newInvoice.setAccount(reading.getAccount());
-        newInvoice.setStatus(InvoiceStatus.UNPAID);
         newInvoice.setDueDate(dueDate);
         newInvoice.setBasic(basic);
         newInvoice.setDepreciationFund(depreciationFund);
         newInvoice.setSystemLoss(systemLoss);
-        newInvoice.setArrears(reading.getAccount().getAccountStandingBalance());
-        newInvoice.setPenalty(reading.getAccount().getPenalty());
-        newInvoice.setOthers(others);
         total = basic.add(systemLoss.add(depreciationFund.add(others)));
-        total = total.add(reading.getAccount().getAccountStandingBalance());
-        total = total.add(reading.getAccount().getPenalty());
+        if(newInvoice.getId() == null){
+            newInvoice.setAccount(reading.getAccount());
+            newInvoice.setStatus(InvoiceStatus.UNPAID);
+            newInvoice.setArrears(reading.getAccount().getAccountStandingBalance());
+            newInvoice.setPenalty(reading.getAccount().getPenalty());
+            newInvoice.setOthers(others);
+            reading.setInvoice(newInvoice);
+            newInvoice.setReading(reading);
+            total = total.add(reading.getAccount().getAccountStandingBalance().add(reading.getAccount().getPenalty()));
+        } else total = total.add(newInvoice.getArrears().add(newInvoice.getPenalty()));
         newInvoice.setNetCharge(total);
-        reading.setInvoice(newInvoice);
-        newInvoice.setReading(reading);
         invoiceRepo.save(newInvoice);
+        reading.getAccount().setAccountStandingBalance(total);
+        reading.getAccount().setStatusUpdated(false);
+        accountRepo.save(reading.getAccount());
     }
     
 
@@ -125,13 +124,14 @@ public class InvoicingServiceImpl implements InvoicingService {
     @Override
     public JRDataSource getCollectiblesDataSource(String barangay, Schedule sched) {
         List<Invoice> monthlyInvoiceByBarangay = null;
-        if(!barangay.isEmpty())
+        if(!barangay.equalsIgnoreCase("summary"))
             monthlyInvoiceByBarangay = invoiceRepo.findByScheduleAndAccount_Address_Brgy(sched, barangay);
         else monthlyInvoiceByBarangay = invoiceRepo.findBySchedule(sched);
         List<CollectiblesReport> report = new ArrayList();
+        report.add(new CollectiblesReport());
         for(Invoice invoice : monthlyInvoiceByBarangay){
             CollectiblesReport rpt = new CollectiblesReport();
-            rpt.setAccountNo(invoice.getAccount().getId());
+            rpt.setAccountNo(invoice.getAccount().getNumber());
             rpt.setAmount(invoice.getNetCharge());
             rpt.setFirstName(invoice.getAccount().getCustomer().getFirstName());
             rpt.setLastName(invoice.getAccount().getCustomer().getLastname());
@@ -152,18 +152,19 @@ public class InvoicingServiceImpl implements InvoicingService {
     @Override
     public JRDataSource getCollectionDataSource(String barangay, Schedule sched) {
         List<Payment> monthlyPaymentByBarangay = null;
-        if(!barangay.isEmpty())
+        if(!barangay.equalsIgnoreCase("summary"))
             monthlyPaymentByBarangay = paymentRepo.findByInvoice_ScheduleAndAccount_Address_Brgy(sched, barangay);
         else monthlyPaymentByBarangay = paymentRepo.findByInvoice_Schedule(sched);
         List<CollectionReport> report = new ArrayList();
+        report.add(new CollectionReport());
         for(Payment payment : monthlyPaymentByBarangay){
             CollectionReport rpt = new CollectionReport();
-            rpt.setAccountNo(payment.getAccount().getId());
+            rpt.setAccountNo(payment.getAccount().getNumber());
             rpt.setAmount(payment.getAmountPaid());
             rpt.setFirstName(payment.getAccount().getCustomer().getFirstName());
             rpt.setLastName(payment.getAccount().getCustomer().getLastname());
             rpt.setLocationCode(payment.getAccount().getAddress().getLocationCode());
-            rpt.setOrNumber(payment.getId());
+            rpt.setOrNumber(payment.getReceiptNumber());
             rpt.setDue(payment.getInvoice().getNetCharge());
             rpt.setDiscount(payment.getDiscount());
             report.add(rpt);
@@ -212,7 +213,8 @@ public class InvoicingServiceImpl implements InvoicingService {
             if(sched != null){
                 String month = new DateFormatSymbols().getMonths()[sched.getMonth()-1];
                 List<Invoice> invoices = invoiceRepo.findBySchedule(sched);
-                BigDecimal collectiblesTotal = BigDecimal.ZERO, collectionTotal = BigDecimal.ZERO;
+                List<Expense> expenses = expenseRepo.findBySchedule(sched);
+                BigDecimal collectiblesTotal = BigDecimal.ZERO, collectionTotal = BigDecimal.ZERO, expensesTotal = BigDecimal.ZERO;
                 for(Invoice invoice : invoices){
                     collectiblesTotal = collectiblesTotal.add(invoice.getNetCharge());
                     Payment payment = invoice.getPayment();
@@ -220,14 +222,14 @@ public class InvoicingServiceImpl implements InvoicingService {
                         collectionTotal = collectionTotal.add(payment.getAmountPaid());
                     }
                 }
-                if(collectiblesTotal.compareTo(BigDecimal.ZERO) > 0){
-                    ChartData monthCollectiblesData = new ChartData(collectiblesTotal, month, "Collectibles");
-                    list.add(monthCollectiblesData);
-                }
-                if(collectionTotal.compareTo(BigDecimal.ZERO) > 0){
-                    ChartData monthCollectionData = new ChartData(collectionTotal, month, "Collection");
-                    list.add(monthCollectionData); 
-                }
+                for(Expense expense : expenses)
+                    expensesTotal = expensesTotal.add(expense.getAmount());
+                if(expensesTotal.compareTo(BigDecimal.ZERO) > 0)
+                    list.add(new ChartData(expensesTotal, month, "Expenses"));
+                if(collectiblesTotal.compareTo(BigDecimal.ZERO) > 0)
+                    list.add(new ChartData(collectiblesTotal, month, "Collectibles"));
+                if(collectionTotal.compareTo(BigDecimal.ZERO) > 0)
+                    list.add(new ChartData(collectionTotal, month, "Collection"));
             }
         }
         return new JRBeanCollectionDataSource(list);
@@ -252,6 +254,114 @@ public class InvoicingServiceImpl implements InvoicingService {
             }
         }
         return new JRBeanCollectionDataSource(list);
+    }
+
+    @Override
+    public HashMap getCollectionCollectiblesExpenseDataSource(Integer year) {
+        HashMap data = new HashMap();
+        ArrayList<String> months = new ArrayList<String>();
+        ArrayList<BigDecimal> collectiblesData = new ArrayList(),
+                collectionData = new ArrayList(), wage1Data = new ArrayList(), wage2Data = new ArrayList(), powerUsageData = new ArrayList();
+        ArrayList<HashMap> datasets = new ArrayList();
+        for(int i=1; i<=12; i++){
+            Schedule sched = schedRepo.findByMonthAndYear(i, year);
+            if(sched != null){
+                BigDecimal collectiblesTotal = BigDecimal.ZERO, collectionTotal = BigDecimal.ZERO, wage1Total = BigDecimal.ZERO,
+                        wage2Total = BigDecimal.ZERO, powerUsageTotal = BigDecimal.ZERO;
+                for(Invoice invoice: invoiceRepo.findBySchedule(sched)){
+                    collectiblesTotal = collectiblesTotal.add(invoice.getNetCharge());
+                    Payment payment = invoice.getPayment();
+                    if(payment != null){
+                        collectionTotal = collectionTotal.add(payment.getAmountPaid());
+                    }
+                }
+                for(Expense expense : expenseRepo.findBySchedule(sched)){
+                    switch(expense.getType()){
+                        case 1:
+                            wage1Total = wage1Total.add(expense.getAmount());
+                            break;
+                        case 2:
+                            wage2Total = wage2Total.add(expense.getAmount());
+                            break;
+                        case 3:
+                            powerUsageTotal = powerUsageTotal.add(expense.getAmount());
+                            break;
+                    }
+                }
+                if(collectiblesTotal.compareTo(BigDecimal.ZERO) > 0 || collectionTotal.compareTo(BigDecimal.ZERO) > 0 ||
+                        wage1Total.compareTo(BigDecimal.ZERO) > 0 || wage2Total.compareTo(BigDecimal.ZERO) > 0 || powerUsageTotal.compareTo(BigDecimal.ZERO) > 0) {
+                    months.add(new DateFormatSymbols().getMonths()[sched.getMonth() - 1]);
+                    collectiblesData.add(collectiblesTotal);
+                    collectionData.add(collectionTotal);
+                    wage1Data.add(wage1Total);
+                    wage2Data.add(wage2Total);
+                    powerUsageData.add(powerUsageTotal);
+                }
+            }
+        }
+        HashMap collectionDataset = new HashMap();
+        collectionDataset.put("label", "Collection");
+        collectionDataset.put("backgroundColor", "rgba(255, 0, 0, 0.5)");
+        collectionDataset.put("data", collectionData);
+        collectionDataset.put("stack", 1);
+        datasets.add(collectionDataset);
+        HashMap collectiblesDataset = new HashMap();
+        collectiblesDataset.put("label", "Collectibles");
+        collectiblesDataset.put("backgroundColor", "rgba(0, 255, 0, 0.5)");
+        collectiblesDataset.put("data", collectiblesData);
+        collectiblesDataset.put("stack", 2);
+        datasets.add(collectiblesDataset);
+        HashMap wage1Dataset = new HashMap();
+        wage1Dataset.put("label", "Wage(1-15)");
+        wage1Dataset.put("backgroundColor", "rgba(255, 165, 0, 0.5)");
+        wage1Dataset.put("data", wage1Data);
+        wage1Dataset.put("stack", 3);
+        datasets.add(wage1Dataset);
+        HashMap wage2Dataset = new HashMap();
+        wage2Dataset.put("label", "Wage(16-30)");
+        wage2Dataset.put("backgroundColor", "rgba(255, 255, 0, 0.5)");
+        wage2Dataset.put("data", wage2Data);
+        wage2Dataset.put("stack", 3);
+        datasets.add(wage2Dataset);
+        HashMap powerUsageDataset = new HashMap();
+        powerUsageDataset.put("label", "Power Usage");
+        powerUsageDataset.put("backgroundColor", "rgba(128, 0, 128, 0.5)");
+        powerUsageDataset.put("data", powerUsageData);
+        powerUsageDataset.put("stack", 3);
+        datasets.add(powerUsageDataset);
+        data.put("labels", months);
+        data.put("datasets", datasets);
+        return data;
+    }
+
+    @Override
+    public HashMap getConsumptionDataSource(Integer year) {
+        HashMap data = new HashMap();
+        ArrayList<String> months = new ArrayList();
+        ArrayList<BigInteger> readings = new ArrayList();
+        ArrayList<HashMap> datasets = new ArrayList();
+        for(int i=1; i<= 12; i++){
+            Schedule sched = schedRepo.findByMonthAndYear(i, year);
+            if(sched != null){
+                BigInteger readingTotal = BigInteger.ZERO;
+                for(MeterReading reading: mrRepo.findBySchedule(sched)){
+                    readingTotal = readingTotal.add(new BigInteger(reading.getConsumption().toString()));
+                }
+                if(readingTotal.compareTo(BigInteger.ZERO) > 0){
+                    months.add(new DateFormatSymbols().getMonths()[sched.getMonth()-1]);
+                    readings.add(readingTotal);
+                }
+            }
+        }
+        HashMap consumptionDataset = new HashMap();
+        consumptionDataset.put("label", "Water Consumption");
+        consumptionDataset.put("backgroundColor", "rgba(255, 0, 0, 0.5)");
+        consumptionDataset.put("data", readings);
+        consumptionDataset.put("stack", 1);
+        datasets.add(consumptionDataset);
+        data.put("labels", months);
+        data.put("datasets", datasets);
+        return data;
     }
 
 }

@@ -4,27 +4,19 @@ package com.domain;
 
 import com.domain.enums.UserStatus;
 import com.domain.enums.UserType;
+
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
 import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,7 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name="user"
     ,catalog="revised_cws_db"
 )
-public class User  implements java.io.Serializable, UserDetails {
+public class User extends AuditableEntity implements java.io.Serializable, UserDetails {
 
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
@@ -52,23 +44,26 @@ public class User  implements java.io.Serializable, UserDetails {
     @Column(name="type", nullable=false)
     @Enumerated(EnumType.STRING)
     private UserType type;
-    @NotNull(message="Please select at least one role")
+    @NotNull(message="Please select at least one privilege")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="usersandroles",
                 joinColumns=@JoinColumn(name="user_id"),
                 inverseJoinColumns=@JoinColumn(name="role_id"))
     private Set<Role> roles;
-
+    /*@Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="timestamp", nullable=false)
+    private Date timestamp;*/
     public User() {
     }
 
     public User(long id, String fullName, String username, String password, UserStatus status, UserType type) {
-       this.id = id;
-       this.username = username;
-       this.password = password;
-       this.status = status;
-       this.type = type;
-       this.fullName = fullName;
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.status = status;
+        this.type = type;
+        this.fullName = fullName;
     }
     
     public Long getId() {
@@ -160,9 +155,10 @@ public class User  implements java.io.Serializable, UserDetails {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        return hash;
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
     }
 
     @Override
@@ -174,10 +170,9 @@ public class User  implements java.io.Serializable, UserDetails {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder().
+                        append(this.id, other.id).
+                        isEquals();
     }
   
 }

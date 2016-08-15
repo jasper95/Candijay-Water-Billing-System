@@ -8,24 +8,22 @@ package com.controller;
 import com.dao.springdatajpa.UserRepository;
 import com.domain.Role;
 import com.domain.User;
+import com.domain.enums.UserStatus;
 import com.service.SystemUserService;
 import java.beans.PropertyEditorSupport;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -34,7 +32,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @RequestMapping("/admin/system-users")
 @Controller
-@SessionAttributes("user")
 public class SystemUsersController {
     @Autowired
     private SystemUserService userService;
@@ -46,7 +43,11 @@ public class SystemUsersController {
     
     @InitBinder
     protected void initBinder(WebDataBinder binder){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(true);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
         binder.registerCustomEditor(Role.class, new CustomRoleEditor());
+        binder.registerCustomEditor(Date.class,  new CustomDateEditor(dateFormat, true));
     }
     
     private class CustomRoleEditor extends PropertyEditorSupport{
@@ -55,9 +56,11 @@ public class SystemUsersController {
             setValue(userService.findRoleById(Long.valueOf(text)));
         }      
     }
-    
+
     @RequestMapping(method=RequestMethod.GET)
-    public String getSystemUsers(){
+    public String getSystemUsers(ModelMap model) {
+        model.addAttribute("roles", userService.getAllRoles());
+        model.addAttribute("user", new User());
         return "systemUsers/usersList";
     }
     
@@ -65,64 +68,72 @@ public class SystemUsersController {
     public @ResponseBody List<User> getAll(){
         return userService.getAllUsers();
     }
+
     
-    @RequestMapping(value="/new")
-    public String getNew(ModelMap model){
-        model.addAttribute("roles", userService.getAllRoles());
-        if(!model.containsAttribute(BINDING_RESULT_NAME)){
-            model.addAttribute("user", new User());
+    @RequestMapping(value="/save", method=RequestMethod.POST)
+    public @ResponseBody
+    HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result, RedirectAttributes redirectAttributes){
+        HashMap response = new HashMap();
+        if(!result.hasErrors()){
+            if(userService.isUsernameAlreadyTaken(user.getUsername()))
+                result.rejectValue("username", "", "Username already taken");
         }
-        model.addAttribute("createOrUpdate", "Create");
-        return "systemUsers/createOrUpdateUserForm";
-    }
-    
-    @RequestMapping(value="/update/{username}")
-    public String getUpdate(@PathVariable("username") String username, ModelMap model){
-        model.addAttribute("roles", userService.getAllRoles());
-        if(!model.containsAttribute(BINDING_RESULT_NAME)){
-            User user = userRepo.findByUsername(username);
-            if(user == null){
-                model.put("type", "Bad request URL");
-                model.put("message", "Please avoid retrieving admin pages via URL");
-                return "errors";
-            }
-            model.addAttribute("user", user);
-        }
-        model.addAttribute("createOrUpdate", "Update");
-        return "systemUsers/createOrUpdateUserForm";
-    }
-    
-    @RequestMapping(value="/new", method=RequestMethod.POST)
-    public String postProcessUserForm(@ModelAttribute("user") @Valid User user, BindingResult result, RedirectAttributes redirectAttributes){
-        
-        if(userService.isUsernameAlreadyTaken(user.getUsername()))
-            result.rejectValue("username", "", "Username already taken");
-        
-        if(result.hasErrors()){
-            redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/system-users/new";
+        if(!result.hasErrors()){
+            user.setPassword(encoder.encode(user.getPassword()));
+            response.put("user",userService.saveUser(user));
+            response.put("status", "SUCCESS");
         }
         else{
-            user.setPassword(encoder.encode(user.getPassword()));
-            userService.saveUser(user);
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
         }
-        return "redirect:/admin/system-users";
+        return response;
+
     }
     
-    @RequestMapping(value="/update/{username}", method=RequestMethod.POST)
-    public String postUpdate(@ModelAttribute("user") @Valid User user, BindingResult result, @PathVariable("username") String username,
-                    RedirectAttributes redirectAttributes){
+    @RequestMapping(value="/update", method=RequestMethod.POST)
+    public @ResponseBody HashMap postUpdate(@ModelAttribute("user") @Valid User userForm, BindingResult result, @RequestParam Map<String, String> params){
+        HashMap response = new HashMap();
+        int status = Integer.valueOf(params.get("updateStatus"));
+        User user = userRepo.findOne(userForm.getId());
+        if(!result.hasErrors()) {
+            if (user != null) {
+                user.setRoles(userForm.getRoles());
+                if (status == 1)
+                    user.setStatus(UserStatus.ACTIVE);
+                else
+                    user.setStatus(UserStatus.INACTIVE);
+                user.setVersion(userForm.getVersion());
+            } else result.reject("global", "User does not exists");
+        }
         if(!result.hasErrors()){
             try{
-               userService.saveUser(user);
+               response.put("user", userService.saveUser(user));
             }catch(JpaOptimisticLockingFailureException e){
-                result.reject("", "This record was modified by another user. Try refreshing the page.");
+                result.reject("global", "This record was modified by another user. Try closing the form and edit the user again.");
             }
         }
         if(result.hasErrors()){
-            redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/system-users/update/"+username;
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+            return response;
         }
-        return "redirect:/admin/system-users";
+        response.put("status", "SUCCESS");
+        return response;
+    }
+
+    @RequestMapping(value="/find/{id}", method=RequestMethod.GET)
+    public @ResponseBody HashMap findUser(@PathVariable("id") Long id){
+        HashMap response = new HashMap();
+        if(id != null){
+            User user = userRepo.findOne(id);
+            if( user != null){
+                response.put("user", user);
+                response.put("status", "SUCCESS");
+                return response;
+            }
+        }
+        response.put("status", "FAILURE");
+        return response;
     }
 }

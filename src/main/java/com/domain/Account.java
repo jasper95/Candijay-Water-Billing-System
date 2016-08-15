@@ -1,3 +1,4 @@
+
 package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
@@ -6,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -57,6 +62,8 @@ public class Account  implements java.io.Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name="status", nullable=false)
     private AccountStatus status = AccountStatus.ACTIVE;
+    @Column(name="status_updated", nullable=false)
+    private boolean statusUpdated = true;
     @OneToMany(fetch=FetchType.LAZY, mappedBy="account", cascade={CascadeType.PERSIST, CascadeType.MERGE})
     private Set<MeterReading> meterReadings = new HashSet<MeterReading>(0);
     @OneToMany(fetch=FetchType.LAZY, mappedBy="account", cascade={CascadeType.PERSIST, CascadeType.MERGE})
@@ -130,6 +137,15 @@ public class Account  implements java.io.Serializable {
     public void setAccountStandingBalance(BigDecimal accountStandingBalance) {
         this.accountStandingBalance = accountStandingBalance;
     }
+
+    public boolean isStatusUpdated() {
+        return statusUpdated;
+    }
+
+    public void setStatusUpdated(boolean statusUpdated) {
+        this.statusUpdated = statusUpdated;
+    }
+
     @JsonBackReference
     public Set<MeterReading> getMeterReadings() {
         return this.meterReadings;
@@ -176,5 +192,27 @@ public class Account  implements java.io.Serializable {
     @JsonProperty
     public void setDevices(Set<Device> devices) {
         this.devices = devices;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Account other = (Account) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
     }
 }

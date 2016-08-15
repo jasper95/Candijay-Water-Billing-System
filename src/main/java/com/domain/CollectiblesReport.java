@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 public class CollectiblesReport {
     private Long billId;
-    private Long accountNo;
+    private String accountNo;
     private BigDecimal amount;
     private BigDecimal basic;
     private BigDecimal arrears;
@@ -35,11 +35,11 @@ public class CollectiblesReport {
         this.billId = billId;
     }
 
-    public Long getAccountNo() {
+    public String getAccountNo() {
         return accountNo;
     }
 
-    public void setAccountNo(Long accountNo) {
+    public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
 

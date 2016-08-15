@@ -15,7 +15,7 @@
         <label class="control-label" for="${id}">${label}</label>
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-${icon} fa-fw"></i></span>
-            <form:input id="${id}" path="${name}" class="form-control" placeholder="${placeholder}" autocomplete="off" required="${required}" readonly="${readOnly}" />
+            <form:input id="${id}" path="${name}" class="form-control input-sm" placeholder="${placeholder}" autocomplete="off" required="${required}" readonly="${readOnly}" />
             <c:if test="${status.error}">
                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
             </c:if>

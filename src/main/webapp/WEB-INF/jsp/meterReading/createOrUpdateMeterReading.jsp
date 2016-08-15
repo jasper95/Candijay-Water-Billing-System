@@ -39,14 +39,14 @@
                                         </div>
                                         <span class="field-error"></span>
                                     </div>
-                                    <button id="search-btn" type="submit" class="btn btn-primary btn-search"><i class="fa fa-search fa-fw"></i> Search </button>
+                                    <button id="search-btn" type="submit" class="btn btn-primary btn-search"><i class="fa fa-search fa-fw"></i><span style="display:none" class="glyphicon glyphicon-refresh spinning"></span> Search </button>
                                 </div>
                             </div>
                         </form:form>
                         <hr/>
                         <div id="crt-mr-found">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-7">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Account Details</h3>
@@ -93,9 +93,9 @@
                                                 <datatables:table cssClass="table table-striped" id="reading" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/reading/datatable-search" displayLength="3" dom="tp" >
                                                     <datatables:column property="account.id" filterable="true" visible="false" selector="acc-no"/>
                                                     <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
-                                                    <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false"/>
-                                                    <datatables:column title="Consumption" name="consume" property="consumption" sortable="false"/>
-                                                    <datatables:column title="Reading" name="reading" property="readingValue" sortable="false"/>
+                                                    <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false" cssCellClass="schedule"/>
+                                                    <datatables:column title="Consumption" name="consume" property="consumption" sortable="false" cssCellClass="consumption"/>
+                                                    <datatables:column title="Reading" name="reading" property="readingValue" cssCellClass="reading" sortable="false"/>
                                                     <datatables:column title="Status" name="invoice.status" property="invoice.status" sortable="false"/>
                                                     <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                                     <datatables:extraJs bundles="months" placeholder="after_all"/>
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Add Reading</h3>
@@ -147,8 +147,9 @@
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
-        <script src="${STATIC_URL}js/helper.js"></script>
-        <script src="${STATIC_URL}js/form-validation.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
+        <script src="${STATIC_URL}js/helpers/search-helper.js"></script>
         <script src="${STATIC_URL}js/meter-reading/create.js"></script>
         <script src="${STATIC_URL}js/meter-reading/edit.js"></script>
     </body>

@@ -5,6 +5,9 @@
  */
 package com.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -70,6 +73,28 @@ public class AddressGroup implements java.io.Serializable {
 
     public void setDueDay(Integer dueDay) {
         this.dueDay = dueDay;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AddressGroup other = (AddressGroup) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
     }
      
 }

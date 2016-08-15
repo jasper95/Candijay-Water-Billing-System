@@ -22,11 +22,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="CWSOpenShift" />
+        <module name="cws" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="CWSOpenShift" target="1.6" />
+      <module name="cws" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -32,7 +32,7 @@
                                 <h2>View Account</h2>
                             </div>
                             <div class="col-sm-2  vertical-center">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#acct-form-modal"><i class="fa fa-edit fa-fw"></i>Update</button>
+                                <button type="button" class="btn btn-primary" id="update-acct-btn"><i class="fa fa-edit fa-fw"></i>Update</button>
                             </div>
                         </div>
                     <c:if test="${updateSuccess == 1}">
@@ -80,7 +80,7 @@
                         <input id="acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts/${accountForm.account.number}"/>
                         <input id="all-acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts"/>
                         <input id="device-action-url" type="hidden"/>
-                        <button type="button" id="btn-add-dv" style="margin-top: 20px"  class="btn btn-default pull-right" data-toggle="modal" data-target="#device-form-modal"> Add Device </button>
+                        <button type="button" id="btn-add-dv" style="margin-top: 20px"  class="btn btn-default pull-right"> Add Device </button>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,8 @@
         <jsp:include page="../fragments/modals/acct-form.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
-        <script src="${STATIC_URL}js/form-validation.js"></script>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/accounts/view.js"></script>
     </body>
 </html>

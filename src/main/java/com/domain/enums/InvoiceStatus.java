@@ -12,6 +12,5 @@ package com.domain.enums;
 public enum InvoiceStatus {
     PARTIALLYPAID,
     FULLYPAID,
-    UNPAID,
-    DEBT;
+    UNPAID
 }

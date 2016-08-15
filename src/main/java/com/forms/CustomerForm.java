@@ -17,8 +17,6 @@ public class CustomerForm {
     @Valid
     private Customer customer;
     @Valid
-    private Occupation occupation;
-    @Valid
     private Account account;
     @Valid
     private Device device;
@@ -32,13 +30,6 @@ public class CustomerForm {
         this.customer = customer;
     }
 
-    public Occupation getOccupation() {
-        return occupation;
-    }
-
-    public void setOccupation(Occupation occupation) {
-        this.occupation = occupation;
-    }
 
     public Account getAccount() { return account; }
 

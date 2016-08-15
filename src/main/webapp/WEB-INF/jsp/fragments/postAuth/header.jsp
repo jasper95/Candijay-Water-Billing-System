@@ -17,7 +17,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><img src="${adminIcon}"> <sec:authentication property="principal.username"/><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Update Profile</a></li>
+                        <li><a href="#" id="update-profile-link">Update Profile</a></li>
                         <li><a href="#" onclick="logout();">Logout</a></li>
                     </ul>
                 </li>
@@ -26,6 +26,7 @@
     </div>
     <!-- /container -->
 </div>
+<jsp:include page="../modals/update-profile-form.jsp"/>
 <form id="logoutForm" action="${pageContext.servletContext.contextPath}/logout.htm" method="post">
   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>

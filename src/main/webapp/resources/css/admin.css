@@ -11,7 +11,7 @@
 .nav-side-menu {
     overflow: auto;
     font-family: verdana;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 200;
     background-color: #2e353d;
     position: fixed;
@@ -37,7 +37,7 @@
     list-style: none;
     padding: 0px;
     margin: 0px;
-    line-height: 50px;
+    line-height: 70px;
     cursor: pointer;
     /*
       .collapsed{
@@ -76,11 +76,16 @@
 .nav-side-menu li .sub-menu li.active a {
     color: #d19b3d;
 }
+.nav-side-menu ul .sub-menu li a,
+.nav-side-menu li a{
+    display: block;
+}
+
 .nav-side-menu ul .sub-menu li,
 .nav-side-menu li .sub-menu li {
     background-color: #181c20;
     border: none;
-    line-height: 28px;
+    line-height: 60px;
     border-bottom: 1px solid #23282e;
     margin-left: 0px;
 }
@@ -88,8 +93,8 @@
 .nav-side-menu li .sub-menu li:hover {
     background-color: #020203;
 }
-.nav-side-menu ul .sub-menu li:before,
-.nav-side-menu li .sub-menu li:before {
+.nav-side-menu ul .sub-menu li a:before,
+.nav-side-menu li .sub-menu li a:before {
     font-family: FontAwesome;
     content: "\f105";
     display: inline-block;
@@ -219,11 +224,22 @@ div.filter-btn-wrapper{
     float: right;
     overflow: hidden;
 }
-.yadcf-filter{
-    display: block;
-    width: 100%;
+
+.yadcf-filter {
+    width: 78%;
+}
+.yadcf-filter-range{
+    width: 44% !important;
+    padding-right: 4px;
+    padding-left: 4px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+.yadcf-filter-wrapper-inner {
+    border: none !important;
+}
+.yadcf-filter, .yadcf-filter-range{
     height: 34px;
-    padding: 6px 12px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #555;
@@ -277,5 +293,93 @@ p.hanging-indent{
     text-align: center;
 }
 .highlight{
-    background-color: #85DFF5;
+    background-color: #85DFF5 !important;
+}
+.yadcf-filter-reset-button{
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    display: inline-block;
+    padding: 0 12px;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    height: 30px;
+    margin-left: 2px;
+}
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+.ui-datepicker{
+    z-index: 1151 !important;
+}
+.checkbox-items {
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.submit-container{
+    min-height : 59px;
+    position: relative;
+}
+
+.submit-left{
+    position: absolute;
+    bottom: 0px;
+}
+.submit-right{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
+.audit-info{
+    font-weight: 500;
+    margin-bottom: 0 !important;
+    font-size: 14px;
+    margin-top: 5px;
+    color: #bfbdbd !important;
+}
+
+.list-filter-btn{
+    margin-bottom: 15px !important;
+}
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+    transform-origin: 48% 50%;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+.overview-wrapper {
+    min-height: 40px;
+    border-bottom: 1px solid #e1e1e1;
+    padding: 15px 0 0;
+}
+.overview-wrapper span{
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: #232427;
+    line-height: 18px;
 }

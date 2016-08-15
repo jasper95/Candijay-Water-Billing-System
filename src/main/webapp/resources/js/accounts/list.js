@@ -12,7 +12,7 @@ $(document).ready(function(){
                         openReport('POST',form.attr('action')+"/print-notice-of-disconnection",response.result,'_blank');
                     else if( action  === '2')
                         changeStatus(form.serialize(), form.attr('action')+'/deactivate-accounts');
-                } else alert("No account is qualified for the action");
+                } else showError("No account is qualified for the action");
             });
         }
         else if(action === "3")
@@ -21,45 +21,21 @@ $(document).ready(function(){
             changeStatus(form.serialize(), form.attr('action')+'/activate-accounts');
 
     });
-    function openReport(verb, url, data, target){
-        var form = document.createElement("form");
-        form.action = url;
-        form.method = verb;
-        form.target = target || "_self";
-        if (data) {
-            for (var key in data) {
-                if( Object.prototype.toString.call( data[key] ) === '[object Array]' ){
-                    for(var i in data[key]){
-                        var input = document.createElement("textarea");
-                        input.name = key;
-                        input.value = data[key][i];
-                        form.appendChild(input);
-                    }
-                }
-                else {
-                    var input = document.createElement("textarea");
-                    input.name = key;
-                    input.value = typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key];
-                    form.appendChild(input);
-                }
-            }
-        }
-        if(verb === 'POST'){
-            var input = document.createElement("textarea");
-            input.name = '_csrf';
-            input.value = $("meta[name='_csrf']").attr("content");
-            form.appendChild(input);
-        }
-        form.style.display = 'none';
-        document.body.appendChild(form);
-        form.submit();
-    }
     function changeStatus(data, url){
         $.post(url, data, function(response){
             if(response.status === "SUCCESS")
                 $('#filterButton').trigger('click');
-            else alert("No account is qualified for the action");
+            else showError("No account is qualified for the action");
         });
     }
-    
+
+    function showError(message){
+        BootstrapDialog.alert({
+            title: 'ACTION DENIED',
+            message: message,
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+        });
+    }
 });

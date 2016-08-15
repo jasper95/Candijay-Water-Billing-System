@@ -2,29 +2,31 @@ package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.dao.util.CustomAuditingEntityListener;
+import com.dao.util.JsonJodaDateTimeSerializer;
+import com.fasterxml.jackson.annotation.*;
+
 import java.math.BigDecimal;
-import java.util.Date;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
 import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -34,7 +36,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name="payment"
     ,catalog="revised_cws_db"
 )
-public class Payment  implements java.io.Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Payment extends AuditableEntity implements java.io.Serializable {
 
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
@@ -49,21 +52,26 @@ public class Payment  implements java.io.Serializable {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name="date", nullable=false, length=10)
     private DateTime date;
-    @Digits(fraction=2, integer=10) @NotNull
-    @Column(name="amount_paid", nullable=false, precision=10, scale=0)
+    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
+    @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=1, message = "Invalid amount")
     private BigDecimal amountPaid;
-    @Digits(fraction=2, integer=10) @NotNull
+    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
     @Column(name="discount", nullable=false, precision=10, scale=0)
     private BigDecimal discount;
+    @NotEmpty(message = "Invalid OR number")
+    @NotNull(message="Invalid OR number") @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid OR number")
+    @Column(name="or_number", nullable = false)
+    private String receiptNumber;
     public Payment() {
     }
 
-    public Payment(Account account, Invoice invoice, DateTime date, BigDecimal amountPaid, BigDecimal discount) {
+    public Payment(Account account, Invoice invoice, DateTime date, BigDecimal amountPaid, BigDecimal discount, String receiptNumber) {
        this.account = account;
        this.invoice = invoice;
        this.date = date;
        this.amountPaid = amountPaid;
        this.discount = discount;
+        this.receiptNumber = receiptNumber;
     }
    
     public Long getId() {
@@ -82,7 +90,7 @@ public class Payment  implements java.io.Serializable {
     public void setAccount(Account account) {
         this.account = account;
     }
-    @JsonManagedReference
+    //@JsonManagedReference
     public Invoice getInvoice() {
         return this.invoice;
     }
@@ -113,5 +121,33 @@ public class Payment  implements java.io.Serializable {
 
     public void setDiscount(BigDecimal discount) {
         this.discount = discount;
+    }
+
+    public String getReceiptNumber() { return receiptNumber; }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Payment other = (Payment) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
     }
 }

@@ -5,14 +5,8 @@
  */
 package com.service.impl;
 
-import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.InvoiceRepository;
-import com.dao.springdatajpa.MeterReadingRepository;
-import com.dao.springdatajpa.ScheduleRepository;
-import com.domain.Account;
-import com.domain.Invoice;
-import com.domain.MeterReading;
-import com.domain.Schedule;
+import com.dao.springdatajpa.*;
+import com.domain.*;
 import com.domain.enums.InvoiceStatus;
 import com.forms.MeterReadingForm;
 import com.service.InvoicingService;
@@ -33,16 +27,25 @@ import org.springframework.validation.Errors;
 @Service("mrService")
 public class MeterReadingServiceImpl implements MeterReadingService{
 
-    @Autowired
     private MeterReadingRepository mrRepo;
-    @Autowired
     private ScheduleRepository schedRepo;
-    @Autowired 
     private AccountRepository accountRepo;
-    @Autowired
     private InvoicingService invoicingService;
-    @Autowired
     private InvoiceRepository invoiceRepo;
+    private DeviceRepository deviceRepo;
+    private ModifiedReadingRepository modifiedReadingRepo;
+
+    @Autowired
+    public MeterReadingServiceImpl(InvoiceRepository invoiceRepo, InvoicingService invoicingService, AccountRepository accountRepo, ScheduleRepository schedRepo,
+                                   MeterReadingRepository mrRepo, DeviceRepository deviceRepo, ModifiedReadingRepository modifiedReadingRepo){
+        this.mrRepo = mrRepo;
+        this.schedRepo = schedRepo;
+        this.accountRepo = accountRepo;
+        this.invoicingService = invoicingService;
+        this.invoiceRepo = invoiceRepo;
+        this.deviceRepo = deviceRepo;
+        this.modifiedReadingRepo = modifiedReadingRepo;
+    }
     
     @Transactional(readOnly=true)
     @Override
@@ -68,6 +71,13 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     public MeterReading saveMeterReading(MeterReadingForm form) {
         Account account = accountRepo.findOne(form.getAccountId());
         MeterReading reading = form.getMeterReading();
+        boolean updateFlag = false;
+        ModifiedReading modifiedReading = null;
+        Long oldVersion = reading.getVersion();
+        if(reading.getId() != null){
+            modifiedReading = new ModifiedReading(mrRepo.findOne(reading.getId()));
+            updateFlag = true;
+        }
         Schedule sched;
         if(form.getMeterReading().getSchedule().getId() != null)
             sched= schedRepo.findOne(form.getMeterReading().getSchedule().getId());
@@ -76,8 +86,15 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         reading.setAccount(account);
         reading.setSchedule(sched);
         account.addMeterReading(reading);
-        reading = mrRepo.save(reading);
+        reading = mrRepo.saveAndFlush(reading);
+        if(updateFlag && reading.getVersion().compareTo(oldVersion) > 0) {
+            modifiedReading.setReading(reading);
+            modifiedReadingRepo.save(modifiedReading);
+        }
         invoicingService.generateInvoiceMeterReading(reading);
+        Device device = deviceRepo.findByOwnerAndActive(account, true);
+        device.setLastReading(reading.getReadingValue());
+        deviceRepo.save(device);
         return reading;
     }
 

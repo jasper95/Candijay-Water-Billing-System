@@ -11,4 +11,6 @@ import java.util.HashMap;
 public interface FormOptionsService{
     public HashMap<String,Collections> getCustomerFormOptions();
     public HashMap<String,Collections> getMeterReadingFormOptions();
+    public HashMap<String, Collections> getReportFormOptions();
+    public HashMap<String, Collections> getExpenseFormOptions();
 }

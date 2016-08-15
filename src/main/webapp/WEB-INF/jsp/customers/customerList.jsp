@@ -36,21 +36,17 @@
                                 <a type="button" class="btn btn-ctm btn-default" href="customers/new">Create Customer</a>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 alert">
-                                <div class="alert alert-info">
-                                    <div class="form-inline">
-                                        <div id="last-name" class="form-group">
-                                            <label>Lastname</label>
-                                        </div>
-                                        <div id="first-name" class="form-group">
-                                            <label>Firstname</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-inline vertical-center">
-                                        <a id="filterButton" type="button" class="btn btn-primary"> Apply </a>
-                                        <a id="filterClearButton" type="button" class="btn btn-danger"> Clear </a>
-                                    </div>
+                        <div class="alert alert-info form-wrapper">
+                            <div class="col-sm-12 form-group">
+                                <div class="col-md-3" id="last-name">
+                                    <label>Lastname</label>
+                                </div>
+                                <div class="col-md-3" id="first-name">
+                                    <label>Firstname</label>
+                                </div>
+                                <div class="col-md-3 pull-align-right vertical-center filter-btn-wrapper">
+                                    <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                                    <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
                                 </div>
                             </div>
                         </div>
@@ -77,5 +73,7 @@
                 </div>
             </div>
         </div>
+        <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/global.js"></script>
     </body>
 </html>

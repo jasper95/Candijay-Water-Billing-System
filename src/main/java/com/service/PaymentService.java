@@ -5,23 +5,26 @@
  */
 package com.service;
 
-import com.domain.Account;
-import com.domain.Invoice;
-import com.domain.Payment;
+import com.domain.*;
 import com.forms.PaymentForm;
+import net.sf.jasperreports.engine.JRDataSource;
 import org.springframework.validation.Errors;
+
+import java.util.List;
 
 /**
  *
  * @author 201244055
  */
 public interface PaymentService {
-    //public Invoice findInvoiceById(Long id);
-    public Payment save(PaymentForm form);
-    public Payment updateAccountFromPayment(Payment payment);
-    public Invoice findLatestBill(Account account);
-    public Errors validate(PaymentForm form, Errors errors);
-    public Payment findPaymentById(Long id);
-    public boolean canEdit(Payment payment);
-    public boolean isAllowedToSetWarningToAccount(Account account);
+    JRDataSource paymentHistoryDataSource(List<Long> paymentIds);
+    Payment save(PaymentForm form);
+    Payment updateAccountFromPayment(Payment payment);
+    Invoice findLatestBill(Account account);
+    Errors validate(PaymentForm form, Errors errors);
+    Payment findPaymentById(Long id);
+    boolean canEdit(Payment payment);
+    boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
+    List<Account> updateAccountsWithNoPayments(Address address);
+
 }

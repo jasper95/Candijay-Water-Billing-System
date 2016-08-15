@@ -3,24 +3,6 @@ $(document).ready(function(){
         $('#reading-year').val(new Date().getFullYear());
     if($('#reading-month').val() === '')
         $('#reading-month').val(new Date().getMonth()+1);
-    $('#fetchAccount').on('submit', function(e){
-        e.preventDefault();
-        cleanUpFormMsgs('#add-meterReading-form')
-        $('#readingVal').val('');
-        $.ajax({
-            data:$(this).serialize(),
-            type:"POST",
-            url:$(this).attr('action')+'/fetchAccount',
-            success: function(response){
-                cleanUpFormMsgs('#fetchAccount')
-                if(validateForm('#fetchAccount', response)){
-                    $('#accountId').val(response.account.id);
-                    displayData(response);
-                    $('#crt-mr-found').show();
-                } else $('#crt-mr-found').hide();
-            }
-        });
-    });
     $('#add-meterReading-form').on('submit', function(e){
         e.preventDefault();
         $('#reading-error').hide();
@@ -32,8 +14,9 @@ $(document).ready(function(){
                 cleanUpFormMsgs('#add-meterReading-form')
                 if (validateForm('#add-meterReading-form', response)) {
                     showSuccess('#add-meterReading-form', "Reading successfully added")
-                    cleanUpFormFields('#add-meterReading-form')
-                    $('#yadcf-filter--reading-0').val(response.result.account.id);
+                    cleanUpFormFields('#add-meterReading-form');
+                    $('#last-reading').html("Last Reading:  "+response.result.readingValue);
+                    $('#acc-no').find('input:first').val(response.result.account.id);
                     $('#filterButton').trigger('click');
                 }
              }
@@ -47,9 +30,12 @@ $(document).ready(function(){
             if(validateForm('#md-update-form' ,response)){
                 showSuccess('#md-update-form', "Reading successfully updated")
                 var reading = response.result;
-                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(1)').text(months[reading.schedule.month]+" "+reading.schedule.year);
-                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(2)').text(reading.consumption);
-                $('#reading tr:nth-child('+$('#row-num').val()+') td:nth-child(3)').text(reading.readingValue)
+                var row = $('#reading tbody tr:nth-child('+$('#row-num').val()+')')
+                row.find('.schedule').text(months[reading.schedule.month]+" "+reading.schedule.year);
+                row.find('.consumption').text(reading.consumption);
+                row.find('.reading').text(reading.readingValue);
+                $('#last-reading').html("Last Reading:  "+reading.readingValue);
+                $('#rd-vs').val(reading.version);
             }
         })
     })

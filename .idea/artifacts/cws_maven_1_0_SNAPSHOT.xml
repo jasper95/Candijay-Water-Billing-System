@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="cws-maven-1.0-SNAPSHOT">
-    <output-path>$PROJECT_DIR$/target/artifacts/cws_maven_1_0_SNAPSHOT</output-path>
-    <root id="archive" name="cws-maven-1.0-SNAPSHOT.war" />
-  </artifact>
-</component>

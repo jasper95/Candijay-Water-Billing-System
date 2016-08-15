@@ -3,6 +3,9 @@ package com.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -71,5 +74,26 @@ public class Schedule  implements java.io.Serializable {
     
     public String getMonthSymbol(){
         return new DateFormatSymbols().getMonths()[month.intValue() - 1];
+    }
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(this.id).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Schedule other = (Schedule) obj;
+        return new EqualsBuilder().
+                append(this.id, other.id).
+                isEquals();
     }
 }
