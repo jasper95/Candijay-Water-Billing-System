@@ -18,12 +18,10 @@ import net.sf.jasperreports.engine.JRDataSource;
  * @author maebernales
  */
 public interface ReportService {
-    public JRDataSource getDataSource(List<Invoice> invoices);
-    public JRDataSource getCollectiblesDataSource(String barangay, Schedule sched);
-    public JRDataSource getCollectionDataSource(String barangay, Schedule sched);
-    public JRDataSource getDisconnectionNoticeDataSource(List<Account> accounts);
-    public JRDataSource getCollectionCollectiblesChartDataSource(Integer year);
-    public JRDataSource getConsumptionChartDataSource(Integer year);
-    public HashMap getCollectionCollectiblesExpenseDataSource(Integer year);
-    public HashMap getConsumptionDataSource(Integer year);
+    JRDataSource getCollectiblesDataSource(String barangay, Schedule sched);
+    JRDataSource getCollectionDataSource(String barangay, Schedule sched);
+    JRDataSource getCollectionCollectiblesChartDataSource(Integer year);
+    JRDataSource getConsumptionChartDataSource(Integer year);
+    HashMap getCollectionCollectiblesExpenseDataSource(Integer year);
+    HashMap getConsumptionDataSource(Integer year);
 }

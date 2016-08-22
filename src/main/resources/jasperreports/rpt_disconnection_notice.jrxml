@@ -2,16 +2,15 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Notice of Disconnection" pageWidth="612" pageHeight="468" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="36" uuid="ac5d1d96-bd87-46ec-a7b0-53f4e340ca76">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="188"/>
-	<field name="accountId" class="java.lang.Long"/>
-	<field name="customerName" class="java.lang.String"/>
-	<field name="address" class="java.lang.String"/>
-	<field name="accountNumber" class="java.lang.String"/>
-	<field name="balanceWords" class="java.lang.String"/>
-	<field name="balanceNumbers" class="java.lang.String"/>
-	<field name="disconnectionDate" class="java.util.Date"/>
-	<group name="accountId" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{accountId}]]></groupExpression>
+	<property name="ireport.y" value="0"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="customer" class="com.domain.Customer"/>
+	<field name="address" class="com.domain.Address"/>
+	<field name="number" class="java.lang.String"/>
+	<field name="accountStandingBalance" class="java.lang.String"/>
+	<field name="_THIS" class="com.domain.Account"/>
+	<group name="id" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -24,64 +23,64 @@
 	</title>
 	<pageHeader>
 		<band height="116" splitType="Stretch">
-			<line>
-				<reportElement x="16" y="86" width="195" height="1" uuid="9aa5d5f1-c280-4926-834f-f4f8e705bdcd"/>
-			</line>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement x="405" y="74" width="100" height="11" uuid="1141c98f-2305-4f63-addb-de41139a8a8b"/>
+				<reportElement x="403" y="71" width="100" height="12" uuid="1141c98f-2305-4f63-addb-de41139a8a8b"/>
 				<textElement>
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="16" y="74" width="195" height="12" uuid="ffe853ca-3ede-4a4e-8ff5-e2f70d7960aa"/>
+				<reportElement x="33" y="78" width="195" height="12" uuid="ffe853ca-3ede-4a4e-8ff5-e2f70d7960aa"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{accountNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="16" y="87" width="195" height="12" uuid="db220160-f4fa-45ed-be60-ceeb46716080"/>
+				<reportElement x="33" y="90" width="195" height="12" uuid="db220160-f4fa-45ed-be60-ceeb46716080"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{customer}.toString()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="16" y="112" width="195" height="1" uuid="3de9bcbe-7863-43b4-a3c7-aacd58a98dff"/>
-			</line>
 			<textField>
-				<reportElement x="16" y="101" width="195" height="12" uuid="60e08807-15f5-4df6-af69-402fbdd6f383"/>
+				<reportElement x="33" y="102" width="195" height="12" uuid="60e08807-15f5-4df6-af69-402fbdd6f383"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{address}.toString()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="16" y="100" width="195" height="1" uuid="f0e7e605-7b38-4541-951b-d65c43670173"/>
-			</line>
 			<staticText>
 				<reportElement x="120" y="0" width="312" height="20" uuid="c91b3960-a429-4359-95c4-492790316395"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8" isBold="true" isStrikeThrough="false"/>
+					<font size="10" isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[CANDIJAY INTEGRATED MUNICIPAL WATERWORKS SYSTEM]]></text>
+				<text><![CDATA[CANDIJAY WATER BILLING SYSTEM]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="120" y="20" width="312" height="20" uuid="71ba58d9-0636-4134-9e8c-3324d03d065a"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Candijay Bohol]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="40" width="312" height="11" uuid="877c759e-80fc-40d8-b215-70b7e13550e7"/>
+				<reportElement x="120" y="40" width="312" height="13" uuid="877c759e-80fc-40d8-b215-70b7e13550e7"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NOTICE OF DISCONNECTION]]></text>
 			</staticText>
+			<line>
+				<reportElement x="34" y="88" width="195" height="1" uuid="29ff2ed3-c2b8-4477-8623-63adfac43401"/>
+			</line>
+			<line>
+				<reportElement x="33" y="99" width="195" height="1" uuid="ffdabbe8-15e0-47a7-920e-6e15ecadcffc"/>
+			</line>
+			<line>
+				<reportElement x="32" y="112" width="195" height="1" uuid="80bc3960-21c4-49d3-a1c4-c81363a6d776"/>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -89,97 +88,47 @@
 	</columnHeader>
 	<detail>
 		<band height="280" splitType="Stretch">
-			<staticText>
-				<reportElement x="16" y="16" width="517" height="49" uuid="a7824686-3126-4b52-974d-1799c82b03c3"/>
-				<textElement>
-					<font size="8"/>
+			<textField>
+				<reportElement x="30" y="6" width="509" height="219" uuid="5760a240-a778-415c-8730-678dbb0dda51"/>
+				<textElement markup="styled">
+					<font size="10"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Tinahod nga KONSUMEDOR sa Tubig
- 
-              	Maayong adlaw kanimo!
-	Sumala sa nahitala sa atong opisina, ang imong balayron sa konsumo sa tubig mikabat na sa kantidad nga
- 
-]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Tinahod nga KONSUMEDOR sa Tubig,\n\n\tMaayong adlaw kanimo!\n\tSumala sa nahitala sa atong opisina, ang imong balayron sa konsumo sa tubig mikabat na sa kantidad nga <style isUnderline='true' isBold='true'>"+$F{_THIS}.getAccountStandingBalanceToString()+"</style>\n\n\tSigon sa atong regulasyon, kadtong dili makabayad sulod sa tulo ka bulan pagaputlan na sa maong serbisyo. Tungod niini, amo ikaw nga gihangyo sa pagbayad sa imong obligasyon sa dili pa ang <style isUnderline='true' isBold='true'>"+$F{_THIS}.getDisconnectionDate().toString("EEEE MMMM dd, yyyy")+"</style> aron dili kini mahitabo.\n\n\tAlang sa dugang katin-awan, ayaw pagpanuko pagbisita sa atong opisina sa adlaw'ng tingtrabaho sa dili pa moabot ang tagal nga gilatid sa ibabaw.\n\n\tDaghang salamat sa imong makanunayon nga pagsuporta.\n\n\t\t\t\t\t\t\t\tKanimo matinahuron,"]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="16" y="89" width="517" height="12" uuid="f3adec80-7854-4017-ae87-2a2cce062fc4"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[	Sigon sa atong regulasyon, kadtong dili makabayad sulod sa tulo ka bulan pagaputlan na sa maong serbisyo. Tungod niini, amo]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="13" y="124" width="517" height="46" uuid="8c69e8d3-c7b1-4dc5-9c4d-5a3c23bd48aa"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[	Alang sa dugang katin-awan, ayaw pagpanuko pagbisita sa atong opisina sa adlaw'ng tingtrabaho sa dili pa moabot ang tagal nga gilatid sa ibabaw.
-
-	Daghang salamat sa imong makanunayon nga pagsuporta.
-
-]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="258" y="174" width="109" height="20" uuid="bac505a0-e9e6-4c93-b3c1-1c6de9ad6d54"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Kanimo matinahuron,]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="343" y="197" width="190" height="20" uuid="787345f0-187d-47ce-8c53-5d9572d65ac7"/>
+				<reportElement x="309" y="196" width="190" height="20" uuid="787345f0-187d-47ce-8c53-5d9572d65ac7"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ENGR. ALBERTO G. BERNALES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="343" y="217" width="190" height="11" uuid="34e24c43-03d6-4b49-9bba-05a79d62fea4"/>
+				<reportElement x="309" y="216" width="190" height="11" uuid="34e24c43-03d6-4b49-9bba-05a79d62fea4"/>
 				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[MPDC/Manager]]></text>
 			</staticText>
-			<textField pattern="">
-				<reportElement x="16" y="65" width="276" height="12" uuid="33f7bb75-d03a-4ede-a9d1-e3159fed415f"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{balanceWords}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="292" y="65" width="114" height="12" uuid="91cb80a1-5878-4119-8b03-cb464d9bd799"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{balanceNumbers}]]></textFieldExpression>
-			</textField>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="267" y="101" width="114" height="12" uuid="357a7224-c773-430e-8881-a01657cde09b"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{disconnectionDate}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="16" y="228" width="49" height="11" uuid="71d18b10-a4c8-46d1-a4fa-e75abae1ecb2"/>
+				<reportElement x="14" y="225" width="49" height="12" uuid="71d18b10-a4c8-46d1-a4fa-e75abae1ecb2"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Received by:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="13" y="237" width="49" height="11" uuid="b988e009-606b-4024-8d17-226259f3d18a"/>
+				<reportElement x="14" y="237" width="49" height="12" uuid="b988e009-606b-4024-8d17-226259f3d18a"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="65" y="238" width="180" height="1" uuid="e7299485-1de0-4863-baad-0c468dbbc73c"/>
+				<reportElement x="65" y="236" width="180" height="1" uuid="e7299485-1de0-4863-baad-0c468dbbc73c"/>
 			</line>
 			<line>
-				<reportElement x="65" y="248" width="180" height="1" uuid="a9f00872-b2f5-49a9-990a-d6c5afc1ea73"/>
+				<reportElement x="65" y="247" width="180" height="1" uuid="a9f00872-b2f5-49a9-990a-d6c5afc1ea73"/>
 			</line>
 			<staticText>
 				<reportElement x="13" y="251" width="245" height="22" uuid="80470103-791d-45a7-9ffc-852141c12882"/>
@@ -189,26 +138,6 @@
 				<text><![CDATA[Palihog ayaw kini tagai ug bili kon ugaling imo nang
 nabayran ang imong obligasyon]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="16" y="101" width="252" height="12" uuid="6c02e8de-f5a0-4f49-acea-5e4cd045c2c6"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[ikaw nga gihangyo sa pagbayad sa imong obligasyon sa dili pa ang]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="382" y="101" width="148" height="12" uuid="01716a4e-096c-47e5-80b7-864debb07707"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[aron dili kini mahitabo.]]></text>
-			</staticText>
-			<line>
-				<reportElement x="16" y="77" width="389" height="1" uuid="49b27dca-f125-4363-accd-49c95f95c7be"/>
-			</line>
-			<line>
-				<reportElement x="267" y="112" width="114" height="1" uuid="10fab9f1-9528-48dd-bd6a-2af568f301f9"/>
-			</line>
 		</band>
 	</detail>
 	<columnFooter>

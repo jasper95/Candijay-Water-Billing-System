@@ -13,12 +13,7 @@ import java.util.List;
  * @author Bert
  */
 public interface DataTableDao {
-    public <T>List<T> findWithDataTablesCriteria(DatatablesCriterias criterias, Class<T> clazz);
-    public Long getFilteredCount(DatatablesCriterias criterias, Class clazz);
-    /**
-     *
-     * @param clazz
-     * @return
-     */
-    public Long getTotalCount(Class clazz);
+    <T>List<T> findWithDataTablesCriteria(DatatablesCriterias criterias, Class<T> clazz);
+    Long getFilteredCount(DatatablesCriterias criterias, Class clazz);
+    Long getTotalCount(Class clazz);
 }

@@ -16,9 +16,7 @@ import org.springframework.validation.Errors;
  * @author Bert
  */
 public interface MeterReadingService {
-    public List<MeterReading> findmeterReadingForAccount(Account account);
-    public MeterReading findAccountLastMeterReading(Account account, int monthLag);
-    public MeterReading saveMeterReading(MeterReadingForm form);
-    public boolean isReadingPaid(MeterReading reading);
-    public Errors validate(MeterReadingForm form, Errors errors);
+    MeterReading findAccountLastMeterReading(Account account, int monthLag);
+    MeterReading saveMeterReading(MeterReadingForm form);
+    boolean isReadingPaid(MeterReading reading);
 }

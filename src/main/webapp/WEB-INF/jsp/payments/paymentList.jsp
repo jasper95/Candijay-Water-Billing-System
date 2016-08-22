@@ -1,8 +1,3 @@
-<%-- 
-    Document   : paymentList
-    Created on : Aug 22, 2015, 12:33:37 PM
-    Author     : 201244055
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -28,7 +23,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display:none" class="container-fluid">
                         <div class="row">
                             <div class="col-sm-8">
                                 <h2>Payments</h2>
@@ -131,5 +127,11 @@
         <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
         <script src="${STATIC_URL}js/payments/list.js"></script>
         <script src="${STATIC_URL}js/payments/update.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

@@ -23,19 +23,19 @@
             <c:if test="${not empty msg}">
                 <div class="alert alert-success alert-msg center-block">${msg}</div>
             </c:if>
-            <c:url value="/j_spring_security_check" var="loginUrl"/>
+            <c:url value="/login" var="loginUrl"/>
             <form id="loginForm"  action="${loginUrl}" method="POST">
                 <sec:csrfInput/>
                 <div class="log-fields-wrapper center-block">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-                        <input name="j_username" type="text" class="form-control" placeholder="Username" autocomplete="off" required autofocus/>
+                        <input name="username" type="text" class="form-control" placeholder="Username" autocomplete="off" required autofocus/>
                     </div>
                 </div>
                 <div class="log-fields-wrapper center-block">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                        <input type="password" name="j_password" class="form-control" placeholder="Password" required autofocus/>
+                        <input type="password" name="password" class="form-control" placeholder="Password" required autofocus/>
                     </div>
                 </div>
                 <div class="form-group">

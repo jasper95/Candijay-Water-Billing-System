@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Chart" pageWidth="936" pageHeight="612" orientation="Landscape" columnWidth="792" leftMargin="72" rightMargin="72" topMargin="72" bottomMargin="72" uuid="574c89c7-1a06-465e-bda0-161975dc31d3">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CHART_TITLE" class="java.lang.String"/>
+	<parameter name="VALUE_LABEL" class="java.lang.String"/>
+	<parameter name="CATEGORY_LABEL" class="java.lang.String"/>
+	<field name="month" class="java.lang.String"/>
+	<field name="category" class="java.lang.String"/>
+	<field name="value" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="237" y="0" width="342" height="20" uuid="194ac508-bc76-4c03-92d8-1dc62d0d089c"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Candijay Water Billing System]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="448" splitType="Stretch">
+			<stackedBarChart>
+				<chart customizerClass="com.charts.customizers.StackedBarCustomizer">
+					<reportElement x="0" y="22" width="792" height="426" uuid="1034c548-84cd-4c35-a1d8-8f497c6f830f"/>
+					<chartTitle>
+						<font size="16"/>
+						<titleExpression><![CDATA[$P{CHART_TITLE}]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{category}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{month}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{value}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisLabelExpression><![CDATA[$P{CATEGORY_LABEL}]]></categoryAxisLabelExpression>
+					<categoryAxisFormat>
+						<axisFormat>
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA[$P{VALUE_LABEL}]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat>
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</stackedBarChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,8 +1,3 @@
-<%-- 
-    Document   : createOrUpdatePaymentForm
-    Created on : Aug 22, 2015, 5:16:55 PM
-    Author     : 201244055
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -27,7 +22,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display: none;" class="container-fluid">
                         <h2>Create Payment</h2>
                         <hr/>
                         <form:form cssClass="row" action="${pageContext.servletContext.contextPath}/admin/payments" modelAttribute="searchForm" id="fetchAccount">
@@ -117,8 +113,7 @@
                                         </div>
                                         <div class="panel-body">
                                             <form:form modelAttribute="paymentForm" method="post" id="add-payment-form">
-                                                <div class="col-sm-12 alert alert-danger global-errors"></div>
-                                                <div class="col-sm-12 alert alert-success success-msg"></div>
+                                                <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                                 <form:hidden path="accountId"/>
                                                 <div class="col-sm-12 form-group">
                                                     <cws:input id="or-num" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="true" size="12"/>
@@ -163,5 +158,11 @@
         <script src="${STATIC_URL}js/helpers/search-helper.js"></script>
         <script src="${STATIC_URL}js/payments/create.js"></script>
         <script src="${STATIC_URL}js/payments/update.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import org.joda.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Created by Bert on 7/17/2016.
  */
@@ -23,6 +25,7 @@ public class FormOptionsServiceImpl implements FormOptionsService{
         this.addressRepo = addressRepo;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public HashMap<String, Collections> getCustomerFormOptions() {
         HashMap<Character, String> genderOptions = new HashMap();
@@ -56,6 +59,7 @@ public class FormOptionsServiceImpl implements FormOptionsService{
         return allOptions;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public HashMap<String, Collections> getReportFormOptions() {
         Map monthOptions = new HashMap(),  yearOptions = new LinkedHashMap(), typeOptionsReport = new HashMap(), typeOptionsChart = new HashMap(), typeAcctblty = new HashMap();

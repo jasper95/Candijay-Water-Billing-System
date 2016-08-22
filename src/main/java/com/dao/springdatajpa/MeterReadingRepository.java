@@ -16,8 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Bert
  */
 public interface MeterReadingRepository extends JpaRepository<MeterReading, Long> {
-    public List<MeterReading> findTop3ByAccountOrderByIdDesc(Account account);
-    public MeterReading findByAccountAndSchedule(Account account, Schedule schedule);
-    public List<MeterReading> findByScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
-    public List<MeterReading> findBySchedule(Schedule sched);
+    List<MeterReading> findTop3ByAccountOrderByIdDesc(Account account);
+    MeterReading findByAccountAndSchedule(Account account, Schedule schedule);
+    List<MeterReading> findBySchedule(Schedule sched);
 }

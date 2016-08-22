@@ -8,6 +8,7 @@ $(document).ready(function(){
         else $('#summary-status').val('0')
     });
     $('#category').on('change', function(){
+        cleanUpFormMsgs("#main-form");
         if (current !== null)
             $(active).hide();
         var value = $(this).val();
@@ -26,7 +27,7 @@ $(document).ready(function(){
             current.show();
             $('#submit').prop("disabled", false);
         } else $('#submit').prop("disabled", true);
-    })
+    });
     $('#submit').on('click', function(e){
         e.preventDefault();
         var form, form_type, form_id = '#';
@@ -43,9 +44,10 @@ $(document).ready(function(){
         }
         form_id += form.attr('id');
         cleanUpFormMsgs("#main-form");
+        cleanUpFormMsgs(form_id);
         $.post($('#form-action').val()+'/validate-'+form_type+'-form', form.serialize(), function(response){
-            if(validateForm(form_id ,response)) {
-                showSuccess("#main-form", "The report was successfully generated.")
+            if(validateForm(form_id ,response, "#main-form")) {
+                showSuccess("#main-form", "The report was successfully generated.");
                 openReport('POST', $('#form-action').val()+'/print-'+form_type, response.result, '_blank');
             }
         });

@@ -14,6 +14,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dao.util.DataTableDaoUtil;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  *
  * @author Bert
@@ -27,7 +29,8 @@ public class DataTableServiceImpl implements DataTableService{
     public DataTableServiceImpl(DataTableDao dataTableQueryHelper) {
         this.dataTableQueryHelper = dataTableQueryHelper;
     }
-    
+
+    @Transactional(readOnly = true)
     @Override
     public <T> DataSet <T> findWithDataTableCriterias(DatatablesCriterias criterias, Class<T> clazz){
         Long count = dataTableQueryHelper.getTotalCount(clazz);

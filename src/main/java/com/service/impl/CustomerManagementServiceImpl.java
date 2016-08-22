@@ -118,6 +118,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
         return deviceRepo.save(origDevice);
     }
 
+    @Transactional
     @Override
     public void activateDevice(Device device) {
         List<Device> devices =  deviceRepo.findByOwner(device.getOwner());
@@ -128,38 +129,5 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
             deviceRepo.save(d);
         }
 
-    }
-
-    @Override
-    public List<Account> getAllActiveAccounts() {
-        return accountRepo.findByStatus(AccountStatus.ACTIVE);
-    }
-
-    @Override
-    public List<Account> getAllNoReadingAccountForSchedule(Schedule sched) {
-        List<MeterReading> readings = mrRepo.findBySchedule(sched);
-        Set<Account> accountsWithReading = new HashSet<Account>();
-        for(MeterReading reading: readings)
-            accountsWithReading.add(reading.getAccount());
-        List<Account> allActiveAccounts = getAllActiveAccounts();
-        List<Account> accountsWithNoReading = new ArrayList<Account>();
-        for(Account account : allActiveAccounts)
-            if(!accountsWithReading.contains(account))
-                accountsWithNoReading.add(account);
-        return accountsWithNoReading;
-    }
-
-    @Override
-    public List<Account> getAllNoPaymentAccountForSchedule(Schedule sched) {
-        List<Payment> payments = paymentRepo.findByInvoice_Schedule(sched);
-        Set<Account> accountsWithPayment = new HashSet<Account>();
-        for(Payment payment: payments)
-            accountsWithPayment.add(payment.getAccount());
-        List<Account> allActiveAccounts = getAllActiveAccounts();
-        List<Account> accountsWithNoPayment = new ArrayList<Account>();
-        for(Account account : allActiveAccounts)
-            if(!accountsWithPayment.contains(account))
-                accountsWithNoPayment.add(account);
-        return accountsWithNoPayment;
     }
 }

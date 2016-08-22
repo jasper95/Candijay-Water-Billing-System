@@ -1,6 +1,5 @@
 package com.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -12,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

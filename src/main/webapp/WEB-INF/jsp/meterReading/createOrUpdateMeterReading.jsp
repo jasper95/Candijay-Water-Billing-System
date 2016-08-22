@@ -1,8 +1,3 @@
-<%-- 
-    Document   : createOrUpdateMeterReading
-    Created on : May 20, 2015, 6:39:33 PM
-    Author     : Bert
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -26,7 +21,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display: none;" class="container-fluid">
                         <h2>Create Reading</h2>
                         <hr/>
                         <form:form method="post" cssClass="row" action="${pageContext.servletContext.contextPath}/admin/reading" modelAttribute="searchForm" id="fetchAccount">
@@ -113,8 +109,7 @@
                                         </div>
                                         <div class="panel-body">
                                             <form:form modelAttribute="meterReadingForm" method="post" id="add-meterReading-form">
-                                                <div class="col-sm-12 alert alert-danger global-errors"></div>
-                                                <div class="col-sm-12 alert alert-success success-msg"></div>
+                                                <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                                 <form:hidden path="accountId"/>
                                                 <div class="col-sm-12 form-group">
                                                     <cws:select id="reading-month" name="meterReading.schedule.month" label="Reading Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="12"/>
@@ -152,5 +147,11 @@
         <script src="${STATIC_URL}js/helpers/search-helper.js"></script>
         <script src="${STATIC_URL}js/meter-reading/create.js"></script>
         <script src="${STATIC_URL}js/meter-reading/edit.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

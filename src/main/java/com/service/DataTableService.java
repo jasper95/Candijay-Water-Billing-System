@@ -13,5 +13,5 @@ import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
  * @author Bert
  */
 public interface DataTableService {
-    public <T> DataSet <T> findWithDataTableCriterias(DatatablesCriterias criterias, Class<T> clazz);
+    <T> DataSet <T> findWithDataTableCriterias(DatatablesCriterias criterias, Class<T> clazz);
 }

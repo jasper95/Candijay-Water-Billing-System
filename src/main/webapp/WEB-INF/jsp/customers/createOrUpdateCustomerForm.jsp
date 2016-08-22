@@ -1,8 +1,3 @@
-<%-- 
-    Document   : createOrUpdateCustomerForm
-    Created on : Apr 29, 2015, 8:22:54 AM
-    Author     : Bert
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>

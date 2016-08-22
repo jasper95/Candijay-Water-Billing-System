@@ -14,7 +14,7 @@
                     <i class="fa fa-home fa-lg"></i> Home
                 </a>
             </li>
-        <sec:authorize access="hasRole('CUSTOMER_ACCOUNTS')">
+        <sec:authorize access="hasAuthority('CUSTOMER_ACCOUNTS')">
             <li data-toggle="collapse" data-target="#manage-cus-acct" class="collapsed">
                 <a href="#">
                     <i class="fa fa-group fa-lg"></i> Accounts <span class="arrow"></span>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
             </ul>
-        <sec:authorize access="hasRole('METER_READING')">
+        <sec:authorize access="hasAuthority('METER_READING')">
             <li>
                 <a href="${pageContext.servletContext.contextPath}/admin/reading">
                     <div>
@@ -42,7 +42,7 @@
                 </a>
             </li>
         </sec:authorize>
-        <sec:authorize access="hasRole('PAYMENTS')">
+        <sec:authorize access="hasAuthority('PAYMENTS')">
             <li data-toggle="collapse" data-target="#transactions"  class="collapsed">
                 <a href="#">
                     <i class="fa fa-bank fa-lg"></i> Transactions <span class="arrow"></span>
@@ -61,7 +61,7 @@
                     </a>
                 </li>
             </ul>
-        <sec:authorize access="hasRole('BILLS_REPORTS')">
+        <sec:authorize access="hasAuthority('BILLS_REPORTS')">
             <li data-toggle="collapse" data-target="#manage-rpt"  class="collapsed">
                 <a href="#">
                     <i class="fa fa-folder-open-o fa-lg"></i> Reports <span class="arrow"></span>
@@ -80,7 +80,7 @@
                     </a>
                 </li>
             </ul>
-        <sec:authorize access="hasRole('SYSTEM_USERS')">
+        <sec:authorize access="hasAuthority('SYSTEM_USERS')">
             <li data-toggle="collapse" class="collapsed" data-target="#system-action">
                 <a href="#">
                     <i class="fa fa-television fa-lg"></i> System <span class="arrow"></span>

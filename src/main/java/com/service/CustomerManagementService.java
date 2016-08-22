@@ -29,7 +29,4 @@ public interface CustomerManagementService {
     Account updateAccount(AccountForm accountForm);
     void changeAccountStatus(Account account, AccountStatus status);
     void activateDevice(Device device);
-    List<Account> getAllActiveAccounts();
-    List<Account> getAllNoReadingAccountForSchedule(Schedule sched);
-    List<Account> getAllNoPaymentAccountForSchedule(Schedule sched);
 }

@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public interface FormOptionsService{
-    public HashMap<String,Collections> getCustomerFormOptions();
-    public HashMap<String,Collections> getMeterReadingFormOptions();
-    public HashMap<String, Collections> getReportFormOptions();
-    public HashMap<String, Collections> getExpenseFormOptions();
+    HashMap<String,Collections> getCustomerFormOptions();
+    HashMap<String,Collections> getMeterReadingFormOptions();
+    HashMap<String, Collections> getReportFormOptions();
+    HashMap<String, Collections> getExpenseFormOptions();
 }

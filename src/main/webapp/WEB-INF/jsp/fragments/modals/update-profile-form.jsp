@@ -3,13 +3,15 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" id="close-reading-form" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 class="modal-title">Update Profile</h3>
             </div>
             <div class="modal-body">
                 <fieldset>
                     <form:form action="${pageContext.servletContext.contextPath}/admin/update-name" id="md-name-edit-form">
-                        <div class="col-sm-12 alert alert-success success-msg"></div>
+                        <div class="col-sm-12 alert alert-success success-msg">
+                            <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+                        </div>
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-4 has-feedback ">
                                 <label class="control-label" for="fn">Fullname</label>

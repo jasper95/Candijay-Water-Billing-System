@@ -12,14 +12,13 @@ import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
 import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
-import com.response.json.FormValidationResponse;
 import com.service.DataTableService;
-import com.service.InvoicingService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
+
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,9 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -41,12 +38,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class InvoiceController {
     
     private InvoiceRepository invoiceRepo;
-    private InvoicingService invoicingService;
     private DataTableService dataTableService;
     
     @Autowired
-    public InvoiceController(InvoicingService invoicingService, DataTableService dataTableService, InvoiceRepository invoiceRepo) {
-        this.invoicingService = invoicingService;
+    public InvoiceController(DataTableService dataTableService, InvoiceRepository invoiceRepo) {
         this.dataTableService = dataTableService;
         this.invoiceRepo = invoiceRepo;
     }
@@ -78,7 +73,7 @@ public class InvoiceController {
         List<Invoice> invoices = new ArrayList();
         for(Long id : checkboxes.getCheckboxValues())
             invoices.add(invoiceRepo.findOne(id));
-        modelMap.put("datasource", invoicingService.getDataSource(invoices));
+        modelMap.put("datasource", new JRBeanCollectionDataSource(invoices));
         modelMap.put("format", "pdf");
         return "rpt_bill";
     }

@@ -75,14 +75,14 @@
     
     <session-config>
         <session-timeout>
-            30
+            240
         </session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
     <error-page>
-	<error-code>404</error-code>
-	<location>/WEB-INF/jsp/error404.jsp</location>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error404.jsp</location>
     </error-page>
 </web-app>

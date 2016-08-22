@@ -21,16 +21,13 @@ import com.service.FormOptionsService;
 import com.service.PaymentService;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -136,13 +133,10 @@ public class PaymentController {
         List<Long> ids = new ArrayList();
         for(Long id: checkboxes.getCheckboxValues())
             ids.add(id);
-        System.out.println("ids "+ids.size());
         model.put("datasource", paymentService.paymentHistoryDataSource(ids));
+        model.put("IS_HISTORY", true);
         model.put("format", "pdf");
-        model.put("month", "");
-        model.put("year","");
-        model.put("barangay", "History");
-        return "rpt_table";
+        return "rpt_payment_history";
     }
 
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
@@ -157,7 +151,7 @@ public class PaymentController {
             response.put("result", result.getAllErrors());
         }
         else{
-            Invoice lastBill = paymentService.findLatestBill(account);
+            Invoice lastBill = invoiceRepo.findTopByAccountOrderByIdDesc(account);
             response.put("status", "SUCCESS");
             response.put("account", account);
             BigDecimal lastDue = (lastBill != null) ? lastBill.getNetCharge() : BigDecimal.ZERO;

@@ -12,6 +12,6 @@ import com.domain.Settings;
  * @author Bert
  */
 public interface SettingsService {
-    public Settings getCurrentSettings();
-    public void updateSettings(Settings settings);
+    Settings getCurrentSettings();
+    void updateSettings(Settings settings);
 }

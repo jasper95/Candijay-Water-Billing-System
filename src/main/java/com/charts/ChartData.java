@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.domain;
+package com.charts;
 
 import java.math.BigDecimal;
 
@@ -21,7 +21,7 @@ public class ChartData {
         this.month = month;
         this.category = category;
     }
-    
+
     public BigDecimal getValue() {
         return value;
     }
@@ -45,6 +45,6 @@ public class ChartData {
     public void setCategory(String category) {
         this.category = category;
     }
-    
-    
+
+
 }

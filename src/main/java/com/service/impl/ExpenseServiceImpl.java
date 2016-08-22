@@ -69,11 +69,4 @@ public class ExpenseServiceImpl implements ExpenseService{
             return expenseRepo.save(form);
         }
     }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Expense findExpense(Long id) {
-        return expenseRepo.findOne(id);
-    }
-
 }

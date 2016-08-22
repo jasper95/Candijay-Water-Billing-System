@@ -3,14 +3,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" id="close-acct-form" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Finalize Payments</h4>
             </div>
             <div class="modal-body">
                 <form:form id="fn-pm-form" modelAttribute="addressForm" role="form">
                     <fieldset>
-                        <div class="col-sm-12 alert alert-danger global-errors"></div>
-                        <div class="col-sm-12 alert alert-success success-msg"></div>
+                        <jsp:include page="../postAuth/form-alerts.jsp"/>
                         <div class="col-sm-12 form-group">
                             <cws:select id="acc-bg" name="brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="6"/>
                             <cws:select id="ac-lc" name="locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" size="6"/>

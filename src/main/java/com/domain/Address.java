@@ -5,7 +5,6 @@ package com.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -121,7 +120,7 @@ public class Address  implements java.io.Serializable {
     
     @Override
     public String toString(){
-        return brgy+", "+locationCode;
+        return brgy+", Zone "+locationCode;
     }
 
     @Override

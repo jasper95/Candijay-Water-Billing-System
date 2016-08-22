@@ -25,7 +25,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display:none" class="container-fluid">
                         <h2>Accounts</h2>
                         <div class="alert alert-info form-wrapper">
                             <div class="col-sm-12 form-group">
@@ -112,5 +113,11 @@
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
         <script src="${STATIC_URL}js/accounts/list.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

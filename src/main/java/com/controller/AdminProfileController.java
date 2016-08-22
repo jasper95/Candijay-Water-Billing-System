@@ -6,23 +6,18 @@
 package com.controller;
 
 import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.ScheduleRepository;
 import com.dao.springdatajpa.UserRepository;
-import com.domain.Account;
 import com.domain.User;
 import com.domain.enums.AccountStatus;
 import com.domain.enums.UserStatus;
-import com.service.CustomerManagementService;
-import com.service.InvoicingService;
+import com.service.ReportService;
+import com.service.SettingsService;
 import com.service.SystemUserService;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -44,27 +39,31 @@ public class AdminProfileController {
     private PasswordEncoder encoder;
     private SystemUserService userService;
     private UserRepository userRepo;
-    private InvoicingService invoicingService;
+    private ReportService reportService;
     private AccountRepository accountRepo;
-    private CustomerManagementService custService;
-    private ScheduleRepository schedRepo;
+    private SettingsService settingsService;
+
     @Autowired
     public AdminProfileController(PasswordEncoder encoder, SystemUserService userService, UserRepository userRepo,
-                                  InvoicingService invoicingService, AccountRepository accountRepo, CustomerManagementService custService,
-                                  ScheduleRepository schedRepo){
+                                  ReportService reportService, AccountRepository accountRepo, SettingsService settingsService){
         this.encoder = encoder;
         this.userRepo = userRepo;
         this.userService = userService;
-        this.invoicingService = invoicingService;
+        this.reportService = reportService;
         this.accountRepo = accountRepo;
-        this.custService = custService;
-        this.schedRepo = schedRepo;
+        this.settingsService = settingsService;
     }
     @RequestMapping(method=RequestMethod.GET)
     public String admin(ModelMap model){
-        Integer activeAccounts = custService.getAllActiveAccounts().size(), warningAccounts = accountRepo.findByStatus(AccountStatus.WARNING).size(),
+        Integer activeAccounts = accountRepo.findByStatus(AccountStatus.ACTIVE).size(), warningAccounts = accountRepo.findByStatus(AccountStatus.WARNING).size(),
                             inactiveAccounts = accountRepo.findByStatus(AccountStatus.INACTIVE).size();
         Integer activeUsers = userRepo.findByStatus(UserStatus.ACTIVE).size(), inactiveUsers = userRepo.findByStatus(UserStatus.INACTIVE).size();
+        model.put("activeUsers", activeUsers);
+        model.put("inactiveUsers", inactiveUsers);
+        model.put("activeAccounts", activeAccounts);
+        model.put("warningAccounts", warningAccounts);
+        model.put("inactiveAccounts", inactiveAccounts);
+        model.put("settings", settingsService.getCurrentSettings());
         return "admin/admin";
     }
 
@@ -118,9 +117,9 @@ public class AdminProfileController {
         if(chartIndex != null){
             int year = LocalDateTime.now().getYear();
             if(chartIndex == 1)
-                response.put("result", invoicingService.getCollectionCollectiblesExpenseDataSource(year));
+                response.put("result", reportService.getCollectionCollectiblesExpenseDataSource(year));
             else if (chartIndex == 2)
-                response.put("result", invoicingService.getConsumptionDataSource(year));
+                response.put("result", reportService.getConsumptionDataSource(year));
             else{
                 response.put("status", "FAILURE");
             }

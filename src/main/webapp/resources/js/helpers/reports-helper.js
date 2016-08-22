@@ -18,7 +18,6 @@ $(document).ready(function(){
                     var input = document.createElement("textarea");
                     input.name = key;
                     input.value = typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key];
-                    console.log(input.value)
                     form.appendChild(input);
                 }
             }

@@ -1,8 +1,3 @@
-<%-- 
-    Document   : viewAccount
-    Created on : May 28, 2015, 1:20:02 AM
-    Author     : Bert
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>

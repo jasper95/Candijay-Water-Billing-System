@@ -20,10 +20,8 @@ public interface PaymentService {
     JRDataSource paymentHistoryDataSource(List<Long> paymentIds);
     Payment save(PaymentForm form);
     Payment updateAccountFromPayment(Payment payment);
-    Invoice findLatestBill(Account account);
     Errors validate(PaymentForm form, Errors errors);
     Payment findPaymentById(Long id);
-    boolean canEdit(Payment payment);
     boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
     List<Account> updateAccountsWithNoPayments(Address address);
 

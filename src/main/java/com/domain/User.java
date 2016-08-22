@@ -6,15 +6,12 @@ import com.domain.enums.UserStatus;
 import com.domain.enums.UserType;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="312" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="5"/>
 	<property name="ireport.y" value="0"/>
-	<field name="customerName" class="java.lang.String"/>
-	<field name="scheduleMonth" class="java.lang.String"/>
-	<field name="accountId" class="java.lang.Long"/>
-	<field name="billId" class="java.lang.Long"/>
-	<field name="readingCurrent" class="java.lang.Integer"/>
-	<field name="readingConsumption" class="java.lang.Integer"/>
-	<field name="billBasic" class="java.math.BigDecimal"/>
-	<field name="billSysLoss" class="java.math.BigDecimal"/>
-	<field name="billDepFund" class="java.math.BigDecimal"/>
-	<field name="billOthers" class="java.math.BigDecimal"/>
-	<field name="billArrears" class="java.math.BigDecimal"/>
-	<field name="billPenalty" class="java.math.BigDecimal"/>
-	<field name="billTotal" class="java.math.BigDecimal"/>
-	<field name="billDiscount" class="java.math.BigDecimal"/>
-	<field name="readingPrevious" class="java.lang.Integer"/>
-	<field name="accountAddress" class="java.lang.String"/>
-	<field name="dueDate" class="java.util.Date"/>
-	<group name="billid" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{billId}]]></groupExpression>
+	<field name="id" class="java.lang.Long"/>
+	<field name="reading" class="com.domain.MeterReading"/>
+	<field name="basic" class="java.math.BigDecimal"/>
+	<field name="systemLoss" class="java.math.BigDecimal"/>
+	<field name="depreciationFund" class="java.math.BigDecimal"/>
+	<field name="others" class="java.math.BigDecimal"/>
+	<field name="arrears" class="java.math.BigDecimal"/>
+	<field name="penalty" class="java.math.BigDecimal"/>
+	<field name="netCharge" class="java.math.BigDecimal"/>
+	<field name="account" class="com.domain.Account"/>
+	<field name="dueDate" class="org.joda.time.DateTime"/>
+	<field name="schedule" class="com.domain.Schedule"/>
+	<group name="id" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -74,21 +69,21 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{account}.getCustomer().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="196" y="48" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{scheduleMonth}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{schedule}.getMonthSymbol()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
 				<reportElement x="383" y="45" width="176" height="19" uuid="56bf8cd7-5dea-4b14-b325-0f1cf9e9937c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{dueDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dueDate}.toString("MM/dd/yyyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -116,7 +111,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Brgy & Zone:]]></text>
+				<text><![CDATA[Address:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="196" y="25" width="84" height="14" uuid="aea4d366-aeab-416d-8368-10b4c3a25bd2"/>
@@ -200,70 +195,69 @@
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ $F{accountId}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{account}.getNumber()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="71" y="29" width="68" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ $F{billId}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="12" width="90" height="13" uuid="edce5fb7-7e6e-4b80-b6ad-3422ee483abc"/>
 				<textElement verticalAlignment="Top">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{accountAddress}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{account}.getAddress().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="26" width="90" height="14" uuid="cb081d5b-2798-4727-b715-bddb2ecf2294"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{readingPrevious}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reading}.getPrevious()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="39" width="90" height="11" uuid="e8d07f0d-f615-43eb-ad9e-84464b98fc6f"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{readingCurrent}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reading}.getReadingValue()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="69" width="70" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billArrears}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{arrears}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="81" width="70" height="14" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billPenalty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{penalty}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="92" width="70" height="11" uuid="ef23cb0e-700a-4b26-8b00-a57681015538"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billDiscount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="103" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billOthers}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{others}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="115" width="70" height="11" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billTotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{netCharge}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="196" y="50" width="84" height="11" uuid="49569f5c-4bef-4c67-9508-606d214c8e34"/>
@@ -298,28 +292,28 @@
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{readingConsumption}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reading}.getConsumption()]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="282" y="60" width="90" height="11" uuid="3420a130-35a7-4c89-805a-a196f27b3df7"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billBasic}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{basic}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="71" width="90" height="12" uuid="18d494b2-ace2-4f8e-9bfc-33d1073dd84d"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billDepFund}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{depreciationFund}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="83" width="90" height="11" uuid="a46169b5-4067-450a-9a87-610f178d87b7"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{billSysLoss}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{systemLoss}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

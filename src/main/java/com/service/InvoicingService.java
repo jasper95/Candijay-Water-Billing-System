@@ -11,6 +11,6 @@ import com.domain.MeterReading;
  *
  * @author Bert
  */
-public interface InvoicingService extends ReportService{
-    public void generateInvoiceMeterReading(MeterReading reading);
+public interface InvoicingService{
+    void generateInvoiceMeterReading(MeterReading reading);
 }

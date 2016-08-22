@@ -1,8 +1,3 @@
-<%-- 
-    Document   : error404
-    Created on : May 27, 2015, 7:16:54 PM
-    Author     : Bert
---%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

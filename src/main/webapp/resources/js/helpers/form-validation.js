@@ -1,4 +1,4 @@
-function validateForm(form_id, response){
+function validateForm(form_id, response, display_error_form_id){
     var fields = [], field_errors = [], global_errors = []
     var result = response.result
     if(response.status === 'FAILURE'){
@@ -24,8 +24,12 @@ function validateForm(form_id, response){
         for(var error_field in field_errors){
             showFieldError(fields[error_field], field_errors[error_field])
         }
-        if(global_errors.length > 0)
-            showGlobalErrors(global_errors, form_id)
+        if(global_errors.length > 0) {
+            if(display_error_form_id !== undefined)
+                showGlobalErrors(global_errors, display_error_form_id);
+            else
+                showGlobalErrors(global_errors, form_id);
+        }
         return false
     }
     return true
@@ -49,13 +53,13 @@ function showGlobalErrors(errors, form_id){
 }
 
 function cleanUpFormMsgs(form_id){
-    $(form_id).find('div.has-error').removeClass('has-error')
-    $(form_id).find('span.field-error').remove()
-    $(form_id).find('span.glyphicon-remove').remove()
+    $(form_id).find('div.has-error').removeClass('has-error');
+    $(form_id).find('span.field-error').remove();
+    $(form_id).find('span.glyphicon-remove').remove();
     $(form_id).find('div.global-errors').hide();
-    $(form_id).find('div.global-errors p').remove()
+    $(form_id).find('div.global-errors p').remove();
     $(form_id).find('div.success-msg').hide();
-    $(form_id).find('div.success-msg p').remove()
+    $(form_id).find('div.success-msg p').remove();
 }
 
 function cleanUpFormFields(form_id){
@@ -69,7 +73,6 @@ function cleanUpFormFields(form_id){
                 input.val('');
             }
         }
-
     })
 }
 

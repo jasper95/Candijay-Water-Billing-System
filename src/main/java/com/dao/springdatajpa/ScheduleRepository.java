@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Bert
  */
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    public Schedule findByMonthAndYear(Integer month, Integer year);
+    Schedule findByMonthAndYear(Integer month, Integer year);
 }

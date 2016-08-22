@@ -5,11 +5,13 @@
  */
 package com.controller;
 
+import com.dao.springdatajpa.RoleRepository;
 import com.dao.springdatajpa.UserRepository;
 import com.domain.Role;
 import com.domain.User;
 import com.domain.enums.UserStatus;
 import com.service.SystemUserService;
+
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,13 +35,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/admin/system-users")
 @Controller
 public class SystemUsersController {
-    @Autowired
     private SystemUserService userService;
-    @Autowired
     private UserRepository userRepo;
-    @Autowired
     private PasswordEncoder encoder;
-    static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.user";
+    private RoleRepository roleRepo;
+
+    @Autowired
+    public SystemUsersController(SystemUserService userService, UserRepository userRepo, PasswordEncoder encoder,
+                                 RoleRepository roleRepo){
+        this.userService = userService;
+        this.userRepo = userRepo;
+        this.encoder = encoder;
+        this.roleRepo = roleRepo;
+    }
     
     @InitBinder
     protected void initBinder(WebDataBinder binder){
@@ -53,20 +61,20 @@ public class SystemUsersController {
     private class CustomRoleEditor extends PropertyEditorSupport{
         @Override
         public void setAsText(String text) throws IllegalArgumentException {
-            setValue(userService.findRoleById(Long.valueOf(text)));
+            setValue(roleRepo.findOne(Long.valueOf(text)));
         }      
     }
 
     @RequestMapping(method=RequestMethod.GET)
     public String getSystemUsers(ModelMap model) {
-        model.addAttribute("roles", userService.getAllRoles());
+        model.addAttribute("roles", roleRepo.findAll());
         model.addAttribute("user", new User());
         return "systemUsers/usersList";
     }
     
     @RequestMapping(value="/get-all", method=RequestMethod.GET)
     public @ResponseBody List<User> getAll(){
-        return userService.getAllUsers();
+        return userRepo.findAll();
     }
 
     
@@ -75,7 +83,7 @@ public class SystemUsersController {
     HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result, RedirectAttributes redirectAttributes){
         HashMap response = new HashMap();
         if(!result.hasErrors()){
-            if(userService.isUsernameAlreadyTaken(user.getUsername()))
+            if(userRepo.findByUsername(user.getUsername()) != null)
                 result.rejectValue("username", "", "Username already taken");
         }
         if(!result.hasErrors()){

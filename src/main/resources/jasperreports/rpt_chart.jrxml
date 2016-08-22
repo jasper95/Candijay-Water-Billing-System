@@ -4,6 +4,8 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="CHART_TITLE" class="java.lang.String"/>
+	<parameter name="VALUE_LABEL" class="java.lang.String"/>
+	<parameter name="CATEGORY_LABEL" class="java.lang.String"/>
 	<field name="month" class="java.lang.String"/>
 	<field name="category" class="java.lang.String"/>
 	<field name="value" class="java.math.BigDecimal"/>
@@ -11,7 +13,15 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="236" y="0" width="342" height="20" uuid="6893ce1a-de6f-4ab4-8b92-ea9fb56e0e13"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Candijay Water Billing System]]></text>
+			</staticText>
+		</band>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
@@ -29,10 +39,10 @@
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="468" splitType="Stretch">
+		<band height="448" splitType="Stretch">
 			<barChart>
 				<chart>
-					<reportElement x="0" y="0" width="792" height="468" uuid="364e3d02-762c-4b20-b0e5-7426e18706ae"/>
+					<reportElement x="0" y="22" width="792" height="426" uuid="364e3d02-762c-4b20-b0e5-7426e18706ae"/>
 					<chartTitle position="Top">
 						<font size="18" isBold="true" isPdfEmbedded="false"/>
 						<titleExpression><![CDATA[$P{CHART_TITLE}]]></titleExpression>
@@ -50,11 +60,21 @@
 				<barPlot>
 					<plot/>
 					<itemLabel/>
+					<categoryAxisLabelExpression><![CDATA[$P{CATEGORY_LABEL}]]></categoryAxisLabelExpression>
 					<categoryAxisFormat>
-						<axisFormat/>
+						<axisFormat>
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+						</axisFormat>
 					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA[$P{VALUE_LABEL}]]></valueAxisLabelExpression>
 					<valueAxisFormat>
-						<axisFormat/>
+						<axisFormat>
+							<labelFont>
+								<font size="12"/>
+							</labelFont>
+						</axisFormat>
 					</valueAxisFormat>
 				</barPlot>
 			</barChart>

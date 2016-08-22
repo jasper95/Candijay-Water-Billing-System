@@ -48,4 +48,7 @@ $(document).ready(function(){
             $('#update-submit').prop('disabled', false);
         }
     });
+    $("[data-hide]").on("click", function(){
+        $(this).closest("." + $(this).attr("data-hide")).hide();
+    });
 });

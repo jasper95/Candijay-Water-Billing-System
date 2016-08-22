@@ -1,8 +1,3 @@
-<%-- 
-    Document   : updateSettings
-    Created on : Jan 20, 2016, 9:29:48 AM
-    Author     : Bert
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>

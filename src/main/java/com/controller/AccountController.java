@@ -13,7 +13,6 @@ import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.Checkboxes;
-import com.forms.CustomerForm;
 import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
@@ -23,9 +22,9 @@ import com.service.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.enterprise.inject.Model;
 import javax.validation.Valid;
+
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
@@ -33,8 +32,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -55,7 +52,6 @@ public class AccountController {
     private InvoicingService invoicingService;
     private FormOptionsService formOptionsService;
     private SettingsService settingsService;
-    static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.accountForm";
 
     @Autowired
     public AccountController(CustomerManagementService custService, DataTableService dataTableService, 
@@ -313,7 +309,7 @@ public class AccountController {
             map.put("message", "None of the accounts is allowed to give notice of disconnection");
             return "errors";
         }
-        map.put("datasource", invoicingService.getDisconnectionNoticeDataSource(accounts));
+        map.put("datasource", new JRBeanCollectionDataSource(accounts));
         map.put("format", "pdf");
         return "rpt_disconnection_notice";
     }

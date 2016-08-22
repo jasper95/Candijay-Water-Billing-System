@@ -10,5 +10,4 @@ import org.springframework.validation.Errors;
 public interface ExpenseService {
     Errors validateExpenseForm(Expense form, Errors result);
     Expense saveExpense(Expense form);
-    Expense findExpense(Long id);
 }

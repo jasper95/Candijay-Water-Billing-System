@@ -1,8 +1,3 @@
-<%-- 
-    Document   : search
-    Created on : Apr 20, 2015, 8:07:08 PM
-    Author     : Bert
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -17,9 +12,6 @@
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
-        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
@@ -27,7 +19,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display:none" class="container-fluid">
                         <div class="row">
                             <div class="col-sm-10">
                                 <h2>Customers</h2>
@@ -53,7 +46,7 @@
                         <div class="row">
                             <div class="col-md-12 main">
                                 <div class="table-responsive">
-                                    <datatables:table id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                                    <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                         <datatables:column title="ID" property="id" filterable="true" />
                                         <datatables:column visible="false" searchable="true" property="lastname" selector="last-name"/>
                                         <datatables:column visible="false" searchable="true" property="firstName" selector="first-name"/>
@@ -63,8 +56,8 @@
                                         <datatables:column title="Contact" filterable="false" sortable="false" property="contactNumber"/>
                                         <datatables:column title="Members" filterable="false" sortable="false" property="familyMembersCount"/>
                                         <datatables:column filterable="false" title="Actions" renderFunction="custom-rendering#customerListActions" sortable="false"/>
-                                        <dandelion:bundle excludes="jquery"/>
                                         <datatables:extraJs bundles="customer" placeholder="before_end_document_ready" />
+                                        <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>
                                 </div>
                             </div>
@@ -73,7 +66,15 @@
                 </div>
             </div>
         </div>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${STATIC_URL}js/bootstrap.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

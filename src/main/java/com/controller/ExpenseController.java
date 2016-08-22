@@ -1,6 +1,7 @@
 package com.controller;
 
 
+import com.dao.springdatajpa.ExpenseRepository;
 import com.domain.Expense;
 import com.domain.ModifiedExpense;
 import com.github.dandelion.datatables.core.ajax.DataSet;
@@ -31,12 +32,15 @@ public class ExpenseController {
     private DataTableService dataTableService;
     private FormOptionsService formOptionsService;
     private ExpenseService expenseService;
+    private ExpenseRepository expenseRepo;
+
     @Autowired
     public ExpenseController(DataTableService dataTableService, FormOptionsService formOptionsService,
-                             ExpenseService expenseService){
+                             ExpenseService expenseService, ExpenseRepository expenseRepo){
         this.formOptionsService = formOptionsService;
         this.dataTableService = dataTableService;
         this.expenseService = expenseService;
+        this.expenseRepo = expenseRepo;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -82,7 +86,7 @@ public class ExpenseController {
         try{
             Long id = Long.valueOf(params.get("id"));
             if(id != null)
-                expense = expenseService.findExpense(id);
+                expense = expenseRepo.findOne(id);
             if(expense != null){
                 response.put("status", "SUCCESS");
                 response.put("expense", expense);

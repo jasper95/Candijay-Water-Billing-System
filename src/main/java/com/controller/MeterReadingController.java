@@ -18,7 +18,6 @@ import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
 import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
-import com.response.json.FormValidationResponse;
 import com.service.DataTableService;
 import com.service.FormOptionsService;
 import com.service.MeterReadingService;
@@ -91,9 +90,9 @@ public class MeterReadingController {
     }
     
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public @ResponseBody FormValidationResponse processCustomerForm(@ModelAttribute("meterReadingForm") @Valid MeterReadingForm meterReadingForm,
+    public @ResponseBody HashMap processCustomerForm(@ModelAttribute("meterReadingForm") @Valid MeterReadingForm meterReadingForm,
                                      BindingResult result) {
-        FormValidationResponse response = new FormValidationResponse();
+        HashMap response = new HashMap();
         //form is valid with no transaction constraints
         if(!result.hasErrors()){
             Account account = accountRepo.findOne(meterReadingForm.getAccountId());
@@ -121,13 +120,13 @@ public class MeterReadingController {
         }
         //form is valid with transaction constraints
         if(!result.hasErrors())
-            response.setResult(mrService.saveMeterReading(meterReadingForm));
+            response.put("result", mrService.saveMeterReading(meterReadingForm));
         if(result.hasErrors()){
-            response.setStatus("FAILURE");
-            response.setResult(result.getAllErrors());
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
             return response;
         }
-        response.setStatus("SUCCESS");
+        response.put("status","SUCCESS");
         return response;
     }
     @RequestMapping(value="/{readingId}/check-can-edit")

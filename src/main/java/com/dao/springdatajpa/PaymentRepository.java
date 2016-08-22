@@ -5,8 +5,6 @@
  */
 package com.dao.springdatajpa;
 
-
-import com.domain.Account;
 import com.domain.Payment;
 import com.domain.Schedule;
 import java.util.List;
@@ -17,9 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author 201244055
  */
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    public Payment findTopByAccountOrderByIdDesc(Account account);
-    public List<Payment> findByInvoice_ScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
-    public List<Payment> findByInvoice_Schedule(Schedule sched);
-    public List<Payment> findTop3ByAccountOrderByIdDesc(Account account);
-    public Payment findByReceiptNumber(String receiptNumber);
+    List<Payment> findByInvoice_ScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
+    List<Payment> findByInvoice_Schedule(Schedule sched);
+    Payment findByReceiptNumber(String receiptNumber);
 }

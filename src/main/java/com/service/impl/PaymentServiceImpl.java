@@ -52,21 +52,10 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Override
     public JRDataSource paymentHistoryDataSource(List<Long> paymentIds) {
-        List<CollectionReport> report = new ArrayList();
-        report.add(new CollectionReport());
-        for(Long id : paymentIds){
-            Payment payment = paymentRepo.findOne(id);
-            CollectionReport rpt = new CollectionReport();
-            rpt.setAmount(payment.getAmountPaid());
-            rpt.setAccountNo(payment.getAccount().getNumber());
-            rpt.setDiscount(payment.getDiscount());
-            rpt.setDue(payment.getInvoice().getNetCharge());
-            rpt.setFirstName(payment.getAccount().getCustomer().getFirstName());
-            rpt.setLastName(payment.getAccount().getCustomer().getLastname());
-            rpt.setOrNumber(payment.getReceiptNumber());
-            rpt.setLocationCode(payment.getAccount().getAddress().getLocationCode());
-            report.add(rpt);
-        }
+        List<Payment> report = new ArrayList();
+        report.add(new Payment());
+        for(Long id : paymentIds)
+            report.add(paymentRepo.findOne(id));
         return new JRBeanCollectionDataSource(report);
     }
 
@@ -88,7 +77,7 @@ public class PaymentServiceImpl implements PaymentService{
             form.setPayment(oldPayment);
         }
         Account account = accountRepo.findOne(form.getAccountId());
-        Invoice invoice = findLatestBill(account);
+        Invoice invoice = invoiceRepo.findTopByAccountOrderByIdDesc(account);
         Payment payment = form.getPayment();
         account.getPayments().add(payment);
         payment.setInvoice(invoice);
@@ -131,21 +120,14 @@ public class PaymentServiceImpl implements PaymentService{
     
     @Transactional(readOnly=true)
     @Override
-    public Invoice findLatestBill(Account account) {
-        return invoiceRepo.findTopByAccountOrderByIdDesc(account);
-    }    
-    
-    @Transactional(readOnly=true)
-    @Override
     public Errors validate(PaymentForm paymentForm, Errors errors) {
         Account account = accountRepo.findOne(paymentForm.getAccountId());
         if(account == null)
             errors.reject("global","Account does not exists");
-        Invoice invoice = findLatestBill(account);
+        Invoice invoice = invoiceRepo.findTopByAccountOrderByIdDesc(account);
         if(invoice == null)            
             errors.reject("global","No existing bill for this account");
         else{
-            //Payment payment = (paymentForm.getPayment().getId() == null) ? paymentForm.getPayment() : paymentRepo.findOne(paymentForm.getPayment().getId());
             boolean validAmount = (paymentForm.getPayment().getAmountPaid().doubleValue() >= 0) &&
                     paymentForm.getPayment().getDiscount().doubleValue() >= 0 &&
                     (paymentForm.getPayment().getAmountPaid().add(paymentForm.getPayment().getDiscount()).doubleValue() 
@@ -176,14 +158,7 @@ public class PaymentServiceImpl implements PaymentService{
     public Payment findPaymentById(Long id) {
         return paymentRepo.findOne(id);
     }
-    
-    
-    @Transactional(readOnly=true)
-    @Override
-    public boolean canEdit(Payment payment) {
-        return payment.getInvoice().getId().equals(invoiceRepo.findTopByAccountOrderByIdDesc(payment.getAccount()).getId());
-    }
-    
+
     @Transactional(readOnly=true)
     @Override
     public boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed) {
@@ -204,6 +179,7 @@ public class PaymentServiceImpl implements PaymentService{
         Settings currentSettings = settingsService.getCurrentSettings();
         for(Account account: accountRepo.findByAddressAndStatus(address, AccountStatus.ACTIVE)){
             account.setStatusUpdated(true);
+            account.setPenalty(BigDecimal.ZERO);
             if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed()))
                 account.setStatus(AccountStatus.WARNING);
             updated.add(accountRepo.save(account));

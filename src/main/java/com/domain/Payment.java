@@ -1,9 +1,6 @@
 package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
-
-import com.dao.util.CustomAuditingEntityListener;
-import com.dao.util.JsonJodaDateTimeSerializer;
 import com.fasterxml.jackson.annotation.*;
 
 import java.math.BigDecimal;
@@ -16,17 +13,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**

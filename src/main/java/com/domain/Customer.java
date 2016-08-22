@@ -27,7 +27,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.core.style.ToStringCreator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -180,14 +179,7 @@ public class Customer  implements java.io.Serializable {
     
     @Override
     public String toString() {
-        return new ToStringCreator(this)
-
-            .append("lastName", this.getLastname())
-            .append("firstName", this.getFirstName())
-            .append("middleName", this.getMiddleName())
-            .append("gender", this.getGender())
-            .append("birthDate", this.getBirthDate())
-            .toString();
+        return this.firstName+" "+this.middleName+" "+this.lastname;
     }
 
     @Override

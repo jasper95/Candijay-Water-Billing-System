@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: jasper
-  Date: 7/26/16
-  Time: 6:52 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -28,7 +21,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display:none" class="container-fluid">
                         <div class="row">
                             <div class="col-sm-10">
                                 <h2>Expenses</h2>
@@ -84,5 +78,11 @@
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/expenses/list.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

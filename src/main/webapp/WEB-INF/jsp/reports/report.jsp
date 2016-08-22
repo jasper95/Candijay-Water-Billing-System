@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: jasper
-  Date: 7/21/16
-  Time: 9:42 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ include file="../fragments/postAuth/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -43,8 +36,7 @@
                                     </div>
                                     <div class="panel-body">
                                         <form id="main-form">
-                                            <div class="col-sm-12 alert alert-danger global-errors"></div>
-                                            <div class="col-sm-12 alert alert-success success-msg"></div>
+                                            <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                             <div class="col-sm-12 form-group">
                                                 <div class="col-sm-12 has-feedback ">
                                                     <label class="control-label" for="category">Report Category</label>

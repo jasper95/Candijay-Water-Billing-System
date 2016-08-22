@@ -3,14 +3,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" id="close-reading-form" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 class="modal-title"><span id="expense-action"></span> Expense</h3>
             </div>
             <div class="modal-body">
                 <form:form modelAttribute="expenseForm" action="${pageContext.servletContext.contextPath}/admin/expenses/save" method="post" id="expense-form">
                     <fieldset>
-                        <div class="col-sm-12 alert alert-danger global-errors"></div>
-                        <div class="col-sm-12 alert alert-success success-msg"></div>
+                        <jsp:include page="../postAuth/form-alerts.jsp"/>
                         <div class="col-sm-6 form-group">
                             <cws:select id="exp-month" name="schedule.month" items="${monthOptions}" label="Month" icon="calendar" required="yrue" placeholder="Select month" size="12"/>
                         </div>

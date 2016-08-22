@@ -45,8 +45,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="col-sm-12 alert alert-danger global-errors"></div>
-                            <div class="col-sm-12 alert alert-success success-msg"></div>
+                            <jsp:include page="../postAuth/form-alerts.jsp"/>
                             <h4 class="sub-header">Reading Form</h4>
                             <div class="col-sm-12 form-group">
                                 <cws:select id="rd-mn" name="meterReading.schedule.month" label="Reading Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="12"/>

@@ -110,6 +110,10 @@ public class MeterReading extends AuditableEntity implements java.io.Serializabl
         this.consumption = consumption;
     }
 
+    public Integer getPrevious(){
+        return this.readingValue - this.consumption ;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers

@@ -26,25 +26,12 @@ public class SystemUserServiceImpl implements SystemUserService {
 
 
     private UserRepository userRepo;
-    private RoleRepository roleRepo;
-    private PasswordEncoder encoder;
 
     @Autowired
-    public SystemUserServiceImpl(UserRepository userRepo, RoleRepository roleRepo, PasswordEncoder encoder){
+    public SystemUserServiceImpl(UserRepository userRepo){
         this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
-        this.encoder = encoder;
-    }
-    
-    @Override
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
     }
 
-    @Override
-    public List<Role> getAllRoles() {
-        return roleRepo.findAll();       
-    }
     @Transactional
     @Override
     public User saveUser(User user) {
@@ -52,15 +39,5 @@ public class SystemUserServiceImpl implements SystemUserService {
             user.setType(UserType.LIMITED);
         else user.setType(UserType.SUPERUSER);
         return userRepo.save(user);
-    }
-
-    @Override
-    public boolean isUsernameAlreadyTaken(String username) {
-        return userRepo.findByUsername(username) != null ;
-    }
-
-    @Override
-    public Role findRoleById(Long id) {
-        return roleRepo.findOne(id);
     }
 }

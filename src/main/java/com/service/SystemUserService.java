@@ -14,9 +14,5 @@ import java.util.List;
  * @author Bert
  */
 public interface SystemUserService {
-    public List<User> getAllUsers();
-    public List<Role> getAllRoles();
-    public User saveUser(User user);
-    public boolean isUsernameAlreadyTaken(String username);
-    public Role findRoleById(Long id);
+    User saveUser(User user);
 }

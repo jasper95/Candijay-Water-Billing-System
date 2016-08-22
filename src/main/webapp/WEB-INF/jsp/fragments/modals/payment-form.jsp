@@ -39,8 +39,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="col-sm-12 alert alert-danger global-errors"></div>
-                            <div class="col-sm-12 alert alert-success success-msg"></div>
+                            <jsp:include page="../postAuth/form-alerts.jsp"/>
                             <h4 class="sub-header">Payment Form</h4>
                             <div class="col-sm-12 form-group">
                                 <cws:input id="pm-or" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="true" size="12"/>

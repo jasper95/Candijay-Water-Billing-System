@@ -1,8 +1,3 @@
-<%-- 
-    Document   : staff
-    Created on : May 15, 2015, 7:55:44 PM
-    Author     : Bert
---%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

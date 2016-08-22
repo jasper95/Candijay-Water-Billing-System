@@ -6,7 +6,6 @@
 package com.dao.springdatajpa;
 
 import com.domain.Address;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

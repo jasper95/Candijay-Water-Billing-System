@@ -18,16 +18,15 @@ import com.forms.AccountabilityReportForm;
 import com.forms.ChartForm;
 import com.forms.ReportForm;
 import com.service.FormOptionsService;
-import com.service.InvoicingService;
-import com.service.MeterReadingService;
 
 import java.util.*;
 import javax.validation.Valid;
+
+import com.service.ReportService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,16 +43,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ReportsController {
 
-    private InvoicingService invoicingService;
+    private ReportService reportService;
     private ScheduleRepository schedRepo;
     private FormOptionsService formOptionsService;
     private AddressRepository addressRepo;
     private AccountRepository accountRepo;
     private InvoiceRepository invoiceRepo;
     @Autowired
-    public ReportsController(InvoicingService invoicingService, ScheduleRepository schedRepo, FormOptionsService formOptionsService,
+    public ReportsController(ReportService reportService, ScheduleRepository schedRepo, FormOptionsService formOptionsService,
                              AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo){
-        this.invoicingService = invoicingService;
+        this.reportService = reportService;
         this.schedRepo = schedRepo;
         this.formOptionsService = formOptionsService;
         this.addressRepo = addressRepo;
@@ -122,7 +121,6 @@ public class ReportsController {
                             result.rejectValue("barangay", "", "");
                             result.rejectValue("zone", "", "");
                             result.reject("global", "Not finished reading or payments already finalized for this address.");
-                            System.out.println("ERROR");
                             break;
                         }
                     } else {
@@ -158,11 +156,11 @@ public class ReportsController {
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
                 invoices.add(invoiceRepo.findTopByAccountOrderByIdDesc(account));
-            dataSource = (JRBeanCollectionDataSource) invoicingService.getDataSource(invoices);
+            dataSource = new JRBeanCollectionDataSource(invoices);
             viewName = "rpt_bill";
         } else {
             List<Account> accounts = accountRepo.findByAddressAndStatusUpdatedAndStatus(address, true, AccountStatus.WARNING);
-            dataSource = (JRBeanCollectionDataSource) invoicingService.getDisconnectionNoticeDataSource(accounts);
+            dataSource = new JRBeanCollectionDataSource(accounts);
             viewName = "rpt_disconnection_notice";
         }
         if(dataSource.getData().size() > 0){
@@ -187,12 +185,13 @@ public class ReportsController {
         Integer type = Integer.valueOf(params.get("type"));
         String barangay = (summary.equals(1)) ? "Summary" : params.get("barangay");
         if(type.equals(1)){
-            datasource = (JRBeanCollectionDataSource)invoicingService.getCollectiblesDataSource(barangay, sched);
+            datasource = (JRBeanCollectionDataSource)reportService.getCollectiblesDataSource(barangay, sched);
             viewName = "rpt_table2";
         }
         else if(type.equals(2)) {
-            datasource = (JRBeanCollectionDataSource)invoicingService.getCollectionDataSource(barangay, sched);
-            viewName = "rpt_table";
+            datasource = (JRBeanCollectionDataSource)reportService.getCollectionDataSource(barangay, sched);
+            viewName = "rpt_payment_history";
+            map.put("IS_HISTORY", false);
         } else {
             map.put("type", "Invalid Parameter(s)");
             map.put("message", "Invalid report type");
@@ -215,12 +214,17 @@ public class ReportsController {
         JRBeanCollectionDataSource datasource;
         Integer year = Integer.valueOf(params.get("year"));
         Integer type = Integer.valueOf(params.get("type"));
+        String viewName;
         if(type.equals(1)){
-            model.put("CHART_TITLE", "Monthly Water Consumption");
-            datasource = (JRBeanCollectionDataSource)invoicingService.getConsumptionChartDataSource(year);
+            model.put("CHART_TITLE", "Monthly Water Consumption for "+year);
+            model.put("VALUE_LABEL", "Cubic Meters");
+            viewName = "rpt_chart";
+            datasource = (JRBeanCollectionDataSource)reportService.getConsumptionChartDataSource(year);
         } else if(type.equals(2)){
-            model.put("CHART_TITLE", "Monthly Collectibles, Collection and Expenses");
-            datasource = (JRBeanCollectionDataSource)invoicingService.getCollectionCollectiblesChartDataSource(year);
+            model.put("CHART_TITLE", "Monthly Collectibles, Collection and Expenses for "+year);
+            model.put("VALUE_LABEL", "Amount");
+            viewName = "rpt_chart2";
+            datasource = (JRBeanCollectionDataSource)reportService.getCollectionCollectiblesChartDataSource(year);
         } else {
             model.put("type", "Invalid Parameter(s)");
             model.put("message", "Invalid chart type");
@@ -234,6 +238,7 @@ public class ReportsController {
             return "errors";
         }
         model.put("format", "pdf");
-        return "rpt_chart";
+        model.put("CATEGORY_LABEL", "Months");
+        return viewName;
     }
 }

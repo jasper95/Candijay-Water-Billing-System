@@ -10,6 +10,6 @@ import java.util.List;
  * Created by jasper on 7/26/16.
  */
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
-    public Expense findByScheduleAndType(Schedule sched, Integer type);
-    public List<Expense> findBySchedule(Schedule sched);
+    Expense findByScheduleAndType(Schedule sched, Integer type);
+    List<Expense> findBySchedule(Schedule sched);
 }

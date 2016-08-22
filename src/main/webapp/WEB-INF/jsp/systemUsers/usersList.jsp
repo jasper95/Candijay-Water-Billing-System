@@ -21,7 +21,8 @@
             <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
             <div id="page-content-wrapper">
                 <div class="page-content">
-                    <div class="container-fluid">
+                    <div id="content-loader" class="loader"></div>
+                    <div id="main-content" style="display:none" class="container-fluid">
                         <div class="row">
                             <div class="col-sm-10">
                                 <h2>System Users</h2>
@@ -59,5 +60,11 @@
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>
         <script src="${STATIC_URL}js/sys-user/list.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+            });
+        </script>
     </body>
 </html>

@@ -47,19 +47,10 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         this.modifiedReadingRepo = modifiedReadingRepo;
     }
     
-    @Transactional(readOnly=true)
-    @Override
-    public List<MeterReading> findmeterReadingForAccount(Account account) {
-        List<MeterReading> recentReadings = new ArrayList();
-        for(MeterReading reading: mrRepo.findTop3ByAccountOrderByIdDesc(account))    
-            recentReadings.add(reading);
-        return recentReadings;
-    }
-    
     @Override
     @Transactional(readOnly=true)
     public MeterReading findAccountLastMeterReading(Account account, int monthLag) {
-        List<MeterReading> readings = findmeterReadingForAccount(account);
+        List<MeterReading> readings = mrRepo.findTop3ByAccountOrderByIdDesc(account);
         if (!readings.isEmpty() && readings.size() >= monthLag){
             return readings.get(monthLag-1);
         }
@@ -107,10 +98,5 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         } else 
             return !invoice.getStatus().equals(InvoiceStatus.UNPAID);
         
-    }
-    
-    @Override
-    public Errors validate(MeterReadingForm form, Errors errors) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
