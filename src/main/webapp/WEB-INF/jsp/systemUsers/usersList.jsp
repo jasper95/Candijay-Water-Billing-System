@@ -17,38 +17,31 @@
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div id="wrapper">
-            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-            <div id="page-content-wrapper">
-                <div class="page-content">
-                    <div id="content-loader" class="loader"></div>
-                    <div id="main-content" style="display:none" class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <h2>System Users</h2>
-                            </div>
-                            <div class="col-sm-2 vertical-center">
-                                <button id="add-user" type="button" class="btn btn-default">Create User</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 main">
-                                <div class="table-responsive">
-                                    <a id="reload-table" class="hidden"></a>
-                                    <datatables:table dom="t" reloadSelector="#reload-table" cssClass="table table-striped" id="users" url="/admin/system-users/get-all">
-                                        <datatables:column title="Username" property="username" sortable="false" sortInitDirection="none" renderFunction="custom-rendering#userListUsername"/>
-                                        <datatables:column title="Type" property="type" cssCellClass="type" sortable="false"/>
-                                        <datatables:column title="Status" property="status" cssCellClass="status
-                                        " sortable="false"/>
-                                        <datatables:column title="Edit" sortable="false" renderFunction="custom-rendering#updateUser"/>
-                                        <dandelion:bundle excludes="jquery"/>
-                                    </datatables:table>
-                                    <input id="request-uri" type="hidden" value="${requestScope['javax.servlet.forward.request_uri']}"/>
-                                    <input id="current-user" type="hidden" value="<sec:authentication property="name"/>"/>
-                                    <input type="hidden" id="row-num"/>
-                                </div>
-                            </div>
-                        </div>
+        <div id="content-loader" class="loader"></div>
+        <div id="main-content" style="display:none" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-10">
+                    <h2>System Users</h2>
+                </div>
+                <div class="col-sm-2 vertical-center">
+                    <button id="add-user" type="button" class="btn btn-default">Create User</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 main">
+                    <div class="table-responsive">
+                        <a id="reload-table" class="hidden"></a>
+                        <datatables:table dom="t" reloadSelector="#reload-table" cssClass="table table-striped" id="users" url="/admin/system-users/get-all">
+                            <datatables:column title="Username" property="username" sortable="false" sortInitDirection="none" renderFunction="custom-rendering#userListUsername"/>
+                            <datatables:column title="Type" property="type" cssCellClass="type" sortable="false"/>
+                            <datatables:column title="Status" property="status" cssCellClass="status
+                            " sortable="false"/>
+                            <datatables:column title="Edit" sortable="false" renderFunction="custom-rendering#updateUser"/>
+                            <dandelion:bundle excludes="jquery"/>
+                        </datatables:table>
+                        <input id="request-uri" type="hidden" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+                        <input id="current-user" type="hidden" value="<sec:authentication property="name"/>"/>
+                        <input type="hidden" id="row-num"/>
                     </div>
                 </div>
             </div>

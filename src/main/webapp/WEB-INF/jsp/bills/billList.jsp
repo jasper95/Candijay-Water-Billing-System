@@ -22,85 +22,78 @@
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div id="wrapper">
-            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-            <div id="page-content-wrapper">
-                <div class="page-content">
-                    <div id="content-loader" class="loader"></div>
-                    <div id="main-content" style="display:none" class="container-fluid">
-                        <h2>Bills</h2>
-                        <div class="alert alert-info form-wrapper">
-                            <div class="col-sm-12 form-group">
-                                <div class="col-md-3" id="acct-no">
-                                    <label>Account Number</label>
-                                </div>
-                                <div class="col-md-3" id="acct-lastname">
-                                    <label>Lastname</label>
-                                </div>
-                                <div class="col-md-3" id="acct-firstname">
-                                    <label>Firstname</label>
-                                </div>
-                                <div class="col-md-3" id="acct-brgy">
-                                    <label>Barangay</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <div class="col-md-3" id="acct-zone">
-                                    <label>Zone</label>
-                                </div>
-                                <div class="col-md-3" id="reading-month">
-                                    <label>Month</label>
-                                </div>
-                                <div class="col-md-3" id="reading-year">
-                                    <label>Year</label>
-                                </div>
-                                <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
-                                    <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
-                                    <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="pull-align-right col-sm-12 form-inline">
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-file-text-o fa-fw"></i>Export Invoice as PDF</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 main">
-                                <div class="table-responsive">
-                                    <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${requestScope['javax.servlet.forward.request_uri']}">
-                                        <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="invoice" cssClass="table table-striped" url="/admin/bills/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                                            <datatables:column title="Trans. #" name="bill-id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
-                                            <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
-                                                <datatables:columnHead>
-                                                    <input type="checkbox" id="master-checkbox" />
-                                                </datatables:columnHead>
-                                            </datatables:column>
-                                            <datatables:column title="Acct #" property="account.number" sortable="false"/>
-                                            <datatables:column title="Lastname" property="account.customer.lastname" sortable="false"/>
-                                            <datatables:column title="Firstname" property="account.customer.firstName" sortable="false"/>
-                                            <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
-                                            <datatables:column title="Year" name ="year" property="schedule.year"/>
-                                            <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
-                                            <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
-                                            <datatables:column title="Status" name="status" property="status" sortable="false"/>
-                                            <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                            <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                            <%--<datatables:column title="Basic" property="basic" sortable="false" />
-                                            <datatables:column title="Arrears" property="arrears" sortable="false" />
-                                            <datatables:column title="Penalty" property="penalty" sortable="false"/>
-                                            <datatables:column title="DepFund" property="depreciationFund" sortable="false"/>
-                                            <datatables:column title="SysLoss" property="systemLoss" sortable="false"/>
-                                            <datatables:column title="PES" property="others" sortable="false"/>--%>
-                                            <dandelion:bundle excludes="jquery"/>
-                                            <datatables:extraJs bundles="invoice" placeholder="before_end_document_ready" />
-                                        </datatables:table>
-                                    </form:form>
-                                </div>
-                            </div>
-                        </div>
+        <div id="content-loader" class="loader"></div>
+        <div id="main-content" style="display:none" class="container-fluid">
+            <h2>Bills</h2>
+            <div class="alert alert-info form-wrapper">
+                <div class="col-sm-12 form-group">
+                    <div class="col-md-3" id="acct-no">
+                        <label>Account Number</label>
+                    </div>
+                    <div class="col-md-3" id="acct-lastname">
+                        <label>Lastname</label>
+                    </div>
+                    <div class="col-md-3" id="acct-firstname">
+                        <label>Firstname</label>
+                    </div>
+                    <div class="col-md-3" id="acct-brgy">
+                        <label>Barangay</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 form-group">
+                    <div class="col-md-3" id="acct-zone">
+                        <label>Zone</label>
+                    </div>
+                    <div class="col-md-3" id="reading-month">
+                        <label>Month</label>
+                    </div>
+                    <div class="col-md-3" id="reading-year">
+                        <label>Year</label>
+                    </div>
+                    <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
+                        <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                        <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="pull-align-right col-sm-12 form-inline">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-file-text-o fa-fw"></i>Export Invoice as PDF</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 main">
+                    <div class="table-responsive">
+                        <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${pageContext.servletContext.contextPath}/admin/bills">
+                            <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="invoice" cssClass="table table-striped" url="/admin/bills/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                                <datatables:column title="Trans. #" name="bill-id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
+                                <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
+                                    <datatables:columnHead>
+                                        <input type="checkbox" id="master-checkbox" />
+                                    </datatables:columnHead>
+                                </datatables:column>
+                                <datatables:column title="Acct #" property="account.number" sortable="false"/>
+                                <datatables:column title="Lastname" property="account.customer.lastname" sortable="false"/>
+                                <datatables:column title="Firstname" property="account.customer.firstName" sortable="false"/>
+                                <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
+                                <datatables:column title="Year" name ="year" property="schedule.year"/>
+                                <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
+                                <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
+                                <datatables:column title="Status" name="status" property="status" sortable="false"/>
+                                <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                <%--<datatables:column title="Basic" property="basic" sortable="false" />
+                                <datatables:column title="Arrears" property="arrears" sortable="false" />
+                                <datatables:column title="Penalty" property="penalty" sortable="false"/>
+                                <datatables:column title="DepFund" property="depreciationFund" sortable="false"/>
+                                <datatables:column title="SysLoss" property="systemLoss" sortable="false"/>
+                                <datatables:column title="PES" property="others" sortable="false"/>--%>
+                                <dandelion:bundle excludes="jquery"/>
+                                <datatables:extraJs bundles="invoice" placeholder="before_end_document_ready" />
+                            </datatables:table>
+                        </form:form>
                     </div>
                 </div>
             </div>

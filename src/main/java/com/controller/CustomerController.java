@@ -110,10 +110,10 @@ public class CustomerController {
             customer = custService.createCustomer(customerForm);
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/customers/new";
+            return "redirect:/admin/customers/new/";
         }
         status.setComplete();
-        return "redirect:/admin/customers/"+customer.getId();
+        return "redirect:/admin/customers/"+customer.getId()+"/";
     }
     
     @RequestMapping(method=RequestMethod.GET)
@@ -176,11 +176,11 @@ public class CustomerController {
         }
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:"+request.getRequestURI();
+            return "redirect:"+request.getRequestURI()+"/";
         }
         status.setComplete();
         redirectAttributes.addFlashAttribute("updateSuccess", 1);
-        return "redirect:/admin/customers/"+customerForm.getCustomer().getId();
+        return "redirect:/admin/customers/"+customerForm.getCustomer().getId()+"/";
     }
     
     @RequestMapping("/datatable-search")

@@ -50,9 +50,8 @@ public class SettingsController {
         }
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
-            return "redirect:/admin/settings";
         }
-        redirectAttributes.addFlashAttribute("updateSuccess", 1);
-        return "redirect:/admin/settings";
+        else redirectAttributes.addFlashAttribute("updateSuccess", 1);
+        return "redirect:/admin/settings/";
     }
 }

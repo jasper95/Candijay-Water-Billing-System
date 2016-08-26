@@ -51,4 +51,7 @@ $(document).ready(function(){
     $("[data-hide]").on("click", function(){
         $(this).closest("." + $(this).attr("data-hide")).hide();
     });
+    $('ul .dropdown-menu a').on('click', function (event) {
+        event.stopPropagation();
+    });
 });

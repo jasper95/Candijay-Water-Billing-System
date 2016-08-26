@@ -2,14 +2,13 @@ var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 function customerUrl(data, type, full){
-    return '<a href="customers/'+full.id+'"> '+ full.lastname+', '+full.firstName+' '+full.middleName+'</a>';
+    return '<a href="/admin/customers/'+full.id+'/"> '+ full.lastname+', '+full.firstName+' '+full.middleName+'</a>';
 }
 function customerListActions(data, type, full){
-    return '<a type="button" href="customers/'+full.id+'/update" class="btn btn-xs btn-primary">Edit</a>'+
-           ' <a type="button" href="accounts/'+full.id+'/new" class="btn btn-xs btn-primary">Add account</a>';
+    return '<a type="button" href="customers/'+full.id+'/update/" class="btn btn-xs btn-primary">Edit</a>';
 }
 function accountUrl(data, type, full){
-    return '<a href="/admin/accounts/'+data+'"> '+data+'</a>';
+    return '<a href="/admin/accounts/'+data+'/"> '+data+'</a>';
 }
 function toPeso(data, type, full){
     if (data == null)

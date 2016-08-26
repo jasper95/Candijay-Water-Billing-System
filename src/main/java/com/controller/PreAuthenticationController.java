@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PreAuthenticationController {
 
-
-    @RequestMapping(value="/login", method=RequestMethod.GET)
+    @RequestMapping(value="login", method=RequestMethod.GET)
     public String login(@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "logout", required = false) String logout, ModelMap model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -40,7 +39,7 @@ public class PreAuthenticationController {
         return "login";
     }
     
-    @RequestMapping(value="/about", method=RequestMethod.GET)
+   /* @RequestMapping(value="/about", method=RequestMethod.GET)
     public String about(){
         return "about";
     }
@@ -58,5 +57,5 @@ public class PreAuthenticationController {
     @RequestMapping(value="/staff", method=RequestMethod.GET)
     public String staff(){
         return "staff";
-    }
+    }*/
 }

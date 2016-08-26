@@ -1,16 +1,9 @@
-<%-- 
-    Document   : login
-    Created on : Apr 30, 2015, 8:03:50 AM
-    Author     : Bert
---%>
-
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <spring:url value="/resources/" var="STATIC_URL"/>
 <html lang="en">
-    
     <jsp:include page="fragments/preAuth/headContents.jsp"/>
     <body>
         <jsp:include page="fragments/preAuth/header.jsp"/>
@@ -18,13 +11,12 @@
         <div class="container">
             <img class="img-responsive center-block" src="${STATIC_URL}/img/center_piece.png">
             <c:if test="${not empty error}">
-                <div class="alert alert-danger alert-msg center-block">${error}</div>
+                <div class="alert alert-danger alert-msg center-block">${error} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>
             </c:if>
             <c:if test="${not empty msg}">
-                <div class="alert alert-success alert-msg center-block">${msg}</div>
+                <div class="alert alert-success alert-msg center-block">${msg} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>
             </c:if>
-            <c:url value="/login" var="loginUrl"/>
-            <form id="loginForm"  action="${loginUrl}" method="POST">
+            <form id="loginForm"  action="${pageContext.servletContext.contextPath}/login" method="POST">
                 <sec:csrfInput/>
                 <div class="log-fields-wrapper center-block">
                     <div class="input-group">

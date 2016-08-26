@@ -15,53 +15,46 @@
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div id="wrapper">
-            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-            <div id="page-content-wrapper">
-                <div class="page-content">
-                    <div id="content-loader" class="loader"></div>
-                    <div id="main-content" style="display:none" class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <h2>Customers</h2>
-                            </div>
-                            <div class="col-sm-2 vertical-center">
-                                <a type="button" class="btn btn-ctm btn-default" href="customers/new">Create Customer</a>
-                            </div>
-                        </div>
-                        <div class="alert alert-info form-wrapper">
-                            <div class="col-sm-12 form-group">
-                                <div class="col-md-3" id="last-name">
-                                    <label>Lastname</label>
-                                </div>
-                                <div class="col-md-3" id="first-name">
-                                    <label>Firstname</label>
-                                </div>
-                                <div class="col-md-3 pull-align-right vertical-center filter-btn-wrapper">
-                                    <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
-                                    <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 main">
-                                <div class="table-responsive">
-                                    <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                                        <datatables:column title="ID" property="id" filterable="true" />
-                                        <datatables:column visible="false" searchable="true" property="lastname" selector="last-name"/>
-                                        <datatables:column visible="false" searchable="true" property="firstName" selector="first-name"/>
-                                        <datatables:column sortable="false" filterable="false" title="Name" renderFunction="custom-rendering#customerUrl"/>
-                                        <datatables:column title="Gender" filterable="false" sortable="false" property="gender"/>
-                                        <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>
-                                        <datatables:column title="Contact" filterable="false" sortable="false" property="contactNumber"/>
-                                        <datatables:column title="Members" filterable="false" sortable="false" property="familyMembersCount"/>
-                                        <datatables:column filterable="false" title="Actions" renderFunction="custom-rendering#customerListActions" sortable="false"/>
-                                        <datatables:extraJs bundles="customer" placeholder="before_end_document_ready" />
-                                        <dandelion:bundle excludes="jquery"/>
-                                    </datatables:table>
-                                </div>
-                            </div>
-                        </div>
+        <div id="content-loader" class="loader"></div>
+        <div id="main-content" style="display:none" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-10">
+                    <h2>Customers</h2>
+                </div>
+                <div class="col-sm-2 vertical-center">
+                    <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/customers/new/">Create Customer</a>
+                </div>
+            </div>
+            <div class="alert alert-info form-wrapper">
+                <div class="col-sm-12 form-group">
+                    <div class="col-md-3" id="last-name">
+                        <label>Lastname</label>
+                    </div>
+                    <div class="col-md-3" id="first-name">
+                        <label>Firstname</label>
+                    </div>
+                    <div class="col-md-3 pull-align-right vertical-center filter-btn-wrapper">
+                        <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                        <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 main">
+                    <div class="table-responsive">
+                        <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                            <datatables:column title="ID" property="id" filterable="true" />
+                            <datatables:column visible="false" searchable="true" property="lastname" selector="last-name"/>
+                            <datatables:column visible="false" searchable="true" property="firstName" selector="first-name"/>
+                            <datatables:column sortable="false" filterable="false" title="Name" renderFunction="custom-rendering#customerUrl"/>
+                            <datatables:column title="Gender" filterable="false" sortable="false" property="gender"/>
+                            <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>
+                            <datatables:column title="Contact" filterable="false" sortable="false" property="contactNumber"/>
+                            <datatables:column title="Members" filterable="false" sortable="false" property="familyMembersCount"/>
+                            <datatables:column filterable="false" title="Actions" renderFunction="custom-rendering#customerListActions" sortable="false"/>
+                            <datatables:extraJs bundles="customer" placeholder="before_end_document_ready" />
+                            <dandelion:bundle excludes="jquery"/>
+                        </datatables:table>
                     </div>
                 </div>
             </div>

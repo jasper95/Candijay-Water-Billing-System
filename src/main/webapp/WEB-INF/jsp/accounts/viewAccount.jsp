@@ -17,68 +17,61 @@
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div id="wrapper">
-            <jsp:include page="../fragments/postAuth/sidebar.jsp"/>
-            <div id="page-content-wrapper">
-                <div class="page-content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-10 ">
-                                <h2>View Account</h2>
-                            </div>
-                            <div class="col-sm-2  vertical-center">
-                                <button type="button" class="btn btn-primary" id="update-acct-btn"><i class="fa fa-edit fa-fw"></i>Update</button>
-                            </div>
-                        </div>
-                    <c:if test="${updateSuccess == 1}">
-                        <div style="text-align: center" class="alert alert-success" style="border-radius:5px;"><br>
-                            <h4>This Account is successfully updated!</h4>
-                        </div>
-                    </c:if>
-                        <form:form modelAttribute="accountForm">
-                            <div class="form-wrapper">
-                                <h3>Customer Information</h3>
-                                <div class="col-sm-12 form-group">
-                                    <cws:input id="cust-ln" name="account.customer.lastname" label="Lastname" icon="user" placeholder="Enter Lastname" required="false" readOnly="true"/>
-                                    <cws:input id="cust-fn" name="account.customer.firstName" label="Firstname" icon="user" placeholder="Enter Firstname" required="false" readOnly="true"/>
-                                    <cws:input id="cust-mn" name="account.customer.middleName" label="Middle" icon="user" placeholder="Enter Middlename" required="false" readOnly="true"/>
-                                </div>
-                            </div>
-                            <div class="form-wrapper">
-                                <h3>Account Information</h3>
-                                <div class="col-sm-12 form-group">
-                                    <cws:input id="acct-no" name="account.number" label="Account number" icon="user" placeholder="" required="false" readOnly="true"/>
-                                    <cws:input id="acct-sb" name="account.accountStandingBalance" label="Standing Balance" icon="money" placeholder="" required="false" readOnly="true"/>
-                                    <cws:input id="acct-st" name="account.status" label="Status" icon="money" placeholder="" required="false" readOnly="true"/>
-                                </div>
-                                <div class="col-sm-12 form-group">
-                                    <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" disabled="true"/>
-                                    <cws:select id="acct-lc" name="address.locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" disabled="true"/>
-                                </div>
-                            </div>
-                        </form:form>
-                        <a id="reload"></a>
-                        <h3>Devices</h3>
-                        <div class="col-md-12 main">
-                            <div class="table-responsive">
-                                <datatables:table dom="t" reloadSelector="#reload" cssClass="table table-striped" id="devices" url="${requestScope['javax.servlet.forward.request_uri']}/devices">
-                                    <datatables:column title="Meter Code" property="meterCode" sortable="false" sortInitDirection="false"/>
-                                    <datatables:column title="Meter Brand" property="brand" sortable="false" sortInitDirection="false"/>
-                                    <datatables:column title="Active" property="active" renderFunction="custom-rendering#trueToYes" sortable="false"/>
-                                    <datatables:column title="Last Reading" property="lastReading" sortable="false"/>
-                                    <datatables:column title="Activate" renderFunction="custom-rendering#activateDevice" sortable="false"/>
-                                    <datatables:column title="Edit" renderFunction="custom-rendering#editDevice" sortable="false"/>
-                                    <dandelion:bundle excludes="jquery"/>
-                                </datatables:table>
-                            </div>
-                        </div>
-                        <input id="acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts/${accountForm.account.number}"/>
-                        <input id="all-acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts"/>
-                        <input id="device-action-url" type="hidden"/>
-                        <button type="button" id="btn-add-dv" style="margin-top: 20px"  class="btn btn-default pull-right"> Add Device </button>
-                    </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-10 ">
+                    <h2>View Account</h2>
+                </div>
+                <div class="col-sm-2  vertical-center">
+                    <button type="button" class="btn btn-primary" id="update-acct-btn"><i class="fa fa-edit fa-fw"></i>Update</button>
                 </div>
             </div>
+        <c:if test="${updateSuccess == 1}">
+            <div style="text-align: center" class="alert alert-success" style="border-radius:5px;"><br>
+                <h4>This Account is successfully updated!</h4>
+            </div>
+        </c:if>
+            <form:form modelAttribute="accountForm">
+                <div class="form-wrapper">
+                    <h3>Customer Information</h3>
+                    <div class="col-sm-12 form-group">
+                        <cws:input id="cust-ln" name="account.customer.lastname" label="Lastname" icon="user" placeholder="Enter Lastname" required="false" readOnly="true"/>
+                        <cws:input id="cust-fn" name="account.customer.firstName" label="Firstname" icon="user" placeholder="Enter Firstname" required="false" readOnly="true"/>
+                        <cws:input id="cust-mn" name="account.customer.middleName" label="Middle" icon="user" placeholder="Enter Middlename" required="false" readOnly="true"/>
+                    </div>
+                </div>
+                <div class="form-wrapper">
+                    <h3>Account Information</h3>
+                    <div class="col-sm-12 form-group">
+                        <cws:input id="acct-no" name="account.number" label="Account number" icon="user" placeholder="" required="false" readOnly="true"/>
+                        <cws:input id="acct-sb" name="account.accountStandingBalance" label="Standing Balance" icon="money" placeholder="" required="false" readOnly="true"/>
+                        <cws:input id="acct-st" name="account.status" label="Status" icon="money" placeholder="" required="false" readOnly="true"/>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" disabled="true"/>
+                        <cws:select id="acct-lc" name="address.locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" disabled="true"/>
+                    </div>
+                </div>
+            </form:form>
+            <a id="reload"></a>
+            <h3>Devices</h3>
+            <div class="col-md-12 main">
+                <div class="table-responsive">
+                    <datatables:table dom="t" reloadSelector="#reload" cssClass="table table-striped" id="devices" url="${requestScope['javax.servlet.forward.request_uri']}/devices">
+                        <datatables:column title="Meter Code" property="meterCode" sortable="false" sortInitDirection="false"/>
+                        <datatables:column title="Meter Brand" property="brand" sortable="false" sortInitDirection="false"/>
+                        <datatables:column title="Active" property="active" renderFunction="custom-rendering#trueToYes" sortable="false"/>
+                        <datatables:column title="Last Reading" property="lastReading" sortable="false"/>
+                        <datatables:column title="Activate" renderFunction="custom-rendering#activateDevice" sortable="false"/>
+                        <datatables:column title="Edit" renderFunction="custom-rendering#editDevice" sortable="false"/>
+                        <dandelion:bundle excludes="jquery"/>
+                    </datatables:table>
+                </div>
+            </div>
+            <input id="acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts/${accountForm.account.number}"/>
+            <input id="all-acct-base-url" type="hidden" value="${pageContext.servletContext.contextPath}/admin/accounts"/>
+            <input id="device-action-url" type="hidden"/>
+            <button type="button" id="btn-add-dv" style="margin-top: 20px"  class="btn btn-default pull-right"> Add Device </button>
         </div>
         <jsp:include page="../fragments/modals/device-form.jsp"/>
         <jsp:include page="../fragments/modals/acct-form.jsp"/>

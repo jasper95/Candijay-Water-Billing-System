@@ -26,8 +26,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 /**
  *
  * @author Bert
@@ -80,7 +78,7 @@ public class SystemUsersController {
     
     @RequestMapping(value="/save", method=RequestMethod.POST)
     public @ResponseBody
-    HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result, RedirectAttributes redirectAttributes){
+    HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result){
         HashMap response = new HashMap();
         if(!result.hasErrors()){
             if(userRepo.findByUsername(user.getUsername()) != null)

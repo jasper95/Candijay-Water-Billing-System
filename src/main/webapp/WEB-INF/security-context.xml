@@ -2,34 +2,38 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- We will be defining all security related configurations in this file -->
 
     <http auto-config='true' use-expressions="true" disable-url-rewriting="true">
         <intercept-url pattern="/dandelion/**" access="permitAll"/>
-        <access-denied-handler error-page="/error403" />
         <intercept-url pattern="/login.htm" access="permitAll"/>
+        <access-denied-handler error-page="/error403" />
         <intercept-url pattern="/admin/logout.htm" access="permitAll"/>
-        <intercept-url pattern="/admin/system-users" access="hasAuthority('SYSTEM_USERS')"/>
-        <intercept-url pattern="/admin/system-users/**" access="hasAuthority('SYSTEM_USERS')"/>
-        <intercept-url pattern="/admin/payments" access="hasAuthority('PAYMENTS')"/>
-        <intercept-url pattern="/admin/payments/**" access="hasAuthority('PAYMENTS')"/>
-        <intercept-url pattern="/admin/reports" access="hasAuthority('BILLS_REPORTS')"/>
-        <intercept-url pattern="/admin/reports/**" access="hasAuthority('BILLS_REPORTS')"/>
-        <intercept-url pattern="/admin/bills" access="hasAuthority('BILLS_REPORTS')"/>
-        <intercept-url pattern="/admin/bills/**" access="hasAuthority('BILLS_REPORTS')"/>
-        <intercept-url pattern="/admin/reading" access="hasAuthority('METER_READING')"/>
-        <intercept-url pattern="/admin/reading/**" access="hasAuthority('METER_READING')"/>
-        <intercept-url pattern="/admin/customers" access="hasAuthority('CUSTOMER_ACCOUNTS')"/>
-        <intercept-url pattern="/admin/customers/**" access="hasAuthority('CUSTOMER_ACCOUNTS')"/>
-        <intercept-url pattern="/admin/accounts" access="hasAuthority('CUSTOMER_ACCOUNTS')"/>
-        <intercept-url pattern="/admin/accounts/**" access="hasAuthority('CUSTOMER_ACCOUNTS')"/>
+        <intercept-url pattern="/admin/settings" access="hasAuthority('SYSTEM')"/>
+        <intercept-url pattern="/admin/settings/**" access="hasAuthority('SYSTEM')"/>
+        <intercept-url pattern="/admin/system-users" access="hasAuthority('SYSTEM')"/>
+        <intercept-url pattern="/admin/system-users/**" access="hasAuthority('SYSTEM')"/>
+        <intercept-url pattern="/admin/expenses" access="hasAuthority('TRANSACTIONS')"/>
+        <intercept-url pattern="/admin/expenses/**" access="hasAuthority('TRANSACTIONS')"/>
+        <intercept-url pattern="/admin/payments" access="hasAuthority('TRANSACTIONS')"/>
+        <intercept-url pattern="/admin/payments/**" access="hasAuthority('TRANSACTIONS')"/>
+        <intercept-url pattern="/admin/reports" access="hasAuthority('REPORTS')"/>
+        <intercept-url pattern="/admin/reports/**" access="hasAuthority('REPORTS')"/>
+        <intercept-url pattern="/admin/bills" access="hasAuthority('REPORTS')"/>
+        <intercept-url pattern="/admin/bills/**" access="hasAuthority('REPORTS')"/>
+        <intercept-url pattern="/admin/reading" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/reading/**" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/customers" access="hasAuthority('ACCOUNTS')"/>
+        <intercept-url pattern="/admin/customers/**" access="hasAuthority('ACCOUNTS')"/>
+        <intercept-url pattern="/admin/accounts" access="hasAuthority('ACCOUNTS')"/>
+        <intercept-url pattern="/admin/accounts/**" access="hasAuthority('ACCOUNTS')"/>
         <intercept-url pattern="/admin**" access="isAuthenticated()"/>
         <intercept-url pattern="/admin/**" access="isAuthenticated()"/>        
-        <form-login login-page="/login" authentication-failure-url="/login?error" default-target-url="/admin.htm"/>
+        <form-login login-page="/login" authentication-failure-url="/login?error" default-target-url="/admin/"/>
         <logout logout-url="/logout.htm" logout-success-url="/login?logout" invalidate-session="true" />
         <csrf/>
     </http>
