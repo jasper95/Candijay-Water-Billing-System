@@ -16,7 +16,6 @@ public class ControllerExceptionHandlers {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public String methodNotSupported(Model model){
-        System.out.println("no handler");
         if(SecurityContextHolder.getContext().getAuthentication() == null ||
                 !SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
             return "login";
@@ -29,9 +28,8 @@ public class ControllerExceptionHandlers {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String notFound(Model model){
-        if(SecurityContextHolder.getContext().getAuthentication() == null ||
-                !SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
+    public String notFound(Model model, Authentication auth){
+        if(auth == null ||  !auth.isAuthenticated())
             return "error404";
         else {
             model.addAttribute("type", "Requested page not found");
