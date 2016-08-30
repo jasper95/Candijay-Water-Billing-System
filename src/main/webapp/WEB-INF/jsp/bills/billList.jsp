@@ -15,15 +15,15 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>Bills</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
-        <div id="main-content" style="display:none" class="container-fluid">
+        <div id="main-content" style="display:none" class="container">
             <h2>Bills</h2>
             <div class="alert alert-info form-wrapper">
                 <div class="col-sm-12 form-group">
@@ -98,8 +98,9 @@
                 </div>
             </div>
         </div>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>

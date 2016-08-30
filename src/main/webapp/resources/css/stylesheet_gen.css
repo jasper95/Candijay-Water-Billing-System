@@ -59,3 +59,13 @@ footer.footer{
 	max-width: 300px;
 	text-align: center;
 }
+
+footer {
+	margin-top: 10px;
+	padding: 12px 0;
+	position: relative;
+	color: #FFF;
+}
+body {
+	padding-top: 70px;
+}

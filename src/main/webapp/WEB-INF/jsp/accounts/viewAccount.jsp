@@ -10,14 +10,14 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>View Account</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-10 ">
                     <h2>View Account</h2>
@@ -75,8 +75,9 @@
         </div>
         <jsp:include page="../fragments/modals/device-form.jsp"/>
         <jsp:include page="../fragments/modals/acct-form.jsp"/>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/accounts/view.js"></script>

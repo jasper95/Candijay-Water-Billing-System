@@ -1,8 +1,3 @@
-<%-- 
-    Document   : preAuthJSBlock
-    Created on : Apr 30, 2015, 7:44:17 AM
-    Author     : Bert
---%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <spring:url value="/webjars/jquery/2.0.3/jquery.min.js" var="jquery"/>

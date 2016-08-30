@@ -16,13 +16,12 @@
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
-        <div id="main-content" style="display:none" class="container-fluid">
+        <div id="main-content" style="display:none" class="container">
             <h2>Accounts</h2>
             <div class="alert alert-info form-wrapper">
                 <div class="col-sm-12 form-group">
@@ -74,7 +73,7 @@
             <div class="row">
                 <div class="col-md-12 main">
                     <div class="table-responsive">
-                        <form:form id="form" modelAttribute="checkboxes" method="POST" action="${requestScope['javax.servlet.forward.request_uri']}">
+                        <form:form id="form" modelAttribute="checkboxes" method="POST" action="${pageContext.servletContext.contextPath}/admin/accounts">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                 <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
                                     <datatables:columnHead>
@@ -93,13 +92,14 @@
                                 <datatables:column visible="false" property="id" />
                                 <dandelion:bundle excludes="jquery"/>
                                 <datatables:extraJs bundles="account" placeholder="before_end_document_ready" />
+                                <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             </datatables:table>
                         </form:form>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>

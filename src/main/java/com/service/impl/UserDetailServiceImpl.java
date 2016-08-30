@@ -39,7 +39,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if(user!=null){
                 return user;
         }else{
-                throw new UsernameNotFoundException("User Not Found!!!");
+                throw new UsernameNotFoundException("Invalid username");
         }
     }
 }

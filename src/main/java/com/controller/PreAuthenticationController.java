@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 
 /**
  *
@@ -22,40 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PreAuthenticationController {
 
-    @RequestMapping(value="login", method=RequestMethod.GET)
-    public String login(@RequestParam(value = "error", required = false) String error,
-		@RequestParam(value = "logout", required = false) String logout, ModelMap model){
+    @RequestMapping(value="/login", method=RequestMethod.GET)
+    public String login(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         if (!(auth instanceof AnonymousAuthenticationToken))
-            return "redirect:/admin";
-        
-        if (error != null) {
-            model.addAttribute("error", "Invalid username and password!");
-        }
-        if (logout != null) {
-            model.addAttribute("msg", "You've been logged out successfully.");
-        }
+            return "redirect:/admin/";
         return "login";
     }
-    
-   /* @RequestMapping(value="/about", method=RequestMethod.GET)
-    public String about(){
-        return "about";
-    }
-    
-    @RequestMapping(value="/faq", method=RequestMethod.GET)
-    public String faq(){
-        return "faq";
-    }
-    
-    @RequestMapping(value="/contact", method=RequestMethod.GET)
-    public String contact(){
-        return "contact";
-    }
-    
-    @RequestMapping(value="/staff", method=RequestMethod.GET)
-    public String staff(){
-        return "staff";
-    }*/
 }

@@ -116,23 +116,18 @@ public class ReportsController {
                 if (type.equals(1))
                     billsFlag = true;
                 for(Account account: accountRepo.findByAddressAndStatus(address, AccountStatus.ACTIVE)){
-                    if(account.isStatusUpdated()){
-                        if(billsFlag){
-                            result.rejectValue("barangay", "", "");
-                            result.rejectValue("zone", "", "");
-                            result.reject("global", "Not finished reading or payments already finalized for this address.");
-                            break;
-                        }
-                    } else {
-                        if(!billsFlag){
-                            result.rejectValue("barangay", "", "");
-                            result.rejectValue("zone", "", "");
-                            result.reject("global", "Payments not finalized for this address");
-                            break;
-                        }
+                    if(account.isStatusUpdated() && billsFlag){
+                        result.rejectValue("barangay", "", "");
+                        result.rejectValue("zone", "", "");
+                        result.reject("global", "Not finished reading or payments already finalized for this address.");
+                        break;
+                    } else if(!billsFlag) {
+                        result.rejectValue("barangay", "", "");
+                        result.rejectValue("zone", "", "");
+                        result.reject("global", "Payments not finalized for this address");
+                        break;
                     }
                 }
-
             }
         }
         return validationResponse(result, form);

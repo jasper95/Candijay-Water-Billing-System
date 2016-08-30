@@ -24,24 +24,19 @@ public class AjaxTimeoutRedirectFilter extends GenericFilterBean{
     private ThrowableAnalyzer throwableAnalyzer = new DefaultThrowableAnalyzer();
     private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
 
-    private int customSessionExpiredErrorCode = 901;
+    private int customSessionExpiredErrorCode = 405;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-    {
-        try
-        {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try {
             chain.doFilter(request, response);
         }
-        catch (IOException ex)
-        {
+        catch (IOException ex) {
             throw ex;
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Throwable[] causeChain = throwableAnalyzer.determineCauseChain(ex);
             RuntimeException ase = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class, causeChain);
-
             if (ase == null)
                 ase = (AccessDeniedException) throwableAnalyzer.getFirstThrowableOfType(AccessDeniedException.class, causeChain);
             if (ase != null) {

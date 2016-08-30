@@ -10,15 +10,15 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>Expenses</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
-        <div id="main-content" style="display:none" class="container-fluid">
+        <div id="main-content" style="display:none" class="container">
             <div class="row">
                 <div class="col-sm-10">
                     <h2>Expenses</h2>
@@ -57,6 +57,7 @@
                             <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
                             <dandelion:bundle excludes="jquery"/>
                             <datatables:extraJs bundles="expense" placeholder="before_end_document_ready" />
+                            <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             <datatables:extraJs bundles="months" placeholder="after_all"/>
                         </datatables:table>
                         <input type="hidden" id="row-num">
@@ -66,8 +67,9 @@
         </div>
         <jsp:include page="../fragments/modals/expense-form.jsp"/>
         <jsp:include page="../fragments/modals/expense-info.jsp"/>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/expenses/list.js"></script>

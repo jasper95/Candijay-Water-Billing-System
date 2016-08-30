@@ -1,6 +1,3 @@
-/**
- * Created by Bert on 7/17/2016.
- */
 $(document).ready(function(){
     $('#fetchAccount').on('submit', function(e){
         e.preventDefault();

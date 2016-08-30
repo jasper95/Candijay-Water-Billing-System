@@ -10,14 +10,14 @@
     <link rel="icon" href="${STATIC_URL}img/cws.ico">
     <title>View Customer</title>
     <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
     <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
     <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-    <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
     <sec:csrfMetaTags/>
 </head>
 <body>
     <jsp:include page="../fragments/postAuth/header.jsp"/>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-sm-10 ">
                 <h2>View Customer</h2>
@@ -68,8 +68,9 @@
         <button type="button" style="margin-top: 20px" class="btn btn-default pull-right" data-toggle="modal" data-target="#acct-form-modal"> Add Account </button>
     </div>
     <jsp:include page="../fragments/modals/acct-form.jsp"/>
-    <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+    <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
     <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+    <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
     <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
     <script src="${STATIC_URL}js/global.js"></script>
     <script src="${STATIC_URL}/js/customers/view.js"></script>

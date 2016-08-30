@@ -47,10 +47,6 @@ public class User extends AuditableEntity implements java.io.Serializable, UserD
                 joinColumns=@JoinColumn(name="user_id"),
                 inverseJoinColumns=@JoinColumn(name="role_id"))
     private Set<Role> roles;
-    /*@Version
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="timestamp", nullable=false)
-    private Date timestamp;*/
     public User() {
     }
 

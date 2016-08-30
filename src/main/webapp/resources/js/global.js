@@ -54,4 +54,20 @@ $(document).ready(function(){
     $('ul .dropdown-menu a').on('click', function (event) {
         event.stopPropagation();
     });
+
+    $.ajaxSetup({
+       statusCode : {
+           405 : function(){
+               BootstrapDialog.alert({
+                   title: 'Session Expired',
+                   message: 'You were logged out somewhere or you were logged out due to inactivity. Please login again.',
+                   type: BootstrapDialog.TYPE_DANGER,
+                   callback : function(){
+                       window.location.reload();
+                   }
+               });
+               console.log("global")
+           }
+       }
+    })
 });

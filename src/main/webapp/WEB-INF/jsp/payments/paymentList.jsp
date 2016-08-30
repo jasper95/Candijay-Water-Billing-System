@@ -13,14 +13,13 @@
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <link href="${WEB_JARS}jquery-ui/1.10.3/themes/base/jquery-ui.css" rel="stylesheet"/>
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
-        <div id="main-content" style="display:none" class="container-fluid">
+        <div id="main-content" style="display:none" class="container">
             <div class="row">
                 <div class="col-sm-8">
                     <h2>Payments</h2>
@@ -99,6 +98,7 @@
                                 <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                 <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
                                 <datatables:extraJs bundles="payment" placeholder="before_end_document_ready"/>
+                                <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                                 <dandelion:bundle excludes="jquery"/>
                             </datatables:table>
                         </form:form>
@@ -110,7 +110,7 @@
         <jsp:include page="../fragments/modals/payment-form.jsp"/>
         <jsp:include page="../fragments/modals/payment-info.jsp"/>
         <jsp:include page="../fragments/modals/finalize-payments-form.jsp"/>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>

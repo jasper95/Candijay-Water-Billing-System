@@ -12,7 +12,7 @@
                         <div class="table-responsive">
                             <div id="auditPayment-id" style="display: none;"></div>
                             <a id="filterButtonAuditTable"></a>
-                            <datatables:table cssClass="table table-striped" id="auditPayment" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/payments/modified/datatable-search" displayLength="3" dom="tp" >
+                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="auditPayment" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/payments/modified/datatable-search" displayLength="3" dom="tp" >
                                 <datatables:column property="payment.id" filterable="true" visible="false" selector="auditPayment-id"/>
                                 <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" cssCellClass="or-number"/>

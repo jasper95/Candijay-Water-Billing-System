@@ -80,9 +80,8 @@ body{
         font-size: 14px;
         letter-spacing: 1px;
     }
-    .navbar-nav .ope
 }
-@media (max-width: 767px)  {
+@media screen and (max-width: 767px)  {
     .navbar-nav .open .dropdown-menu{
         background-color: #FFF;
     }
@@ -93,6 +92,31 @@ body{
         padding-left: 10px;
         padding-right: 10px;
         vertical-align: middle;
+    }
+}
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+    body {
+        padding-top: 100px;
+    }
+}
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+    body {
+        padding-top: 150px;
+    }
+}
+/* iPhone 5 (landscape)----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : portrait) {
+    body {
+        padding-top: 100px;
     }
 }
 .vertical-center{

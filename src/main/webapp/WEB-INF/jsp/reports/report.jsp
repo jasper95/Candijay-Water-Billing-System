@@ -11,24 +11,20 @@
         <title>Reports</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/bootstrap-toggle.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-10">
-                    <h2>Generate Reports</h2>
-                </div>
-            </div>
+        <div class="container">
             <div class="row">
                 <div class="col-sm-6 col-centered">
+                    <h2>Generate Reports</h2>
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Accounts Specific Report</h3>
+                            <h3 class="panel-title">Reports Form</h3>
                         </div>
                         <div class="panel-body">
                             <form id="main-form">
@@ -104,8 +100,9 @@
                 </div>
             </div>
         </div>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>

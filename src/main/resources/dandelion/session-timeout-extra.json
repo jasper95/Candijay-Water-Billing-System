@@ -1,0 +1,13 @@
+{
+  "bundle" : "session-timeout",
+  "assets": [
+      {
+          "name": "session-timeout-extra",
+          "version": "0.0.1",
+          "type": "js",
+          "locations": {
+            "webapp": "/resources/js/datatables/session-timeout-extra.js"
+          }
+      }
+  ]
+}

@@ -34,8 +34,9 @@
         <intercept-url pattern="/admin**" access="isAuthenticated()"/>
         <intercept-url pattern="/admin/**" access="isAuthenticated()"/>
         <custom-filter ref="ajaxTimeoutRedirectFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
-        <form-login login-page="/login" authentication-failure-url="/login?error" always-use-default-target="true" default-target-url="/admin/"/>
-        <logout logout-url="/logout.htm" logout-success-url="/login?logout"/>
+        <form-login login-page="/login" authentication-failure-url="/login?error=true" always-use-default-target="true" default-target-url="/admin/"/>
+        <logout logout-url="/logout" invalidate-session="true" logout-success-url="/login?logout=true" delete-cookies="JSESSIONID"/>
+        <session-management invalid-session-url="/login?session-expired=true"/>
         <csrf/>
     </http>
    

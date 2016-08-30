@@ -4,9 +4,9 @@ var monthFilters = [{"value":1, "label":"Jan"},{"value":2, "label":"Feb"},{"valu
     {"value":7, "label":"Jul"},{"value":8, "label":"Aug"},{"value":9, "label":"Sep"},
     {"value":10, "label":"Oct"},{"value":11, "label":"Nov"},{"value":12, "label":"Dec"}];
 var yearFilters = [];
-for (i = new Date().getFullYear(); i >= 2007; i--)
-{    yearFilters.push(i);
-}
+for (var i = new Date().getFullYear(); i >= 2007; i--) {
+    yearFilters.push(i);
+};
 yadcf.init(oTable_expense, [
     {
         "externally_triggered": true,

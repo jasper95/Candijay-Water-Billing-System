@@ -20,7 +20,11 @@
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <init-param>
+            <param-name>throwExceptionIfNoHandlerFound</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     
     <servlet-mapping>
@@ -74,15 +78,10 @@
     </filter-mapping>             
     
     <session-config>
-        <session-timeout>
-            240
-        </session-timeout>
+        <session-timeout>60</session-timeout>
+        <tracking-mode>COOKIE</tracking-mode>
     </session-config>
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>
     </welcome-file-list>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/error404.jsp</location>
-    </error-page>
 </web-app>

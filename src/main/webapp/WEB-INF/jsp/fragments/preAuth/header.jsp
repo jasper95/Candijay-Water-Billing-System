@@ -8,7 +8,7 @@
 <nav id="header1" class="navbar navbar-default navbar-fixed-top" >
   <div class="container">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#" style="color: #fff;">CANDIJAY WATER BILLING SYSTEM</a>
+        <%--<a class="navbar-brand" href="#" style="color: #fff;">CANDIJAY WATER BILLING SYSTEM</a>--%>
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>

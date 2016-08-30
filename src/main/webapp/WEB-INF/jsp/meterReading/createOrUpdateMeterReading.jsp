@@ -10,15 +10,15 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${createOrUpdate} Reading</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <sec:csrfMetaTags/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
-        <div id="main-content" style="display: none;" class="container-fluid">
+        <div id="main-content" style="display: none;" class="container">
             <h2>Create Reading</h2>
             <hr/>
             <form:form method="post" cssClass="row" action="${pageContext.servletContext.contextPath}/admin/reading" modelAttribute="searchForm" id="fetchAccount">
@@ -133,8 +133,9 @@
             </div>
         </div>
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/helpers/search-helper.js"></script>

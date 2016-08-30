@@ -10,14 +10,14 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${customerForm.customer.id == null ? 'Create' : 'Update' } Customer</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
-        <link href="${STATIC_URL}css/stylesheet_sticky-footer-navbar.css" rel="stylesheet">
         <link href="${WEB_JARS}jquery-ui/1.10.3/themes/base/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-md-10">
                     <h2> ${customerForm.customer.id == null ? 'Create' : 'Update' } Customer
@@ -58,8 +58,9 @@
                 <button style="margin-right: 30px;" class="btn btn-primary btn-lg pull-right" type="submit">  Save  </button>
             </form:form>
         </div>
-        <script src="${WEB_JARS}jquery/2.0.3/jquery.js"></script>
+        <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>

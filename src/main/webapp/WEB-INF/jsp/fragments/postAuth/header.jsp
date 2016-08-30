@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!-- Fixed navbar -->
 <nav class="navbar navbar-cws navbar-fixed-top">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -13,12 +13,7 @@
             <a class="navbar-brand" href="${pageContext.servletContext.contextPath}/admin/">Candijay Water Billing System</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li >
-                    <a href="${pageContext.servletContext.contextPath}/admin/">
-                        <i class="fa fa-home fa-lg"></i> Home
-                    </a>
-                </li>
+            <ul class="nav navbar-nav navbar-right">
                 <sec:authorize access="hasAuthority('ACCOUNTS')">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle animate" data-toggle="dropdown">
@@ -103,8 +98,6 @@
                         </ul>
                     </li>
                 </sec:authorize>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown dropdown-right" class="dropdown-toggle animate" data-toggle="dropdown">
                     <a href="#" class="dropdown-toggle animate" data-toggle="dropdown">
                         <i class="fa fa-user fa-lg"></i> <sec:authentication property="principal.username"/> <span class="caret"></span>
@@ -128,7 +121,7 @@
     </div>
 </nav>
 <jsp:include page="../modals/update-profile-form.jsp"/>
-<form id="logoutForm" action="${pageContext.servletContext.contextPath}/logout.htm" method="post">
+<form id="logoutForm" action="${pageContext.servletContext.contextPath}/logout" method="post">
   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
 <script>  

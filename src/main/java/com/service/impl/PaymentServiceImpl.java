@@ -24,10 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
-/**
- *
- * @author 201244055
- */
 @Service
 public class PaymentServiceImpl implements PaymentService{
 
@@ -35,18 +31,16 @@ public class PaymentServiceImpl implements PaymentService{
     private InvoiceRepository invoiceRepo;
     private AccountRepository accountRepo;
     private SettingsService settingsService;
-    private DeviceRepository deviceRepo;
     private ModifiedPaymentRepository modifiedPaymentRepo;
     
     @Autowired 
     public PaymentServiceImpl(PaymentRepository paymentRepo, InvoiceRepository invoiceRepo, 
-                              AccountRepository accountRepo, SettingsService settingsService, DeviceRepository deviceRepo,
+                              AccountRepository accountRepo, SettingsService settingsService,
                               ModifiedPaymentRepository modifiedPaymentRepo) {
         this.paymentRepo = paymentRepo;
         this.invoiceRepo = invoiceRepo;
         this.accountRepo = accountRepo;
         this.settingsService = settingsService;
-        this.deviceRepo = deviceRepo;
         this.modifiedPaymentRepo = modifiedPaymentRepo;
     }
 
@@ -98,7 +92,10 @@ public class PaymentServiceImpl implements PaymentService{
         BigDecimal diff = payment.getInvoice().getNetCharge().subtract(payment.getAmountPaid().add(payment.getDiscount()));
         payment.getAccount().setAccountStandingBalance(diff);
         Settings settings = settingsService.getCurrentSettings();
-        if(diff.doubleValue() > 0)
+        if(diff.compareTo(payment.getInvoice().getNetCharge()) == 0){
+            payment.getInvoice().setStatus(InvoiceStatus.DEBT);
+        }
+        else if(diff.doubleValue() > 0)
             payment.getInvoice().setStatus(InvoiceStatus.PARTIALLYPAID);
         else
             payment.getInvoice().setStatus(InvoiceStatus.FULLYPAID);
@@ -112,7 +109,9 @@ public class PaymentServiceImpl implements PaymentService{
             payment.getAccount().setPenalty(BigDecimal.ZERO);
         }
         payment = paymentRepo.save(payment);
-        payment.getAccount().setStatus(AccountStatus.ACTIVE);
+        if(isAllowedToSetWarningToAccount(payment.getAccount(), settings.getDebtsAllowed()))
+            payment.getAccount().setStatus(AccountStatus.WARNING);
+        else payment.getAccount().setStatus(AccountStatus.ACTIVE);
         payment.getAccount().setStatusUpdated(true);
         accountRepo.save(payment.getAccount());
         return payment;
@@ -164,10 +163,9 @@ public class PaymentServiceImpl implements PaymentService{
     public boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed) {
         int ctr = 0;
         for(Invoice invoice: invoiceRepo.findTop5ByAccountOrderByIdDesc(account)){
-            if(!invoice.getStatus().equals(InvoiceStatus.UNPAID))
+            if(! (invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)))
                 break;
             else ctr++;
-
         }
         return debtsAllowed.compareTo(ctr) <= 0;
     }
