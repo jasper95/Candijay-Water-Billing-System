@@ -41,7 +41,19 @@
     <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
         p:dataSource-ref="dataSource"
-        p:persistenceUnitName="com.jasper.spring_testttt_war_1.0-SNAPSHOTPU"/>
+        p:persistenceUnitName="cws-persistence-unit"
+        p:packagesToScan="com.domain">
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+            </property>
+            <property name="jpaProperties">
+                <props>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                    <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                    <prop key="hibernate.show_sql">true</prop>
+                </props>
+            </property>
+    </bean>
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>

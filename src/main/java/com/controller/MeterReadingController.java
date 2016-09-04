@@ -39,8 +39,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping(value="/admin/reading")
 public class MeterReadingController {
- 
-    static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.meterReadingForm";
+
     private MeterReadingService mrService;
     private DataTableService dataTableService;
     private AccountRepository accountRepo;
