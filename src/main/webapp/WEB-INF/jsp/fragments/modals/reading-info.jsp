@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" id="close-reading-form" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 class="modal-title">Payment Changes</h3>
+                <h3 class="modal-title">Reading Changes</h3>
             </div>
             <div class="modal-body">
                 <fieldset>

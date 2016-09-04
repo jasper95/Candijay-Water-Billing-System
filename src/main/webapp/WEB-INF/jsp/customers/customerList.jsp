@@ -52,7 +52,7 @@
                             <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>
                             <datatables:column title="Contact" filterable="false" sortable="false" property="contactNumber"/>
                             <datatables:column title="Members" filterable="false" sortable="false" property="familyMembersCount"/>
-                            <datatables:column filterable="false" title="Actions" renderFunction="custom-rendering#customerListActions" sortable="false"/>
+                            <datatables:column filterable="false" title="Edit" renderFunction="custom-rendering#customerListActions" sortable="false"/>
                             <datatables:extraJs bundles="customer" placeholder="before_end_document_ready" />
                             <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             <dandelion:bundle excludes="jquery"/>

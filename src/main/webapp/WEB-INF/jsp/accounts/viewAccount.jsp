@@ -33,7 +33,7 @@
         </c:if>
             <form:form modelAttribute="accountForm">
                 <div class="form-wrapper">
-                    <h3>Customer Information</h3>
+                    <h3> <a href="${pageContext.servletContext.contextPath}/admin/customers/${accountForm.customerId}/"> Customer Information </a> </h3>
                     <div class="col-sm-12 form-group">
                         <cws:input id="cust-ln" name="account.customer.lastname" label="Lastname" icon="user" placeholder="Enter Lastname" required="false" readOnly="true"/>
                         <cws:input id="cust-fn" name="account.customer.firstName" label="Firstname" icon="user" placeholder="Enter Firstname" required="false" readOnly="true"/>
@@ -45,7 +45,7 @@
                     <div class="col-sm-12 form-group">
                         <cws:input id="acct-no" name="account.number" label="Account number" icon="user" placeholder="" required="false" readOnly="true"/>
                         <cws:input id="acct-sb" name="account.accountStandingBalance" label="Standing Balance" icon="money" placeholder="" required="false" readOnly="true"/>
-                        <cws:input id="acct-st" name="account.status" label="Status" icon="money" placeholder="" required="false" readOnly="true"/>
+                        <cws:input id="acct-st" name="account.status" label="Status" icon="info" placeholder="" required="false" readOnly="true"/>
                     </div>
                     <div class="col-sm-12 form-group">
                         <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" disabled="true"/>
@@ -57,7 +57,7 @@
             <h3>Devices</h3>
             <div class="col-md-12 main">
                 <div class="table-responsive">
-                    <datatables:table dom="t" reloadSelector="#reload" cssClass="table table-striped" id="devices" url="${requestScope['javax.servlet.forward.request_uri']}/devices">
+                    <datatables:table dom="t" reloadSelector="#reload" cssClass="table table-striped" id="devices" url="${pageContext.servletContext.contextPath}/admin/accounts/${accountForm.account.number}/devices">
                         <datatables:column title="Meter Code" property="meterCode" sortable="false" sortInitDirection="false"/>
                         <datatables:column title="Meter Brand" property="brand" sortable="false" sortInitDirection="false"/>
                         <datatables:column title="Active" property="active" renderFunction="custom-rendering#trueToYes" sortable="false"/>

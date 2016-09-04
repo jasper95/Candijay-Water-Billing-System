@@ -66,7 +66,7 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-eyedropper fa-fw"></i>Apply</button>
+                        <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-hand-pointer-o fa-fw"></i>Apply</button>
                     </div>
                 </div>
             </div>

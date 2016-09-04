@@ -17,7 +17,7 @@
                             <cws:select id="exp-year" name="schedule.year" items="${yearOptions}" label="Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
                         </div>
                         <div class="col-sm-6 form-group">
-                            <cws:select id="exp-type" name="type" items="${typeOptions}" label="Type" icon="money" required="true" placeholder="Select type" size="12"/>
+                            <cws:select id="exp-type" name="type" items="${typeOptions}" label="Type" icon="credit-card" required="true" placeholder="Select type" size="12"/>
                         </div>
                         <div class="col-sm-6 form-group">
                             <cws:input id="exp-amount" name="amount" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>

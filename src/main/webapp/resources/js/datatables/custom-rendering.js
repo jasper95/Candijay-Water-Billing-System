@@ -5,7 +5,7 @@ function customerUrl(data, type, full){
     return '<a href="/admin/customers/'+full.id+'/"> '+ full.lastname+', '+full.firstName+' '+full.middleName+'</a>';
 };
 function customerListActions(data, type, full){
-    return '<a type="button" href="customers/'+full.id+'/update/" class="btn btn-xs btn-primary">Edit</a>';
+    return '<a type="button" href="/admin/customers/'+full.id+'/update/" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 };
 function accountUrl(data, type, full){
     return '<a href="/admin/accounts/'+data+'/"> '+data+'</a>';

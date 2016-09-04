@@ -100,7 +100,7 @@
                 </sec:authorize>
                 <li class="dropdown dropdown-right" class="dropdown-toggle animate" data-toggle="dropdown">
                     <a href="#" class="dropdown-toggle animate" data-toggle="dropdown">
-                        <i class="fa fa-user fa-lg"></i> <sec:authentication property="principal.username"/> <span class="caret"></span>
+                        <i class="fa fa-user fa-lg"></i>Profile<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>

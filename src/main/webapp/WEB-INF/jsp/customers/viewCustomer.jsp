@@ -27,8 +27,8 @@
             </div>
         </div>
     <c:if test="${updateSuccess == 1}">
-        <div style="text-align: center" class="alert alert-success" style="border-radius:5px;"><br>
-            <h4>This customer is successfully updated!</h4>
+        <div style="text-align: center" class="alert alert-success" style="border-radius:5px;">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>This customer is successfully updated
         </div>
     </c:if>
         <form:form modelAttribute="customerForm" id="add-customer-form">
@@ -59,7 +59,6 @@
                     <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
                     <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
                     <datatables:column name="status" title="Status" property="status" sortable="false"/>
-                    <datatables:column title="Action" renderFunction="custom-rendering#activateAccount" sortable="false"/>
                     <dandelion:bundle excludes="jquery"/>
                 </datatables:table>
             </div>

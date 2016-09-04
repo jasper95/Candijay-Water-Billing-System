@@ -170,7 +170,8 @@ public class AccountController {
             response.put("status","FAILURE");
         else{
             for(Long id : checkboxes.getCheckboxValues()){
-                if(accountRepo.findOne(id).getStatus().equals(AccountStatus.WARNING))
+                Account account = accountRepo.findOne(id);
+                if(account.getStatus().equals(AccountStatus.WARNING) || account.getStatus().equals(AccountStatus.ACTIVE))
                     qualifiedList.add(id);
             }
             if(!qualifiedList.isEmpty()){
@@ -314,7 +315,7 @@ public class AccountController {
         return "rpt_disconnection_notice";
     }
 
-    @RequestMapping(value="/warning", method=RequestMethod.POST)
+/*    @RequestMapping(value="/warning", method=RequestMethod.POST)
     public @ResponseBody HashMap warningAccount(@RequestParam("accountId") Long id){
         HashMap response = new HashMap();
         Account account = accountRepo.findOne(id);
@@ -352,7 +353,7 @@ public class AccountController {
             } else response.put("status", "FAILURE");
         }else response.put("status", "FAILURE");
         return response;
-    }
+    }*/
     @RequestMapping(value="/find-device", method = RequestMethod.POST)
     public @ResponseBody Device find(@RequestParam("device_id") Long id){
         return deviceRepo.findOne(id);
