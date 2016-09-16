@@ -8,6 +8,8 @@ package com.dao.springdatajpa;
 import com.domain.Account;
 import com.domain.Address;
 import com.domain.Customer;
+
+import java.util.Collection;
 import java.util.List;
 
 import com.domain.enums.AccountStatus;
@@ -24,5 +26,5 @@ public interface AccountRepository extends JpaRepository<Account,Long>{
     List<Account> findByStatus(AccountStatus status);
     List<Account> findByAddressAndStatusUpdatedAndStatus(Address address, boolean statusUpdated, AccountStatus status);
     List<Account> findByAddressAndStatus(Address address, AccountStatus status);
-
+    List<Account> findByAddressAndStatusUpdatedAndStatusIn(Address address, boolean statusUpdated, Collection<AccountStatus> statuses);
 }

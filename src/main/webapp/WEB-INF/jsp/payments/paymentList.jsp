@@ -94,7 +94,7 @@
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
                                 <datatables:column title="Discount" name="discount" property="discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                 <datatables:column title="Paid" name="amount-paid" property="amountPaid" sortable="false"  renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
-                                <datatables:column title="Date" name="date" property="date" sortable="false" renderFunction="custom-rendering#paidDate" cssCellClass="payment-date"/>
+                                <datatables:column title="Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                 <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
                                 <datatables:extraJs bundles="payment" placeholder="before_end_document_ready"/>

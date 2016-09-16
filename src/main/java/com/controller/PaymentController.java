@@ -93,6 +93,7 @@ public class PaymentController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody HashMap processPaymentForm(@ModelAttribute("paymentForm") @Valid PaymentForm paymentForm,
                                                     BindingResult result, @RequestParam(value="update", required = false) Long id){
+        System.out.println("FUCKKKKKKKKKKK");
         HashMap response = new HashMap();
         if(id != null)
             paymentForm.getPayment().setId(id);
@@ -104,12 +105,15 @@ public class PaymentController {
                 response.put("result", paymentService.save(paymentForm));
             } catch(JpaOptimisticLockingFailureException e){
                 result.reject("global","This record was modified by another user. Try refreshing the page.");
+            } catch(Exception e){
+                result.reject("global", e.getMessage());
             }
         } if (result.hasErrors()) {
             response.put("status","FAILURE");
             response.put("result",result.getAllErrors());
             return response;
         }
+        System.out.println("HERE WTF");
         response.put("status","SUCCESS");
         return response;
     }
@@ -141,6 +145,7 @@ public class PaymentController {
 
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
     public @ResponseBody HashMap getaccountAndInvoiceData(@ModelAttribute("searchForm") @Valid SearchForm form, BindingResult result){
+        System.out.println("FETCH ACCOUNT");
         HashMap response = new HashMap();
         Account account = null;
         if(!result.hasErrors())

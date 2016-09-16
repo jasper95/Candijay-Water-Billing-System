@@ -20,9 +20,7 @@ import javax.persistence.Table;
  * @author Bert
  */
 @Entity
-@Table(name="address_group"
-    ,catalog="revised_cws_db"
-)
+@Table(name="address_group")
 public class AddressGroup implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)

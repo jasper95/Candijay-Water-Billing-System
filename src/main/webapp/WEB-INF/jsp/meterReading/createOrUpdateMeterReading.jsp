@@ -90,6 +90,7 @@
                                         <datatables:column title="Reading" name="reading" property="readingValue" cssCellClass="reading" sortable="false"/>
                                         <datatables:column title="Status" name="invoice.status" property="invoice.status" sortable="false"/>
                                         <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
+                                        <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
                                         <datatables:extraJs bundles="months" placeholder="after_all"/>
                                         <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>
@@ -133,6 +134,7 @@
             </div>
         </div>
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
+        <jsp:include page="../fragments/modals/reading-info.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>

@@ -1,6 +1,6 @@
 package com.domain;
 
-import com.dao.util.JsonJodaDateTimeSerializer;
+import com.dao.util.AuditorDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -19,9 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name="modified_reading"
-        ,catalog="revised_cws_db"
-)
+@Table(name="modified_reading")
 public class ModifiedReading implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy=IDENTITY)
@@ -38,7 +36,7 @@ public class ModifiedReading implements java.io.Serializable {
     private Integer readingValue;
     @Column(name="consumption", nullable=false)
     private Integer consumption;
-    @JsonSerialize(using=JsonJodaDateTimeSerializer.class)
+    @JsonSerialize(using=AuditorDateTimeSerializer.class)
     @Column(name = "creation_time", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @CreatedDate

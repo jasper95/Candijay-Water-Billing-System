@@ -161,7 +161,7 @@ public class AccountController {
         return DatatablesResponse.build(dataSet, criterias);
     }
     
-    @RequestMapping(value="/deactivate-check", method=RequestMethod.POST)
+    @RequestMapping(value="/notice-of-disconnection-check", method=RequestMethod.POST)
     public @ResponseBody 
     HashMap deactivateCheck(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         List<Long> qualifiedList = new ArrayList();
@@ -171,7 +171,7 @@ public class AccountController {
         else{
             for(Long id : checkboxes.getCheckboxValues()){
                 Account account = accountRepo.findOne(id);
-                if(account.getStatus().equals(AccountStatus.WARNING) || account.getStatus().equals(AccountStatus.ACTIVE))
+                if(account.getStatus().equals(AccountStatus.WARNING))
                     qualifiedList.add(id);
             }
             if(!qualifiedList.isEmpty()){
@@ -183,19 +183,17 @@ public class AccountController {
             }
         }
         return response;
-    }    
+    }
     
     @RequestMapping(value="/deactivate-accounts", method=RequestMethod.POST)
     public @ResponseBody HashMap deactivateAccounts(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         boolean success = false;
         if(!result.hasErrors()){
             for(Long id : checkboxes.getCheckboxValues()){
+                if(!success)
+                    success = true;
                 Account account = accountRepo.findOne(id);
-                if(account.getStatus().equals(AccountStatus.WARNING)){
-                    if(!success)
-                        success = true;
-                    custService.changeAccountStatus(account, AccountStatus.INACTIVE);
-                }
+                custService.changeAccountStatus(account, AccountStatus.INACTIVE);
             }
         }
         HashMap response = new HashMap();
@@ -306,54 +304,14 @@ public class AccountController {
                 accounts.add(account);
         }
         if(accounts.isEmpty()){
-            map.put("type", "Invalid URL Parameter(s)");
-            map.put("message", "None of the accounts is allowed to give notice of disconnection");
+            map.put("type", "Invalid Parameter(s)");
+            map.put("message", "None of the accounts is qualified to generate notice of disconnection");
             return "errors";
         }
         map.put("datasource", new JRBeanCollectionDataSource(accounts));
         map.put("format", "pdf");
         return "rpt_disconnection_notice";
     }
-
-/*    @RequestMapping(value="/warning", method=RequestMethod.POST)
-    public @ResponseBody HashMap warningAccount(@RequestParam("accountId") Long id){
-        HashMap response = new HashMap();
-        Account account = accountRepo.findOne(id);
-        if(account != null){
-            Settings currentSettings = settingsService.getCurrentSettings();
-            if(paymentService.isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
-                custService.changeAccountStatus(account, AccountStatus.WARNING);
-                response.put("status", "SUCCESS");
-            } else response.put("status", "FAILURE");
-        } else response.put("status", "FAILURE");
-        return response;
-    }
-    
-    @RequestMapping(value="/activate", method=RequestMethod.POST)
-    public @ResponseBody HashMap activateAccount(@RequestParam("accountId") Long id){
-        HashMap response = new HashMap();
-        Account account = accountRepo.findOne(id);
-        if(account != null){
-            if(!account.getStatus().equals(AccountStatus.ACTIVE)){
-                custService.changeAccountStatus(accountRepo.findOne(id), AccountStatus.ACTIVE);
-                response.put("status", "SUCCESS");
-            } else response.put("status", "FAILURE");
-        }else response.put("status", "FAILURE");
-        return response;
-    }
-    
-    @RequestMapping(value="/deactivate", method=RequestMethod.POST)
-    public @ResponseBody HashMap deactivateAccount(@RequestParam("accountId") Long id){
-        HashMap response = new HashMap();
-        Account account = accountRepo.findOne(id);
-        if(account != null){
-            if(account.getStatus().equals(AccountStatus.WARNING)){
-                custService.changeAccountStatus(accountRepo.findOne(id), AccountStatus.INACTIVE);
-                response.put("status", "SUCCESS");
-            } else response.put("status", "FAILURE");
-        }else response.put("status", "FAILURE");
-        return response;
-    }*/
     @RequestMapping(value="/find-device", method = RequestMethod.POST)
     public @ResponseBody Device find(@RequestParam("device_id") Long id){
         return deviceRepo.findOne(id);

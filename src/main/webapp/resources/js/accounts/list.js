@@ -5,16 +5,15 @@ $(document).ready(function(){
     });
     $('#apply').on('click', function(){
         var action = $('#action').val(), form = $('#form');
-        if(action === '1' || action === '2'){
-            $.post(form.attr('action')+'/deactivate-check', form.serialize(), function(response){
+        if(action === '1'){
+            $.post(form.attr('action')+'//notice-of-disconnection-check', form.serialize(), function(response){
                 if(response.status === "SUCCESS"){
-                    if(action === '1')
-                        openReport('POST',form.attr('action')+"/print-notice-of-disconnection",response.result,'_blank');
-                    else if( action  === '2')
-                        changeStatus(form.serialize(), form.attr('action')+'/deactivate-accounts');
+                    openReport('POST',form.attr('action')+"/print-notice-of-disconnection",response.result,'_blank');
                 } else showError("No account is qualified for the action");
             });
         }
+        else if (action === "2")
+            changeStatus(form.serialize(), form.attr('action')+'/deactivate-accounts');
         else if(action === "3")
             changeStatus(form.serialize(), form.attr('action')+'/warning-accounts');
         else if(action === "4")
@@ -23,8 +22,16 @@ $(document).ready(function(){
     });
     function changeStatus(data, url){
         $.post(url, data, function(response){
-            if(response.status === "SUCCESS")
+            if(response.status === "SUCCESS") {
+                BootstrapDialog.alert({
+                    title: 'ACTION SUCCESS',
+                    message: "Action successfully performed",
+                    type: BootstrapDialog.TYPE_SUCCESS, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                    closable: true, // <-- Default value is false
+                    draggable: true, // <-- Default value is false
+                });
                 $('#filterButton').trigger('click');
+            }
             else showError("No account is qualified for the action");
         });
     }

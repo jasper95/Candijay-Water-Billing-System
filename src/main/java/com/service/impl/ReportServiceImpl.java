@@ -3,6 +3,7 @@ package com.service.impl;
 import com.charts.ChartData;
 import com.dao.springdatajpa.*;
 import com.domain.*;
+import com.domain.enums.InvoiceStatus;
 import com.service.ReportService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -52,8 +53,8 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly=true)
     @Override
     public JRDataSource getCollectionDataSource(String barangay, Schedule sched) {
-        List<Payment> monthlyPaymentByBarangay = (!barangay.equalsIgnoreCase("summary")) ? paymentRepo.findByInvoice_ScheduleAndAccount_Address_Brgy(sched, barangay) :
-                paymentRepo.findByInvoice_Schedule(sched);
+        List<Payment> monthlyPaymentByBarangay = (!barangay.equalsIgnoreCase("summary")) ? paymentRepo.findByInvoice_ScheduleAndAccount_Address_BrgyAndInvoice_StatusNot(sched, barangay, InvoiceStatus.DEBT) :
+                paymentRepo.findByInvoice_ScheduleAndInvoice_StatusNot(sched, InvoiceStatus.DEBT);
         monthlyPaymentByBarangay.add(0, new Payment());
         return new JRBeanCollectionDataSource(monthlyPaymentByBarangay);
     }

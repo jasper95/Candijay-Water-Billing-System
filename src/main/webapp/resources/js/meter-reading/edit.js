@@ -16,6 +16,10 @@ $(document).ready(function(){
                 $('#rd-id').val(id);
                 $('#ac-id').val(reading.account.id);
                 $('#rd-vs').val(reading.version);
+                $('#cr-time-audit-mr').text(reading.creationTime);
+                $('#up-time-audit-mr').text(reading.modificationTime);
+                $('#cr-user-audit-mr').text(reading.createdByUser);
+                $('#up-user-audit-mr').text(reading.modifiedByUser);
                 //populate account details
                 var account = reading.account;
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;

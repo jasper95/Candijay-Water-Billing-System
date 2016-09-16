@@ -1,6 +1,6 @@
 package com.domain;
 
-import com.dao.util.JsonJodaDateTimeSerializer;
+import com.dao.util.AuditorDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -29,14 +29,14 @@ public abstract class AuditableEntity {
     @CreatedBy
     private String createdByUser;
     @Column(name = "creation_time", nullable = false)
-    @JsonSerialize(using=JsonJodaDateTimeSerializer.class)
+    @JsonSerialize(using=AuditorDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @CreatedDate
     private DateTime creationTime;
     @Column(name = "modified_by_user", nullable = false)
     @LastModifiedBy
     private String modifiedByUser;
-    @JsonSerialize(using=JsonJodaDateTimeSerializer.class)
+    @JsonSerialize(using=AuditorDateTimeSerializer.class)
     @Column(name = "modification_time")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @LastModifiedDate

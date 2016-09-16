@@ -24,6 +24,8 @@
                         </div>
                         <input type="hidden" name="update" id="expId"/>
                         <form:hidden path="version" id="exp-version"/>
+                        <p class="pm-audit audit-info">Created on <span id="cr-time-audit-pm"></span> by <span id="cr-user-audit-pm"></span></p>
+                        <p class="pm-audit audit-info">Updated on <span id="up-time-audit-pm"></span> by <span id="up-user-audit-pm"></span></p>
                         <div class="col-sm-12 form-group">
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">

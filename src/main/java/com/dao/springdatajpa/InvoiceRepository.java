@@ -9,6 +9,8 @@ import com.domain.Account;
 import com.domain.Invoice;
 import com.domain.Schedule;
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -20,5 +22,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     Invoice findTopByAccountOrderByIdDesc(Account account);
     List<Invoice> findByScheduleAndAccount_Address_Brgy(Schedule sched, String brgy);
     List<Invoice> findBySchedule(Schedule sched);
-    List<Invoice> findTop5ByAccountOrderByIdDesc(Account account);
+    List<Invoice> findByAccountOrderByIdDesc(Account account, Pageable pageable);
 }

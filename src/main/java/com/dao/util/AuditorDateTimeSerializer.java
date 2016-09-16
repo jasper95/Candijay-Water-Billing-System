@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by jasper on 8/3/16.
  */
-public class JsonJodaDateTimeSerializer extends JsonSerializer<DateTime> {
+public class AuditorDateTimeSerializer extends JsonSerializer<DateTime> {
     private static DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM dd, ''yy hh:mm:ss a");
     @Override
     public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {

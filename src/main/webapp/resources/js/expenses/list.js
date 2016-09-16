@@ -5,11 +5,11 @@ $(document).ready(function(){
         $('#expense-info-modal').modal('show');
     };
     $('#create-expense').click(function(){
-        $('expense-action').text('Create');
+        $('#expense-action').text('Create');
         $('#expense-form-modal').modal('show');
         cleanUpFormMsgs('#expense-form');
         cleanUpFormFields('#expense-form');
-        console.log("test")
+        $('p.pm-audit').hide();
         $('#exp-version').val('');
         $('#expId').val('')
     });
@@ -36,7 +36,7 @@ $(document).ready(function(){
     });
     $('#expense').on('click', 'tr', function(){
         $('#row-num').val($(this).index()+1)
-    })
+    });
     window.checkCanEdit = function(id){
         var uri = $('#expense-uri').val()+"find";
         var data = {"id": id};
@@ -60,10 +60,15 @@ $(document).ready(function(){
                     $('#exp-amount').val(expense.amount);
                     $('#exp-version').val(expense.version);
                     $('#expId').val(expense.id);
-                    $('expense-action').val('Update');
+                    $('#cr-time-audit-pm').text(expense.creationTime);
+                    $('#up-time-audit-pm').text(expense.modificationTime);
+                    $('#cr-user-audit-pm').text(expense.createdByUser);
+                    $('#up-user-audit-pm').text(expense.modifiedByUser);
+                    $('p.pm-audit').show();
+                    $('#expense-action').text('Update');
                     $('#expense-form-modal').modal('show');
                 } else alert("This expense might have been deleted by other user. Please refresh the page.")
             }
-        })
-    }
+        });
+    };
 });

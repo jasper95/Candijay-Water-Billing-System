@@ -20,7 +20,7 @@
                 <div class="col-sm-12" style= "padding-top: 20px;">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Graphs Overview for 2016</h3>
+                            <h3 class="panel-title">Graphs Overview for ${currentYear}</h3>
                         </div>
                         <div class="panel-body">
                             <ul id="chart-menu" class="nav nav-tabs">

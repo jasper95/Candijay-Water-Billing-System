@@ -10,6 +10,9 @@ function customerListActions(data, type, full){
 function accountUrl(data, type, full){
     return '<a href="/admin/accounts/'+data+'/"> '+data+'</a>';
 };
+function checkboxAccount(data, type, full){
+    return full.statusUpdated ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
+}
 function toPeso(data, type, full){
     if (data == null) return '---';
     else return "&#8369; "+data;
@@ -18,7 +21,7 @@ function month(data, type, full){
     return monthNames[data-1];
 };
 function checkbox(data, type, full){
-    return '<input type="checkbox" name="checkboxValues" value="'+full.id+'" /> ';
+    return '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />';
 };
 function audit(data, type, full){
     if(full.version == 0) return '---';
@@ -26,7 +29,7 @@ function audit(data, type, full){
 };
 function auditPayment2(data, type, full){
     if(full.payment == null) return "---";
-    else return '<a type="button" onclick="viewChanges('+ full.payment.id +')" class="btn btn-xs btn-primary"><i class="fa fa-info-circle fa-fw"></i></a>';
+    else return (full.payment.version == 0)? '' : '<a type="button" onclick="viewChanges('+ full.payment.id +')" class="btn btn-xs btn-primary"><i class="fa fa-info-circle fa-fw"></i></a>';
 };
 function readingActions(data, type, full){
     return '<a type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';

@@ -18,7 +18,7 @@
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" cssCellClass="or-number"/>
                                 <datatables:column title="Discount" name="discount" property="discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                 <datatables:column title="Amount Paid" name="amount-paid" property="amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
-                                <datatables:column title="Payment Date" name="date" property="date" sortable="false" renderFunction="custom-rendering#paidDate" cssCellClass="payment-date"/>
+                                <datatables:column title="Payment Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="Modified on" name="creationTime" property="creationTime"/>
                                 <datatables:column title="Modified by" name="createdByUser" property="createdByUser" sortable="false"/>
                                 <dandelion:bundle excludes="jquery"/>

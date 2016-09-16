@@ -58,6 +58,7 @@ public class AdminProfileController {
         Integer activeAccounts = accountRepo.findByStatus(AccountStatus.ACTIVE).size(), warningAccounts = accountRepo.findByStatus(AccountStatus.WARNING).size(),
                             inactiveAccounts = accountRepo.findByStatus(AccountStatus.INACTIVE).size();
         Integer activeUsers = userRepo.findByStatus(UserStatus.ACTIVE).size(), inactiveUsers = userRepo.findByStatus(UserStatus.INACTIVE).size();
+        model.put("currentYear", LocalDateTime.now().getYear());
         model.put("activeUsers", activeUsers);
         model.put("inactiveUsers", inactiveUsers);
         model.put("activeAccounts", activeAccounts);

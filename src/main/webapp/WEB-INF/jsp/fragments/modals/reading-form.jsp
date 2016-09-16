@@ -58,6 +58,8 @@
                             </div>
                             <form:hidden path="meterReading.version" id="rd-vs"/>
                             <input type="hidden" name="readingId" id="rd-id"/>
+                            <p class="audit-info">Created on <span id="cr-time-audit-mr"></span> by <span id="cr-user-audit-mr"></span></p>
+                            <p class="audit-info">Updated on <span id="up-time-audit-mr"></span> by <span id="up-user-audit-mr"></span></p>
                             <div class="col-sm-12 form-group">
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">

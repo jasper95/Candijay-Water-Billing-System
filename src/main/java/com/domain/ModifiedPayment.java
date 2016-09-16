@@ -1,13 +1,14 @@
 package com.domain;
 
-import com.dao.util.JsonJodaDateTimeSerializer;
+import com.dao.util.AuditorDateTimeSerializer;
+import com.dao.util.StandardDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,9 +16,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import java.math.BigDecimal;
 
@@ -28,9 +26,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name="modified_payment"
-        ,catalog="revised_cws_db"
-)
+@Table(name="modified_payment")
 public class ModifiedPayment implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy=IDENTITY)
@@ -39,21 +35,18 @@ public class ModifiedPayment implements java.io.Serializable {
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="payment_id", nullable=false)
     private Payment payment;
+    @JsonSerialize(using= StandardDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name="date", nullable=false, length=10)
     private DateTime date;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
     @Column(name="amount_paid", nullable=false, precision=10, scale=0)
     private BigDecimal amountPaid;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
     @Column(name="discount", nullable=false, precision=10, scale=0)
     private BigDecimal discount;
-    @NotEmpty(message = "Invalid OR number")
-    @NotNull(message="Invalid OR number") @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid OR number")
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
-    @JsonSerialize(using=JsonJodaDateTimeSerializer.class)
+    @JsonSerialize(using=AuditorDateTimeSerializer.class)
     @Column(name = "creation_time", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @CreatedDate
@@ -111,6 +104,7 @@ public class ModifiedPayment implements java.io.Serializable {
         this.createdByUser = createdByUser;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public DateTime getDate() {
         return date;
     }

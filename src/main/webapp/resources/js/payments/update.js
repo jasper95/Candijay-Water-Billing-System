@@ -13,10 +13,9 @@ $(document).ready(function(){
                 cleanUpFormMsgs('#md-update-form');
                 var payment = data.payment;
                 var account = payment.account;
-                var date = payment.date;
                 $('#pm-paid').val(payment.amountPaid);
                 $('#pm-discount').val(payment.discount);
-                $('#pm-date').val(date.year+'/'+date.monthOfYear+'/'+date.dayOfMonth);
+                $('#pm-date').val(payment.date);
                 $('#pm-version').val(payment.version);
                 $('#pm-or').val(payment.receiptNumber)
                 $('#ac-id').val(account.id);
@@ -60,11 +59,10 @@ $(document).ready(function(){
                 var payment = response.result;
                 var invoice = payment.invoice;
                 var row = $('#payment tbody tr:nth-child('+$('#row-num').val()+')');
-                var sched = payment.date.year+'/'+payment.date.monthOfYear+'/'+payment.date.dayOfMonth;
                 row.find('.invoice-status').text(invoice.status);
                 row.find('.payment-discount').html('&#8369 '+payment.discount);
                 row.find('.payment-amount').html('&#8369 '+payment.amountPaid);
-                row.find('.payment-date').text(sched);
+                row.find('.payment-date').text(payment.date);
                 row.find('.or-number').text(payment.receiptNumber);
                 $('#pm-version').val(payment.version);
             }

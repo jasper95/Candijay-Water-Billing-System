@@ -19,9 +19,7 @@ import javax.validation.constraints.NotNull;
  * @author Bert
  */
 @Entity
-@Table(name="settings"
-    ,catalog="revised_cws_db"
-)
+@Table(name="settings")
 public class Settings implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)

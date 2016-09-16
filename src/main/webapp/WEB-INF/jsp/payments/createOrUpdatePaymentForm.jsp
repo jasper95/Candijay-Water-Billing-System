@@ -90,7 +90,7 @@
                                         <datatables:column title="OR number" property="payment.receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
                                         <datatables:column title="Discount" name="discount" property="payment.discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                         <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
-                                        <datatables:column title="Payment Date" name="date" property="payment.date" renderFunction="custom-rendering#paidDate" cssCellClass="payment-date"/>
+                                        <datatables:column title="Payment Date" name="date" property="payment.date" cssCellClass="payment-date"/>
                                         <datatables:column title="Edit" renderFunction="custom-rendering#createPaymentAction" searchable="false" sortable="false"/>
                                         <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#auditPayment2"/>
                                         <datatables:extraJs bundles="months" placeholder="after_all"/>
@@ -111,7 +111,7 @@
                                     <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                     <form:hidden path="accountId"/>
                                     <div class="col-sm-12 form-group">
-                                        <cws:input id="or-num" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="true" size="12"/>
+                                        <cws:input id="or-num" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="false" size="12"/>
                                     </div>
                                     <div class="col-sm-12 form-group">
                                         <cws:input id="amount-paid" name="payment.amountPaid" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>

@@ -20,6 +20,8 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -138,14 +140,28 @@ public class PaymentServiceImpl implements PaymentService{
                 errors.rejectValue("payment.discount","","");
                 errors.reject("global", "Invalid amount paid and discount.");
             }
-            Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(paymentForm.getPayment().getReceiptNumber());
-            if(paymentUniqueOr != null) {
-                if(paymentForm.getPayment().getId() == null)
-                    errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+            if(paymentForm.getPayment().getAmountPaid().add(paymentForm.getPayment().getDiscount()).doubleValue() != 0){
+                System.out.println(paymentForm.getPayment().getReceiptNumber());
+                if(paymentForm.getPayment().getReceiptNumber().isEmpty()) {
+                    errors.rejectValue("payment.receiptNumber", "", "");
+                    errors.reject("global", "OR number is required for not DEBT payment");
+                }
                 else {
-                    Payment origPayment = paymentRepo.findOne(paymentForm.getPayment().getId());
-                    if(!paymentUniqueOr.getId().equals(origPayment.getId()))
-                        errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+                    Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(paymentForm.getPayment().getReceiptNumber());
+                    if(paymentUniqueOr != null) {
+                        if(paymentForm.getPayment().getId() == null)
+                            errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+                        else {
+                            Payment origPayment = paymentRepo.findOne(paymentForm.getPayment().getId());
+                            if(!paymentUniqueOr.getId().equals(origPayment.getId()))
+                                errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+                        }
+                    }
+                }
+            } else {
+                if(!paymentForm.getPayment().getReceiptNumber().isEmpty()){
+                    errors.rejectValue("payment.receiptNumber", "", "");
+                    errors.reject("global", "OR number should be left empty for DEBT payment");
                 }
             }
         }
@@ -162,12 +178,12 @@ public class PaymentServiceImpl implements PaymentService{
     @Override
     public boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed) {
         int ctr = 0;
-        for(Invoice invoice: invoiceRepo.findTop5ByAccountOrderByIdDesc(account)){
+        for(Invoice invoice: invoiceRepo.findByAccountOrderByIdDesc(account, new PageRequest(0, debtsAllowed))){
             if(! (invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)))
                 break;
             else ctr++;
         }
-        return debtsAllowed.compareTo(ctr) <= 0;
+        return debtsAllowed.compareTo(ctr) == 0;
     }
 
     @Transactional

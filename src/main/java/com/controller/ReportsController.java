@@ -147,7 +147,7 @@ public class ReportsController {
         JRBeanCollectionDataSource dataSource;
         String viewName;
         if(type.equals(1)) {
-            List<Account> accounts = accountRepo.findByAddressAndStatusUpdatedAndStatus(address, false, AccountStatus.ACTIVE);
+            List<Account> accounts = accountRepo.findByAddressAndStatusUpdatedAndStatusIn(address, false, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
                 invoices.add(invoiceRepo.findTopByAccountOrderByIdDesc(account));
@@ -192,7 +192,7 @@ public class ReportsController {
             map.put("message", "Invalid report type");
             return "errors";
         }
-        if(datasource.getData().size() > 0)
+        if(datasource.getData().size() > 1)
             map.put("datasource", datasource);
         else {
             map.put("type", "Invalid Parameter(s)");

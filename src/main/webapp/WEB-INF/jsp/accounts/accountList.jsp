@@ -75,7 +75,7 @@
                     <div class="table-responsive">
                         <form:form id="form" modelAttribute="checkboxes" method="POST" action="${pageContext.servletContext.contextPath}/admin/accounts">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                                <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
+                                <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkboxAccount">
                                     <datatables:columnHead>
                                         <input type="checkbox" id="master-checkbox" />
                                     </datatables:columnHead>

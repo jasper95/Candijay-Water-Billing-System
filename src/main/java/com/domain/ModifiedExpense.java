@@ -1,6 +1,6 @@
 package com.domain;
 
-import com.dao.util.JsonJodaDateTimeSerializer;
+import com.dao.util.AuditorDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -21,9 +21,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name="modified_expense"
-        ,catalog="revised_cws_db"
-)
+@Table(name="modified_expense")
 public class ModifiedExpense implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy=IDENTITY)
@@ -40,7 +38,7 @@ public class ModifiedExpense implements java.io.Serializable {
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input") @Min(value=1, message = "Invalid amount")
     @Column(name="amount", nullable=false, precision=9)
     private BigDecimal amount;
-    @JsonSerialize(using=JsonJodaDateTimeSerializer.class)
+    @JsonSerialize(using=AuditorDateTimeSerializer.class)
     @Column(name = "creation_time", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @CreatedDate

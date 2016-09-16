@@ -59,7 +59,7 @@
             <div class="row">
                 <div class="pull-align-right col-sm-12 form-inline">
                     <div class="form-group">
-                        <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-file-text-o fa-fw"></i>Export Invoice as PDF</button>
+                        <button type="button" class="btn btn-success" id="apply" ><i class="fa fa-file-text-o fa-fw"></i>Export Bills as PDF</button>
                     </div>
                 </div>
             </div>

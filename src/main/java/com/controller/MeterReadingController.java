@@ -172,11 +172,11 @@ public class MeterReadingController {
                         result.reject("global", "Duplicate meter reading for this user in this period.");
                     } else mForm.getMeterReading().setSchedule(newSchedule);
                 }
-            } else{
+            } /*else{
                 result.rejectValue("meterReading.schedule.month", "", "");
                 result.rejectValue("meterReading.schedule.year", "", "");
                 result.reject("global", "Cannot use a period that is not used on existing records.");
-            }
+            }*/
             //check if reading value is valid
             if(lastReading.compareTo(formReading.getReadingValue()) >= 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");

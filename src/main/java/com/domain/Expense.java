@@ -18,9 +18,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Created by jasper on 7/26/16.
  */
 @Entity
-@Table(name="expense"
-        ,catalog="revised_cws_db"
-)
+@Table(name="expense")
 public class Expense extends AuditableEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy=IDENTITY)
