@@ -29,17 +29,18 @@ public class FormOptionsServiceImpl implements FormOptionsService{
     @Override
     public HashMap<String, Collections> getCustomerFormOptions() {
         HashMap<Character, String> genderOptions = new HashMap();
-        Set<String> brgyList = new HashSet(), zoneList = new HashSet();
+        Set<String> brgyList = new HashSet();
+        HashMap<Integer, Integer> purokOptions =  new HashMap();
         genderOptions.put('M', "Male");
         genderOptions.put('F', "Female");
-        for( Address address : addressRepo.findAll()){
+        for(int i=1; i<=7; i++)
+            purokOptions.put(i, i);
+        for( Address address : addressRepo.findAll())
             brgyList.add(address.getBrgy());
-            zoneList.add(address.getLocationCode().toString());
-        }
         HashMap allOptions = new HashMap();
         allOptions.put("brgy", brgyList);
         allOptions.put("gender", genderOptions);
-        allOptions.put("zone", zoneList);
+        allOptions.put("purok", purokOptions);
         return allOptions;
     }
 

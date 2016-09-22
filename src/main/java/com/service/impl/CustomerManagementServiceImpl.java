@@ -60,19 +60,19 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
     @Transactional
     public Customer createCustomer(CustomerForm customerForm) {
         Customer customer = customerRepo.save(customerForm.getCustomer());
-        saveNewAccount(new Account(), customerForm.getDevice(), customerForm.getAddress(), customer);
+        saveNewAccount(customerForm.getAccount(), customerForm.getDevice(), customerForm.getAddress(), customer);
         return customer;
     }
 
     @Transactional
     @Override
     public Account createAccount(AccountForm accountForm) {
-        return saveNewAccount(new Account(), accountForm.getDevice(), accountForm.getAddress(), customerRepo.findOne(accountForm.getCustomerId()));
+        return saveNewAccount(accountForm.getAccount(), accountForm.getDevice(), accountForm.getAddress(), customerRepo.findOne(accountForm.getCustomerId()));
     }
 
     private Account saveNewAccount(Account account, Device device, Address address, Customer customer){
         account.setCustomer(customer);
-        String number = address.getAddressGroup().getAccountPrefix() + "-" + String.format("%05d", address.getAddressGroup().getAccountsCount());
+        String number = address.getAccountPrefix() + "-" + String.format("%05d", address.getAccountsCount());
         account.setNumber(number);
         account.setAddress(address);
         if(account.getId() == null)
@@ -81,7 +81,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
         account = accountRepo.save(account);
         device.setOwner(account);
         deviceRepo.save(device);
-        address.getAddressGroup().setAccountsCount(address.getAddressGroup().getAccountsCount()+1);
+        address.setAccountsCount(address.getAccountsCount()+1);
         addressRepo.save(address);
         return account;
 

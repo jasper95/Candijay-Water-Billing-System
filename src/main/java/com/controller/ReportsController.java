@@ -104,29 +104,41 @@ public class ReportsController {
 
     @RequestMapping(value="/validate-accountability-form", method=RequestMethod.POST)
     public @ResponseBody HashMap validateAccountabilityForm(@ModelAttribute("addressForm") @Valid  AccountabilityReportForm form, BindingResult result){
+        List<Account> accounts = null;
+        List<Address> addresses = new ArrayList();
+        boolean isPrintBrgy = form.getPrintBrgy().equals(1);
         if(!result.hasErrors()){
-            Address address = addressRepo.findByBrgyAndLocationCode(form.getBarangay(), form.getZone());
-            if(address == null) {
-                result.rejectValue("barangay", "", "");
-                result.rejectValue("zone", "", "");
-                result.reject("global", "Invalid address");
+            if(isPrintBrgy){
+                if(form.getBarangay().isEmpty())
+                    result.rejectValue("barangay", "", "This field is required");
+                else
+                    addresses.add(addressRepo.findByBrgy(form.getBarangay()));
             } else {
-                Integer type = Integer.valueOf(form.getType());
-                boolean billsFlag = false;
-                if (type.equals(1))
-                    billsFlag = true;
-                for(Account account: accountRepo.findByAddressAndStatus(address, AccountStatus.ACTIVE)){
-                    if(account.isStatusUpdated() && billsFlag){
+                if(form.getZone() == null)
+                    result.rejectValue("zone", "", "This field is required");
+                else
+                    addresses = addressRepo.findByLocationCode(form.getZone());
+
+            }
+        }
+        if(!result.hasErrors()){
+            Integer type = Integer.valueOf(form.getType());
+            boolean billsFlag = type.equals(1);
+            for(Account account : accountRepo.findByAddressIn(addresses)){
+                if(account.isStatusUpdated() && billsFlag){
+                    if(isPrintBrgy)
                         result.rejectValue("barangay", "", "");
+                    else
                         result.rejectValue("zone", "", "");
-                        result.reject("global", "Not finished reading or payments already finalized for this address.");
-                        break;
-                    } else if(!billsFlag) {
+                    result.reject("global", "Not finished reading or payments already finalized for this address.");
+                    break;
+                } else if(!billsFlag && !account.isStatusUpdated()) {
+                    if(isPrintBrgy)
                         result.rejectValue("barangay", "", "");
+                    else
                         result.rejectValue("zone", "", "");
-                        result.reject("global", "Payments not finalized for this address");
-                        break;
-                    }
+                    result.reject("global", "Payments not finalized for this address");
+                    break;
                 }
             }
         }
@@ -141,28 +153,34 @@ public class ReportsController {
 
     @RequestMapping(value="/print-accountability", method=RequestMethod.POST)
     public String getAccountabilityReport(ModelMap model, @RequestParam Map<String,String> params){
-        Integer type = Integer.valueOf(params.get("type")), locationCode = Integer.valueOf(params.get("zone"));
-        String barangay = params.get("barangay");
-        Address address = addressRepo.findByBrgyAndLocationCode(barangay, locationCode);
+        boolean isPrintBrgy = Integer.valueOf(params.get("printBrgy")).equals(1);
+        Integer type = Integer.valueOf(params.get("type"));
+        List<Address> addresses = new ArrayList();
+        System.out.println(isPrintBrgy);
+        if(isPrintBrgy)
+            addresses.add(addressRepo.findByBrgy(params.get("barangay")));
+        else addresses = addressRepo.findByLocationCode(Integer.valueOf(params.get("zone")));
+        System.out.println(addresses.size());
         JRBeanCollectionDataSource dataSource;
         String viewName;
         if(type.equals(1)) {
-            List<Account> accounts = accountRepo.findByAddressAndStatusUpdatedAndStatusIn(address, false, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
+            List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, false, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
                 invoices.add(invoiceRepo.findTopByAccountOrderByIdDesc(account));
             dataSource = new JRBeanCollectionDataSource(invoices);
             viewName = "rpt_bill";
         } else {
-            List<Account> accounts = accountRepo.findByAddressAndStatusUpdatedAndStatus(address, true, AccountStatus.WARNING);
+            List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, true, Arrays.asList(AccountStatus.WARNING));
+            System.out.println(accounts.size());
             dataSource = new JRBeanCollectionDataSource(accounts);
             viewName = "rpt_disconnection_notice";
         }
         if(dataSource.getData().size() > 0){
             model.put("datasource", dataSource);
         } else {
-            model.put("type", "No data available");
-            model.put("message", "Nothing to display");
+            model.put("type", "No data available for this report");
+            model.put("message", "No account in this address that has WARNING status.");
             return "errors";
         }
         model.put("format", "pdf");
@@ -195,8 +213,8 @@ public class ReportsController {
         if(datasource.getData().size() > 1)
             map.put("datasource", datasource);
         else {
-            map.put("type", "Invalid Parameter(s)");
-            map.put("message", "No data for this type, month and year");
+            map.put("type", "No data available for this report");
+            map.put("message", "No collection/collectibles data for this type, month and year");
             return "errors";
         }
         map.put("barangay", barangay);
@@ -228,8 +246,8 @@ public class ReportsController {
         if(datasource.getData().size() > 0){
             model.put("datasource", datasource);
         } else {
-            model.put("type", "Invalid Parameter(s)");
-            model.put("message", "No data for this type and year");
+            model.put("type", "No data available");
+            model.put("message", "No chart data for this type and year");
             return "errors";
         }
         model.put("format", "pdf");

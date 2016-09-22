@@ -57,6 +57,7 @@
                     <datatables:column name="id" property="id" visible="false" sortInitDirection="false"/>
                     <datatables:column renderFunction="custom-rendering#accountUrl" title="Acct No." name="number" property="number" sortable="false" sortInitDirection="false"/>
                     <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
+                    <datatables:column name="purok" title="Purok" property="purok" sortable="false"/>
                     <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
                     <datatables:column name="status" title="Status" property="status" sortable="false"/>
                     <dandelion:bundle excludes="jquery"/>

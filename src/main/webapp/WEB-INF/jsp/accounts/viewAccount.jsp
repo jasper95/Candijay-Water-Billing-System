@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-sm-12 form-group">
                         <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" disabled="true"/>
-                        <cws:select id="acct-lc" name="address.locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" disabled="true"/>
+                        <cws:select id="acct-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" disabled="true"/>
                     </div>
                 </div>
             </form:form>

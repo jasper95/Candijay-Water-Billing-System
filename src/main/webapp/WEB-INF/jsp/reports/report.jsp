@@ -31,10 +31,10 @@
                                 <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                 <div class="col-sm-12 form-group">
                                     <div class="col-sm-12 has-feedback ">
-                                        <label class="control-label" for="category">Report Category</label>
+                                        <label class="control-label" for="category">Report Category <span style="color:red">&#42</span></label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-home fa-fw"></i></span>
-                                            <select id="category" name="brgy" autocomplete="off" class="form-control input-sm" required="true">
+                                            <select id="category" name="brgy" autocomplete="off" class="form-control input-sm">
                                                 <option value="">--Select category--</option>
                                                 <option value="1">Customers Accountability</option>
                                                 <option value="2">Tables</option>
@@ -46,17 +46,24 @@
                                 </div>
                             </form>
                             <form:form modelAttribute="addressForm" id="acctblityForm" cssStyle="display: none">
+                                <form:hidden id="print-brgy" path="printBrgy" value="1"/>
                                 <div class="col-sm-12 form-group">
                                     <cws:select id="ad-type" name="type" label="Report Type" icon="bar-chart" required="true" placeholder="Select type" size="12" items="${typeOptionsAcctblty}"/>
                                 </div>
                                 <div class="col-sm-12 form-group barangay">
                                     <cws:select id="ad-barangay" name="barangay" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="12"/>
                                 </div>
-                                <div class="col-sm-12 form-group">
+                                <div class="col-sm-12 form-group zone" style="display:none;">
                                     <cws:select id="ad-zone" name="zone" label="Zone" icon="home" required="true" placeholder="Select zone" items2="${zoneOptions}" size="12"/>
                                 </div>
+                                <div class="col-sm-12 form-group">
+                                    <div class="col-sm-4">
+                                        <label class="control-label" style="display:block">Print By</label>
+                                        <input id="acctability-toggle" type="checkbox" checked data-width="100px" data-toggle="toggle" data-on="Barangay" data-off="Zone" data-onstyle="warning" data-offstyle="info">
+                                    </div>
+                                </div>
                             </form:form>
-                            <form:form modelAttribute="reportForm" id="reportForm" cssClass="report-form" cssStyle="display: none">
+                            <form:form modelAttribute="reportForm" id="reportForm" cssStyle="display: none">
                                 <form:hidden value="0" id="summary-status" path="summary"/>
                                 <div class="col-sm-12 form-group">
                                     <cws:select id="rp-type" name="type" label="Report Type" icon="bar-chart" required="true" placeholder="Select type" size="12" items="${typeOptionsReport}"/>
@@ -70,6 +77,12 @@
                                 <div class="col-sm-12 form-group barangay">
                                     <cws:select id="rp-barangay" name="barangay" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="12"/>
                                 </div>
+                                <div class="col-sm-12 form-group">
+                                    <div class="col-sm-4">
+                                        <label class="control-label" style="display:block">Summary</label>
+                                        <input id="summary-toggle" type="checkbox" data-width="100px" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Enabled" data-off="<i class='fa fa-remove'></i> Disabled">
+                                    </div>
+                                </div>
                             </form:form>
                             <form:form modelAttribute="chartForm" id="chartForm" cssStyle="display:none">
                                 <div class="col-sm-12 form-group">
@@ -80,12 +93,6 @@
                                 </div>
                             </form:form>
                             <input type="hidden" value="${pageContext.servletContext.contextPath}/admin/reports" id="form-action"/>
-                            <div class="col-sm-12 form-group report-form" style="display: none">
-                                <div class="col-sm-4">
-                                    <label class="control-label" style="display:block">Summary</label>
-                                    <input id="summary-toggle" type="checkbox" data-width="100px" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Enabled" data-off="<i class='fa fa-remove'></i> Disabled">
-                                </div>
-                            </div>
                             <div class="col-sm-12 form-group">
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">

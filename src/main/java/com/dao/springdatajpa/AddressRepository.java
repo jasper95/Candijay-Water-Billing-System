@@ -8,10 +8,14 @@ package com.dao.springdatajpa;
 import com.domain.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  *
  * @author Bert
  */
 public interface AddressRepository extends JpaRepository<Address, Long> {
     Address findByBrgyAndLocationCode(String brgy, Integer locationCode);
+    Address findByBrgy(String brgy);
+    List<Address> findByLocationCode(Integer locationCode);
 }

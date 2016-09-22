@@ -72,7 +72,7 @@ public class AccountController {
 
     @InitBinder({"accountForm", "deviceForm"})
     public void initBinder(WebDataBinder binder){
-        binder.setAllowedFields("address.brgy", "address.locationCode", "meterCode", "brand",
+        binder.setAllowedFields("address.brgy", "account.purok", "meterCode", "brand",
                 "device.meterCode", "device.brand");
     }
 
@@ -87,13 +87,9 @@ public class AccountController {
     public @ResponseBody HashMap processAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
                                      BindingResult result) {
 
-        Address address = addressRepo.findByBrgyAndLocationCode(accountForm.getAddress().getBrgy(), accountForm.getAddress().getLocationCode());
+        Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
         HashMap response = new HashMap();
-        if(address == null){
-            result.rejectValue("address.locationCode", "locationCode", "Invalid Zone for Barangay");
-        } else{
-            accountForm.setAddress(address);
-        }
+        accountForm.setAddress(address);
         if(deviceRepo.findByMeterCode(accountForm.getDevice().getMeterCode().trim()) != null)
             result.rejectValue("device.meterCode", "meterCode", "Meter code already exists");
         if(!result.hasErrors()){
@@ -123,7 +119,7 @@ public class AccountController {
         model.addAttribute("accountForm", accountForm);
         model.addAttribute("deviceForm", new Device());
         model.addAttribute("brgyOptions", formOptions.get("brgy"));
-        model.addAttribute("zoneOptions", formOptions.get("zone"));
+        model.addAttribute("purokOptions", formOptions.get("purok"));
         return "accounts/viewAccount";
     }
 
@@ -190,10 +186,12 @@ public class AccountController {
         boolean success = false;
         if(!result.hasErrors()){
             for(Long id : checkboxes.getCheckboxValues()){
-                if(!success)
-                    success = true;
                 Account account = accountRepo.findOne(id);
-                custService.changeAccountStatus(account, AccountStatus.INACTIVE);
+                if(account.isStatusUpdated()) {
+                    if (!success)
+                        success = true;
+                    custService.changeAccountStatus(account, AccountStatus.INACTIVE);
+                }
             }
         }
         HashMap response = new HashMap();
@@ -209,7 +207,7 @@ public class AccountController {
         if(!result.hasErrors()){
             for(Long id : checkboxes.getCheckboxValues()){
                 Account account = accountRepo.findOne(id);
-                if(!account.getStatus().equals(AccountStatus.ACTIVE)){
+                if(account.isStatusUpdated() && !account.getStatus().equals(AccountStatus.ACTIVE)){
                     if(!success)
                         success = true;
                     custService.changeAccountStatus(account, AccountStatus.ACTIVE);
@@ -230,7 +228,7 @@ public class AccountController {
             Settings currentSettings = settingsService.getCurrentSettings();
             for(Long id : checkboxes.getCheckboxValues()){
                 Account account = accountRepo.findOne(id);
-                if(paymentService.isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
+                if(account.isStatusUpdated() && paymentService.isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
                     if(!success)
                         success = true;
                     custService.changeAccountStatus(account, AccountStatus.WARNING);

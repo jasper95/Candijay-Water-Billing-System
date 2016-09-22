@@ -12,10 +12,9 @@ import javax.validation.constraints.NotNull;
 public class AccountabilityReportForm {
     @NotNull(message="Please select a type")
     private Integer type;
-    @NotEmpty(message="Please select a barangay") @NotNull(message="Please select a barangay")
     private String barangay;
-    @NotNull(message="Please select a zone")
     private Integer zone;
+    private Integer printBrgy;
 
     public Integer getType() {
         return type;
@@ -39,5 +38,13 @@ public class AccountabilityReportForm {
 
     public void setZone(Integer zone) {
         this.zone = zone;
+    }
+
+    public Integer getPrintBrgy() {
+        return printBrgy;
+    }
+
+    public void setPrintBrgy(Integer printBrgy) {
+        this.printBrgy = printBrgy;
     }
 }

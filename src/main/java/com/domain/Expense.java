@@ -6,6 +6,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -24,12 +25,14 @@ public class Expense extends AuditableEntity implements java.io.Serializable {
     @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
+    @NotNull(message = "This field is required")
     @Column(name="type", nullable=false)
     private Integer type;
+    @Valid
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="schedule_id", nullable=false)
     private Schedule schedule;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input") @Min(value=1, message = "Invalid amount")
+    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required") @Min(value=1, message = "Invalid amount")
     @Column(name="amount", nullable=false, precision=9)
     private BigDecimal amount;
 

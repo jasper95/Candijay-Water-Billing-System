@@ -10,17 +10,13 @@
                 <form:form modelAttribute="expenseForm" action="${pageContext.servletContext.contextPath}/admin/expenses/save" method="post" id="expense-form">
                     <fieldset>
                         <jsp:include page="../postAuth/form-alerts.jsp"/>
-                        <div class="col-sm-6 form-group">
-                            <cws:select id="exp-month" name="schedule.month" items="${monthOptions}" label="Month" icon="calendar" required="yrue" placeholder="Select month" size="12"/>
+                        <div class="col-sm-12 form-group">
+                            <cws:select id="exp-month" name="schedule.month" items="${monthOptions}" label="Month" icon="calendar" required="yrue" placeholder="Select month" size="6"/>
+                            <cws:select id="exp-year" name="schedule.year" items="${yearOptions}" label="Year" icon="calendar" required="true" placeholder="Select year" size="6"/>
                         </div>
-                        <div class="col-sm-6 form-group">
-                            <cws:select id="exp-year" name="schedule.year" items="${yearOptions}" label="Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
-                        </div>
-                        <div class="col-sm-6 form-group">
-                            <cws:select id="exp-type" name="type" items="${typeOptions}" label="Type" icon="credit-card" required="true" placeholder="Select type" size="12"/>
-                        </div>
-                        <div class="col-sm-6 form-group">
-                            <cws:input id="exp-amount" name="amount" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>
+                        <div class="col-sm-12 form-group">
+                            <cws:select id="exp-type" name="type" items="${typeOptions}" label="Type" icon="credit-card" required="true" placeholder="Select type" size="6"/>
+                            <cws:input id="exp-amount" name="amount" label="Amount" icon="money" placeholder="Enter amount" required="true" size="6"/>
                         </div>
                         <input type="hidden" name="update" id="expId"/>
                         <form:hidden path="version" id="exp-version"/>

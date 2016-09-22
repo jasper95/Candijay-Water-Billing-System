@@ -66,7 +66,8 @@ function cleanUpFormFields(form_id){
     $(form_id+' input:not([type=hidden]), '+form_id+' select').each(function(index){
         var input = $(this);
         if(input.attr('name') != undefined && input.attr('name') != '_csrf' &&
-            input.attr('name') != 'meterReading.schedule.month' && input.attr('name') != 'meterReading.schedule.year'){
+            input.attr('name') != 'meterReading.schedule.month' && input.attr('name') != 'meterReading.schedule.year' &&
+            input.attr('name') != 'payment.date' && input.attr('name') != 'payment.discount' ){
             if(input.attr('type') === 'checkbox'){
                input.bootstrapToggle('off')
             } else {

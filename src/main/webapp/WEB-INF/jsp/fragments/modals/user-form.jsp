@@ -18,14 +18,14 @@
                         </div>
                         <div class="col-sm-12 form-group create">
                             <div class="col-sm-6 has-feedback ">
-                                <label class="control-label" for="pw">Password</label>
+                                <label class="control-label" for="pw">Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
                                     <input id="pw" type="password" name="password" placeholder="Enter Password" class="form-control" required="true">
                                 </div>
                             </div>
                             <div id="rt-container" class="col-sm-6 has-feedback ">
-                                <label class="control-label" for="rt-pw">Retype Password</label>
+                                <label class="control-label" for="rt-pw">Retype Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
                                     <input id="rt-pw" name="retype" placeholder="Retype password" class="form-control" required="true" type="password">
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-12">
-                                <label class="control-label block" style="display: block;">Privileges</label>
+                                <label class="control-label block" style="display: block;">Privileges <span style="color:red">*</span></label>
                                 <c:forEach var="role" items="${roles}">
                                     <div class="checkbox-items">
                                         <label class="checkbox-inline">
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-12 checkbox-container">
-                                <label class="control-label block" style="display: block;">Privileges</label>
+                                <label class="control-label block" style="display: block;">Privileges <span style="color:red">*</span></label>
                                 <c:forEach var="role" items="${roles}">
                                     <div class="checkbox-items">
                                         <label class="checkbox-inline">

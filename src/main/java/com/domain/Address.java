@@ -36,27 +36,28 @@ public class Address  implements java.io.Serializable {
     private Long id; 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="address")
     private Set<Account> accounts;
-    @Column(name="street", length=45)
-    private String street;
-    @NotEmpty @NotBlank
+    @NotEmpty(message = "This field is required") @NotBlank(message = "This field is required")
     @Column(name="brgy", nullable=false, length=45)
     private String brgy;
-    @NotNull
     @Column(name="location_code", nullable=false)
     private Integer locationCode;
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name="address_group", nullable=false)
-    private AddressGroup addressGroup;
+    @Column(name="account_prefix", length=2)
+    private String accountPrefix;
+    @Column(name="accounts_count", nullable=false)
+    private Integer accountsCount;
+    @Column(name="due_day", nullable=false)
+    private Integer dueDay;
     
     public Address() {
     }
 
-    public Address(Set<Account> accounts, String street, String brgy, Integer locationCode, AddressGroup addressGroup) {
+    public Address(Set<Account> accounts, String brgy, Integer locationCode, String accountPrefix, Integer accountsCount, Integer dueDay) {
         this.accounts = accounts;
-        this.street = street;
         this.brgy = brgy;
         this.locationCode = locationCode;
-        this.addressGroup = addressGroup;
+        this.accountPrefix = accountPrefix;
+        this.accountsCount = accountsCount;
+        this.dueDay = dueDay;
     }
 
       
@@ -81,15 +82,7 @@ public class Address  implements java.io.Serializable {
     public void addAccount(Account account) {
         this.accounts.add(account);
     }
-    
-    public String getStreet() {
-        return this.street;
-    }
-    
-    public void setStreet(String street) {
-        this.street = street;
-    }
-  
+
     public String getBrgy() {
         return this.brgy;
     }
@@ -97,17 +90,7 @@ public class Address  implements java.io.Serializable {
     public void setBrgy(String brgy) {
         this.brgy = brgy;
     }
-    
-    @JsonManagedReference
-    public AddressGroup getAddressGroup() {
-        return addressGroup;
-    }
 
-    @JsonProperty
-    public void setAddressGroup(AddressGroup addressGroup) {
-        this.addressGroup = addressGroup;
-    }
-    
     public Integer getLocationCode() {
         return this.locationCode;
     }
@@ -115,7 +98,31 @@ public class Address  implements java.io.Serializable {
     public void setLocationCode(Integer locationCode) {
         this.locationCode = locationCode;
     }
-    
+
+    public Integer getDueDay() {
+        return dueDay;
+    }
+
+    public void setDueDay(Integer dueDay) {
+        this.dueDay = dueDay;
+    }
+
+    public Integer getAccountsCount() {
+        return accountsCount;
+    }
+
+    public void setAccountsCount(Integer accountsCount) {
+        this.accountsCount = accountsCount;
+    }
+
+    public String getAccountPrefix() {
+        return accountPrefix;
+    }
+
+    public void setAccountPrefix(String accountPrefix) {
+        this.accountPrefix = accountPrefix;
+    }
+
     @Override
     public String toString(){
         return brgy+", Zone "+locationCode;

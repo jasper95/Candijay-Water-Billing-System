@@ -6,7 +6,6 @@
 package com.forms;
 
 import com.domain.MeterReading;
-import com.domain.Schedule;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -16,9 +15,9 @@ import javax.validation.constraints.NotNull;
  */
 public class MeterReadingForm implements java.io.Serializable{
     @Valid
-    private MeterReading meterReading = null;
+    private MeterReading meterReading;
     @NotNull
-    private Long accountId = null;
+    private Long accountId;
     
     public MeterReading getMeterReading() {
         return meterReading;

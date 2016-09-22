@@ -80,7 +80,7 @@ public class CustomerController {
                                     "customer.gender", "customer.timestamp", "customer.birthDate",
                                     "customer.familyMembersCount", "customer.contactNumber",
                                     "customer.occupation", "device.meterCode", "device.brand",
-                                    "address.brgy", "address.locationCode");
+                                    "address.brgy", "account.purok");
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
@@ -88,7 +88,7 @@ public class CustomerController {
         HashMap<String, Collections> options = formOptionsService.getCustomerFormOptions();
         model.addAttribute("genderOptions", options.get("gender"));
         model.addAttribute("brgyOptions", options.get("brgy"));
-        model.addAttribute("zoneOptions", options.get("zone"));
+        model.addAttribute("purokOptions", options.get("purok"));
         if(!model.containsAttribute(BINDING_RESULT_NAME))
             model.addAttribute("customerForm", new CustomerForm());
         return "customers/createOrUpdateCustomerForm";
@@ -98,12 +98,8 @@ public class CustomerController {
                                      BindingResult result,RedirectAttributes redirectAttributes,
                                      SessionStatus status) {
         Customer customer = null;
-        Address address = addressRepo.findByBrgyAndLocationCode(customerForm.getAddress().getBrgy(), customerForm.getAddress().getLocationCode());
-        if(address == null){
-            result.rejectValue("address.locationCode", "", "Invalid Zone for Barangay");
-        } else{
-            customerForm.setAddress(address);
-        }
+        Address address = addressRepo.findByBrgy(customerForm.getAddress().getBrgy());
+        customerForm.setAddress(address);
         if(deviceRepo.findByMeterCode(customerForm.getDevice().getMeterCode().trim()) != null)
             result.rejectValue("device.meterCode", "", "Metercode already exists");
         if(!result.hasErrors())
@@ -138,7 +134,7 @@ public class CustomerController {
         model.addAttribute("customerForm", customerForm);
         model.addAttribute("genderOptions", options.get("gender"));
         model.addAttribute("brgyOptions", options.get("brgy"));
-        model.addAttribute("zoneOptions", options.get("zone"));
+        model.addAttribute("purokOptions", options.get("purok"));
         return "customers/viewCustomer";
     }
     

@@ -24,7 +24,7 @@ public interface AccountRepository extends JpaRepository<Account,Long>{
     List<Account> findByCustomer(Customer customer);
     Account findByNumber(String number);
     List<Account> findByStatus(AccountStatus status);
-    List<Account> findByAddressAndStatusUpdatedAndStatus(Address address, boolean statusUpdated, AccountStatus status);
     List<Account> findByAddressAndStatus(Address address, AccountStatus status);
-    List<Account> findByAddressAndStatusUpdatedAndStatusIn(Address address, boolean statusUpdated, Collection<AccountStatus> statuses);
+    List<Account> findByAddressIn(Collection<Address> addresses);
+    List<Account> findByAddressInAndStatusUpdatedAndStatusIn(Collection<Address> addresses, boolean statusUpdated, Collection<AccountStatus> statuses);
 }

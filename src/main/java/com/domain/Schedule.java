@@ -23,10 +23,10 @@ public class Schedule  implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @NotNull
+    @NotNull(message="This field is required")
     @Column(name="month", nullable=false, length=2)
     private Integer month;
-    @NotNull
+    @NotNull(message = "This field is required")
     @Column(name="year", nullable=false, length=4)
     private Integer year ;
 

@@ -63,7 +63,6 @@ public class PaymentController {
         model.addAttribute("checkboxes", new Checkboxes());
         HashMap finalizePaymentFormOptions = formOptionsService.getCustomerFormOptions();
         model.addAttribute("brgyOptions", finalizePaymentFormOptions.get("brgy"));
-        model.addAttribute("zoneOptions", finalizePaymentFormOptions.get("zone"));
         model.addAttribute("addressForm", new Address());
         return "payments/paymentList";
     }
@@ -187,16 +186,10 @@ public class PaymentController {
     public @ResponseBody HashMap finalizePayments(@ModelAttribute("addressForm") @Valid Address addressForm, BindingResult result){
         HashMap response = new HashMap();
         if(!result.hasErrors()){
-            Address address = addressRepo.findByBrgyAndLocationCode(addressForm.getBrgy(), addressForm.getLocationCode());
-            if(address != null) {
-                response.put("result", paymentService.updateAccountsWithNoPayments(address));
-                response.put("status", "SUCCESS");
-            } else {
-                result.rejectValue("brgy","","");
-                result.rejectValue("locationCode","","");
-                result.reject("global", "Address does not exists");
-            }
-        } if(result.hasErrors()) {
+            Address address = addressRepo.findByBrgy(addressForm.getBrgy());
+            response.put("result", paymentService.updateAccountsWithNoPayments(address));
+            response.put("status", "SUCCESS");
+        } else {
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
         }

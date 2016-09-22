@@ -26,9 +26,10 @@ $(document).ready(function(){
     }
     $('#acct-form').on('submit', function(e){
         e.preventDefault();
+        cleanUpFormMsgs('#acct-form');
         $.post($('#context-path').val()+'/admin/accounts/new', $(this).serialize(), function(response){
-            cleanUpFormMsgs('#acct-form')
             if (validateForm('#acct-form', response)) {
+                showSuccess('#acct-form', "Account successfully created");
                 window.location = $('#context-path').val()+'/admin/accounts/'+response.result.number
             }
         });

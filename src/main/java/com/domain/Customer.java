@@ -43,26 +43,26 @@ public class Customer  implements java.io.Serializable {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name="birth_date", nullable=false, length=10)
     private Date birthDate;
-    @NotBlank(message="Invalid firstname") @NotEmpty(message="Invalid firstname")
+    @NotBlank @NotEmpty
     @Column(name="first_name", nullable=false, length=45)
     private String firstName;
-    @NotBlank(message="Invalid lastname") @NotEmpty(message="Invalid lastname")
+    @NotBlank @NotEmpty
     @Column(name="lastname", nullable=false, length=45)
     private String lastname;
-    @NotBlank(message="Invalid middlename") @NotEmpty(message="Invalid middlename")
+    @NotBlank @NotEmpty
     @Column(name="middle_name", nullable=false, length=45)
     private String middleName;
-    @Pattern(regexp = "^[M|F]{1}$", message ="Must be M or F")
-    @NotEmpty(message="Invalid gender")
+    @NotEmpty
+    @Pattern(regexp = "^[M|F]{1}$", message ="This field is required")
     @Column(name="gender", nullable=false, length=1)
     private String gender;
-    @Digits(fraction = 0, integer = 10, message="Invalid contact number format (10 digits only)")
+    @NotEmpty
+    @Digits(fraction = 0, integer = 10, message="10 digit format is required")
     @Column(name="contact_number")
     private String contactNumber;
-    @NotNull(message="Invalid members count") @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid members count")
+    @NotEmpty @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid number")
     @Column(name="family_members_count", nullable=false)
     private String familyMembersCount;
-    @NotBlank(message="Invalid occupation") @NotEmpty(message="Invalid occupation")
     @Column(name="occupation", nullable=false, length=45)
     private String occupation;  
     @OneToMany(fetch=FetchType.LAZY, mappedBy="customer", cascade={CascadeType.PERSIST, CascadeType.MERGE})

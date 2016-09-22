@@ -5,10 +5,20 @@ $(document).ready(function(){
         $('#reportForm div.barangay').toggle();
         if($('#summary-status').val() == '0')
             $('#summary-status').val('1');
-        else $('#summary-status').val('0')
+        else $('#summary-status').val('0');
+    });
+    $('#acctability-toggle').on('change', function(){
+        $('#acctblityForm div.barangay').toggle();
+        $('#acctblityForm div.zone').toggle();
+        if($('#print-brgy').val() === '0')
+            $('#print-brgy').val('1');
+        else
+            $('#print-brgy').val('0');
+
     });
     $('#category').on('change', function(){
         cleanUpFormMsgs("#main-form");
+        cleanUpFormMsgs(active);
         if (current !== null)
             $(active).hide();
         var value = $(this).val();
@@ -16,7 +26,7 @@ $(document).ready(function(){
         if(value === "1")
             active = "#acctblityForm";
         else if(value === "2")
-            active = ".report-form";
+            active = "#reportForm";
         else if(value === "3")
             active = "#chartForm";
         else thereIsActive = false;

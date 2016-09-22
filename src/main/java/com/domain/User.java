@@ -14,6 +14,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,10 +29,13 @@ public class User extends AuditableEntity implements java.io.Serializable, UserD
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
+    @NotBlank(message = "This field is required") @NotEmpty(message = "This field is required")
     @Column(name="full_name", nullable=false, length=45)
     private String fullName;
+    @NotEmpty(message = "This field is required") @NotBlank(message = "This field is required")
     @Column(name="username", nullable=false, length=16)
     private String username;
+    @NotBlank(message = "This field is required") @NotEmpty(message = "This field is required")
     @Column(name="password", nullable=false, length=100)
     private String password;
     @Column(name="status", nullable=false)

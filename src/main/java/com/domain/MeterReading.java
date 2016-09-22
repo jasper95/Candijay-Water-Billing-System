@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
@@ -33,10 +34,11 @@ public class MeterReading extends AuditableEntity implements java.io.Serializabl
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="account_id", nullable=false)
     private Account account;
+    @Valid
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="schedule_id", nullable=false)
     private Schedule schedule;
-    @Digits(fraction=0, integer=10) @NotNull
+    @Digits(fraction=0, integer=10, message = "Invalid input format") @NotNull(message="This field is required")
     @Column(name="reading_value", nullable=false)
     private Integer readingValue;
     @Column(name="consumption", nullable=false)

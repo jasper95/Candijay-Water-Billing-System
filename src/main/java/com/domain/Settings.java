@@ -39,6 +39,7 @@ public class Settings implements java.io.Serializable {
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="basic", nullable=false, precision=7)
     private Double basic;
+    @NotNull
     @Min(value=1, message="Must be greater than zero") @Digits(integer=2,fraction = 0, message="Must be a number")
     @Column(name="debts_allowed", nullable = false)
     private Integer debtsAllowed;

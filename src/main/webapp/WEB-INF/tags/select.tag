@@ -14,10 +14,10 @@
 
 <spring:bind path="${name}">
     <div class="col-sm-${not empty size ? size : '4'} has-feedback ${status.error ? 'has-error' : '' }">
-        <label class="control-label" for="${id}">${label}</label>
+        <label class="control-label" for="${id}">${label} <span style="color:red">${required eq 'true' ? '&#42;' :''}</span></label>
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-${icon} fa-fw"></i></span>
-            <form:select id="${id}" path="${name}" class="form-control input-sm"  autocomplete="off" required="${required}" disabled="${disabled}">
+            <form:select id="${id}" path="${name}" class="form-control input-sm"  autocomplete="off" disabled="${disabled}">
                 <form:option value="" label="--${placeholder}--"/>
                     <c:choose>
                         <c:when test="${not empty items}">

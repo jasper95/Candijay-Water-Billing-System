@@ -18,7 +18,7 @@
                     </c:if>
                         <div class="col-sm-12 form-group">
                             <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="6"/>
-                            <cws:select id="ac-lc" name="address.locationCode" items2="${zoneOptions}" placeholder="Select Zone" label="Zone" icon="home" required="true" size="6"/>
+                            <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" size="6"/>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">

@@ -46,10 +46,10 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     @Column(name="date", nullable=false, length=10)
     private DateTime date;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
+    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=0, message = "Invalid amount")
     private BigDecimal amountPaid;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="Invalid input")
+    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     @Column(name="discount", nullable=false, precision=10, scale=0)
     private BigDecimal discount = BigDecimal.ZERO;
     @Pattern(regexp = "(^$)|([\\s]*[0-9]*[1-9]+)",message="Invalid OR number format")

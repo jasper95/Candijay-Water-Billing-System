@@ -14,13 +14,13 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class ReportForm {
     private String barangay;
-    @NotNull(message="Please select a month")
+    @NotNull(message="This field is required")
     private Integer month;
-    @NotNull(message="Please select a year")
+    @NotNull(message="This field is required")
     private Integer year;
     @NotNull
     private Integer summary;
-    @NotNull(message="Please select a type") @NotEmpty(message="Please select a type")
+    @NotNull(message="This field is required") @NotEmpty(message="This field is required")
     private String type;
     public String getBarangay() {
         return barangay;

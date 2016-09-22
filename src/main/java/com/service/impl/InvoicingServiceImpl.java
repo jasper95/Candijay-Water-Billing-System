@@ -57,7 +57,7 @@ public class InvoicingServiceImpl implements InvoicingService {
         }
         DateTime dueDate = new DateTime(year,
                                         month,
-                                        reading.getAccount().getAddress().getAddressGroup().getDueDay(),
+                                        reading.getAccount().getAddress().getDueDay(),
                                         0, 0);
         Invoice newInvoice = (reading.getInvoice() == null) ? new Invoice() : reading.getInvoice();
         newInvoice.setSchedule(reading.getSchedule());

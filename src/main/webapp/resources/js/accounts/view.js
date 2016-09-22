@@ -30,10 +30,8 @@ $(document).ready(function(){
     $('#device-form').on('submit', function (e){
         e.preventDefault();
         $.post($('#device-action-url').val(), $(this).serialize(), function (response) {
-            cleanUpFormMsgs('#device-form')
+            cleanUpFormMsgs('#device-form');
             if (validateForm('#device-form', response)) {
-                cleanUpFormMsgs('#device-form')
-                cleanUpFormFields('#device-form')
                 var action;
                 if($('#device-action').text() == 'Add')
                     action = "added"
