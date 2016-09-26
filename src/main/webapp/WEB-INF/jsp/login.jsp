@@ -10,7 +10,15 @@
         <div class="container">
             <img class="img-responsive center-block" src="${STATIC_URL}/img/center_piece.png">
             <c:if test="${param['error'] != null && param['error'] == true}">
-                <div class="alert alert-danger alert-msg center-block"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message} </div>
+                <c:choose>
+                    <c:when test="${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] == 'org.springframework.security.authentication.InternalAuthenticationServiceException: Could not open JPA EntityManager for transaction; nested exception is org.hibernate.exception.JDBCConnectionException: Could not open connection'}">
+                        <c:set var="exception" value="No database connection"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="exception" value="${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}"/>
+                    </c:otherwise>
+                </c:choose>
+                <div class="alert alert-danger alert-msg center-block"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>${exception}</div>
             </c:if>
             <c:if test="${param['logout'] != null && param['logout'] == true}">
                 <div class="alert alert-success alert-msg center-block"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>You've been logged out successfully</div>

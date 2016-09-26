@@ -172,11 +172,7 @@ public class MeterReadingController {
                         result.reject("global", "Duplicate meter reading for this user in this period.");
                     } else mForm.getMeterReading().setSchedule(newSchedule);
                 }
-            } /*else{
-                result.rejectValue("meterReading.schedule.month", "", "");
-                result.rejectValue("meterReading.schedule.year", "", "");
-                result.reject("global", "Cannot use a period that is not used on existing records.");
-            }*/
+            }
             //check if reading value is valid
             if(lastReading.compareTo(formReading.getReadingValue()) >= 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
@@ -211,17 +207,21 @@ public class MeterReadingController {
     public HashMap fetchAccount(@ModelAttribute("searchForm") @Valid SearchForm searchForm, BindingResult result){
         HashMap response = new HashMap();
         Account account = null;
+        Device device = deviceRepo.findByOwnerAndActive(account, true);
         if(!result.hasErrors())
             account = accountRepo.findByNumber(searchForm.getAccountNumber());
-        if(result.hasErrors() || account == null ) {
-            result.rejectValue("accountNumber", "", "Account does not exists");
+        if(result.hasErrors() || account == null || device == null) {
+            if(account == null)
+                result.rejectValue("accountNumber", "", "Account does not exists");
+            if(device == null)
+                result.rejectValue("accountNumber", "", "Account has no active device.");
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
         }
         else{
             response.put("status", "SUCCESS");
             response.put("account", account);
-            response.put("last_reading", deviceRepo.findByOwnerAndActive(account, true).getLastReading());
+            response.put("last_reading", device.getLastReading());
         }
         return response;
     }
