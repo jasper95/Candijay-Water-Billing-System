@@ -40,20 +40,18 @@
                     <cws:input id="cust-mn" name="customer.middleName" label="Middle" icon="user" placeholder="Enter Middlename" required="true" readOnly="true"/>
                 </div>
                 <div class="col-sm-12 form-group">
-                    <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke" required="true" disabled="true"/>
-                    <cws:input id="cust-bd" name="customer.birthDate" label="Birth Date" icon="birthday-cake" placeholder="Enter birth date" required="true" readOnly="true"/>
-                    <cws:input id="cust-mc" name="customer.familyMembersCount" label="Members Count" placeholder="Enter members" icon="users" required="false" readOnly="true"/>
-                </div>
-                <div class="col-sm-12 form-group">
-                    <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 10-digit #" required="false" readOnly="true"/>
-                    <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false" readOnly="true"/>
+                    <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke" required="true" disabled="true" size="3"/>
+                    <cws:input id="cust-mc" name="customer.familyMembersCount" label="Members Count" placeholder="Enter members" icon="users" required="false" readOnly="true" size="3"/>
+                    <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 10-digit #" required="false" readOnly="true" size="3"/>
+                    <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false" readOnly="true" size="3"/>
                 </div>
             </div>
         </form:form>
         <h3>Accounts</h3>
         <div class="col-md-12 main">
             <div class="table-responsive">
-                <datatables:table dom="t" cssClass="table table-striped" reloadSelector="#reload" id="accounts" url="${requestScope['javax.servlet.forward.request_uri']}/accounts">
+                <datatables:table dom="t" cssClass="table table-striped" reloadSelector="#reload" id="accounts"
+                                  url="${pageContext.servletContext.contextPath}/admin/customers/${customerForm.customer.id}/accounts">
                     <datatables:column name="id" property="id" visible="false" sortInitDirection="false"/>
                     <datatables:column renderFunction="custom-rendering#accountUrl" title="Acct No." name="number" property="number" sortable="false" sortInitDirection="false"/>
                     <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>

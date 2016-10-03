@@ -80,10 +80,11 @@ public class SystemUsersController {
     public @ResponseBody
     HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result){
         HashMap response = new HashMap();
-        if(!result.hasErrors()){
+        if(user.getRoles().isEmpty())
+            result.reject("global", "Please select at least one role.");
+        if(!result.hasErrors())
             if(userRepo.findByUsername(user.getUsername()) != null)
                 result.rejectValue("username", "", "Username already taken");
-        }
         if(!result.hasErrors()){
             user.setPassword(encoder.encode(user.getPassword()));
             response.put("user",userService.saveUser(user));
@@ -98,10 +99,12 @@ public class SystemUsersController {
     }
     
     @RequestMapping(value="/update", method=RequestMethod.POST)
-    public @ResponseBody HashMap postUpdate(@ModelAttribute("user") @Valid User userForm, BindingResult result, @RequestParam Map<String, String> params){
+    public @ResponseBody HashMap postUpdate(@ModelAttribute("user") User userForm, BindingResult result, @RequestParam Map<String, String> params){
         HashMap response = new HashMap();
         int status = Integer.valueOf(params.get("updateStatus"));
         User user = userRepo.findOne(userForm.getId());
+        if(userForm.getRoles().isEmpty())
+            result.reject("global", "Please select at least one role.");
         if(!result.hasErrors()) {
             if (user != null) {
                 user.setRoles(userForm.getRoles());
@@ -132,7 +135,7 @@ public class SystemUsersController {
     public @ResponseBody HashMap findUser(@PathVariable("id") Long id){
         HashMap response = new HashMap();
         if(id != null){
-            User user = userRepo.findOne(id);
+            User user = userRepo.findById(id);
             if( user != null){
                 response.put("user", user);
                 response.put("status", "SUCCESS");

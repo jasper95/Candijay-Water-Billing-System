@@ -23,7 +23,8 @@
                 </div>
             </div>
             <c:if test="${updateSuccess == 1}">
-                <div style="text-align: center" class="alert alert-success" style="border-radius:5px;"><br>
+                <div style="text-align: center" class="alert alert-success" style="border-radius:5px;">
+                    <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
                     <h4>Settings successfully updated!</h4>
                 </div>
             </c:if>

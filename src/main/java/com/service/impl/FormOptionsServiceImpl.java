@@ -29,13 +29,13 @@ public class FormOptionsServiceImpl implements FormOptionsService{
     @Override
     public HashMap<String, Collections> getCustomerFormOptions() {
         HashMap<Character, String> genderOptions = new HashMap();
-        Set<String> brgyList = new HashSet();
+        SortedSet<String> brgyList = new TreeSet();
         HashMap<Integer, Integer> purokOptions =  new HashMap();
         genderOptions.put('M', "Male");
         genderOptions.put('F', "Female");
         for(int i=1; i<=7; i++)
             purokOptions.put(i, i);
-        for( Address address : addressRepo.findAll())
+        for( Address address : addressRepo.findAllByOrderByBrgyAsc())
             brgyList.add(address.getBrgy());
         HashMap allOptions = new HashMap();
         allOptions.put("brgy", brgyList);
@@ -64,9 +64,10 @@ public class FormOptionsServiceImpl implements FormOptionsService{
     @Override
     public HashMap<String, Collections> getReportFormOptions() {
         Map monthOptions = new HashMap(),  yearOptions = new LinkedHashMap(), typeOptionsReport = new HashMap(), typeOptionsChart = new HashMap(), typeAcctblty = new HashMap();
-        Set<String> brgyList = new HashSet(), zoneList = new HashSet<String>();
+        Set<String> zoneList = new HashSet();
+        SortedSet<String> brgyList = new TreeSet();
         int year = Calendar.getInstance().get(Calendar.YEAR);
-        for( Address address : addressRepo.findAll()){
+        for( Address address : addressRepo.findAllByOrderByBrgyAsc()){
             brgyList.add(address.getBrgy());
             zoneList.add(address.getLocationCode().toString());
         }

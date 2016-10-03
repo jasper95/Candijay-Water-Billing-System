@@ -33,25 +33,20 @@
                         <cws:input id="cust-mn" name="customer.middleName" label="Middlename" icon="user" placeholder="Enter Middlename" required="true"/>
                     </div>
                     <div class="col-sm-12 form-group">
-                        <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke"  required="true"/>
-                        <cws:input id="cust-bd" name="customer.birthDate" label="Birth Date" icon="birthday-cake" placeholder="Enter birth date" readOnly="true" required="true"/>
-                        <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="true"/>
-                    </div>
-                    <div class="col-sm-12 form-group">
-                        <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 10-digit #" required="true"/>
-                        <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false"/>
+                        <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke"  required="true" size="3"/>
+                        <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="true" size="3"/>
+                        <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 11-digit #" required="true" size="3"/>
+                        <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false" size="3"/>
                     </div>
                 </div>
             <c:if test="${customerForm.customer.id == null}">
                 <div class="form-wrapper">
                     <h3>Account Information</h3>
                     <div class="col-sm-12 form-group">
-                        <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true"/>
-                        <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true"/>
-                        <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true"/>
-                    </div>
-                    <div class="col-sm-12 form-group">
-                        <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true"/>
+                        <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="3"/>
+                        <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="3"/>
+                        <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="3"/>
+                        <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" size="3"/>
                     </div>
                 </div>
             </c:if>
@@ -65,10 +60,5 @@
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
-        <script>
-            $(function () {
-                $("#cust-bd").datepicker({ changeMonth: true, changeYear: true, yearRange : '-90:+0', dateFormat: 'yy/mm/dd'});
-            });
-        </script>
     </body>
 </html>

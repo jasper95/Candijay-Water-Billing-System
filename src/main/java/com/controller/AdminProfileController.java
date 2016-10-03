@@ -13,11 +13,16 @@ import com.domain.enums.UserStatus;
 import com.service.ReportService;
 import com.service.SettingsService;
 import com.service.SystemUserService;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -55,8 +60,8 @@ public class AdminProfileController {
     }
     @RequestMapping(method=RequestMethod.GET)
     public String admin(ModelMap model){
-        Integer activeAccounts = accountRepo.findByStatus(AccountStatus.ACTIVE).size(), warningAccounts = accountRepo.findByStatus(AccountStatus.WARNING).size(),
-                            inactiveAccounts = accountRepo.findByStatus(AccountStatus.INACTIVE).size();
+        Long activeAccounts = accountRepo.countByStatus(AccountStatus.ACTIVE), warningAccounts = accountRepo.countByStatus(AccountStatus.WARNING),
+                            inactiveAccounts = accountRepo.countByStatus(AccountStatus.INACTIVE);
         Integer activeUsers = userRepo.findByStatus(UserStatus.ACTIVE).size(), inactiveUsers = userRepo.findByStatus(UserStatus.INACTIVE).size();
         model.put("currentYear", LocalDateTime.now().getYear());
         model.put("activeUsers", activeUsers);
@@ -73,7 +78,7 @@ public class AdminProfileController {
         HashMap response = new HashMap(), fieldErrors = new HashMap();
         String newPassword = params.get("new"), currentPassword = params.get("current");
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        user = userRepo.findOne(user.getId());
+        user = userRepo.findById(user.getId());
         boolean errors = false;
         if(newPassword == null || newPassword.trim().isEmpty()){
             fieldErrors.put("new", "Invalid new password");
@@ -105,9 +110,12 @@ public class AdminProfileController {
         }
         else{
             User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            user = userRepo.findOne(user.getId());
+            user = userRepo.findById(user.getId());
             user.setFullName(fullName);
-            response.put("fullName", userService.saveUser(user).getFullName());
+            user = userService.saveUser(user);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            response.put("fullName", user.getFullName());
             response.put("status", "SUCCESS");
         }
         return response;
@@ -117,15 +125,27 @@ public class AdminProfileController {
         HashMap response = new HashMap();
         if(chartIndex != null){
             int year = LocalDateTime.now().getYear();
-            if(chartIndex == 1)
-                response.put("result", reportService.getCollectionCollectiblesExpenseDataSource(year));
-            else if (chartIndex == 2)
-                response.put("result", reportService.getConsumptionDataSource(year));
+            HashMap result;
+            if(chartIndex == 1) {
+                result = reportService.getCollectionCollectiblesExpenseDataSource(year);
+                response.put("result", result);
+            }
+            else if (chartIndex == 2) {
+                result = reportService.getConsumptionDataSource(year);
+                response.put("result", result);
+            }
             else{
                 response.put("status", "FAILURE");
+                return response;
             }
-            response.put("status", "SUCCESS");
-            return response;
+            ArrayList<HashMap> datasets = (ArrayList<HashMap>) result.get("datasets");
+            for(HashMap dataset: datasets){
+                ArrayList data = (ArrayList)dataset.get("data");
+                if(!data.isEmpty()){
+                    response.put("status", "SUCCESS");
+                    return response;
+                }
+            }
         }
         response.put("status", "FAILURE");
         return response;

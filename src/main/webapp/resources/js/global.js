@@ -32,9 +32,9 @@ $(document).ready(function(){
     });
     $('#update-profile-link2').click(function(){
         $('#update-profile-link').trigger('click');
-    })
-    $('#rt-new-pw').keyup(function (){
-        var rtPw =  $(this).val();
+    });
+    $('input:password.pw-update').keyup(function(){
+        var rtPw =  $('#rt-new-pw').val();
         var pw = $('#new-pw').val();
         if(rtPw.length > 0 && rtPw != pw){
             if(!$('#rt-profile-container').hasClass('has-error')){

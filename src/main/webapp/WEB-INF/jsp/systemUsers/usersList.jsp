@@ -39,7 +39,7 @@
                             <datatables:column title="Edit" sortable="false" renderFunction="custom-rendering#updateUser"/>
                             <dandelion:bundle excludes="jquery"/>
                         </datatables:table>
-                        <input id="request-uri" type="hidden" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+                        <input id="request-uri" type="hidden" value="${pageContext.servletContext.contextPath}/admin/system-users"/>
                         <input id="current-user" type="hidden" value="<sec:authentication property="name"/>"/>
                         <input type="hidden" id="row-num"/>
                     </div>

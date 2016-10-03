@@ -43,13 +43,11 @@
                 <div class="form-wrapper">
                     <h3>Account Information</h3>
                     <div class="col-sm-12 form-group">
-                        <cws:input id="acct-no" name="account.number" label="Account number" icon="user" placeholder="" required="false" readOnly="true"/>
-                        <cws:input id="acct-sb" name="account.accountStandingBalance" label="Standing Balance" icon="money" placeholder="" required="false" readOnly="true"/>
-                        <cws:input id="acct-st" name="account.status" label="Status" icon="info" placeholder="" required="false" readOnly="true"/>
-                    </div>
-                    <div class="col-sm-12 form-group">
-                        <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" disabled="true"/>
-                        <cws:select id="acct-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" disabled="true"/>
+                        <cws:input id="acct-no" name="account.number" label="Account number" icon="user" placeholder="" required="false" readOnly="true" size="2"/>
+                        <cws:input id="acct-st" name="account.status" label="Status" icon="info" placeholder="" required="false" readOnly="true" size="2"/>
+                        <cws:input id="acct-sb" name="account.accountStandingBalance" label="Standing Balance" icon="money" placeholder="" required="false" readOnly="true" size="3"/>
+                        <cws:select id="acct-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="false" disabled="true" size="3"/>
+                        <cws:select id="acct-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="false" disabled="true" size="2"/>
                     </div>
                 </div>
             </form:form>

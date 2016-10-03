@@ -22,7 +22,7 @@ $(document).ready(function(){
             if (validateForm('#acct-form', response)) {
                 cleanUpFormMsgs('#acct-form');
                 $('#acct-bg').val(response.result.address.brgy)
-                $('#acct-lc').val(response.result.address.locationCode)
+                $('#acct-lc').val(response.result.purok)
                 showSuccess('#acct-form', "Account successfully updated")
             }
         });

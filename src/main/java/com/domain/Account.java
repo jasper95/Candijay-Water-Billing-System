@@ -4,10 +4,7 @@ package com.domain;
 
 import com.dao.util.EnglishNumberToWords;
 import com.domain.enums.AccountStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
@@ -130,6 +127,7 @@ public class Account  implements java.io.Serializable {
         this.customer = customer;
     }
 
+    @JsonIgnore
     public String getAccountType() {
         return this.accountType;
     }

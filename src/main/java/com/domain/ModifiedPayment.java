@@ -32,7 +32,7 @@ public class ModifiedPayment implements java.io.Serializable {
     @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="payment_id", nullable=false)
     private Payment payment;
     @JsonSerialize(using= StandardDateTimeSerializer.class)

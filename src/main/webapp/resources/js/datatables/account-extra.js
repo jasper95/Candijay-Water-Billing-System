@@ -1,5 +1,6 @@
-var barangayFilters=["Abihilan", "Poblacion", "Tugas"];
-var zoneFilters=[1,2,3,4];
+var barangayFilters=["Cogtong", "Tawid", "Can-olin", "Cadapdapan", "Tambongan",
+    "Abihilan", "La Union", "Panadtaran", "Poblacion", "Boyoan", "Pagahat"];
+var zoneFilters=[1,2,3,4,5];
 var statusFilters=['ACTIVE', 'WARNING', 'INACTIVE'];
 yadcf.init(oTable_account, [
     {

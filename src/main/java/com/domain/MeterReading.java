@@ -2,22 +2,16 @@ package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
 import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -31,7 +25,7 @@ public class MeterReading extends AuditableEntity implements java.io.Serializabl
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="account_id", nullable=false)
     private Account account;
     @Valid
@@ -43,9 +37,9 @@ public class MeterReading extends AuditableEntity implements java.io.Serializabl
     private Integer readingValue;
     @Column(name="consumption", nullable=false)
     private Integer consumption;
-    @OneToOne(fetch=FetchType.EAGER, mappedBy="reading")
+    @OneToOne(fetch=FetchType.LAZY, mappedBy="reading")
     private Invoice invoice;
-    
+
     public MeterReading() {
     }
 

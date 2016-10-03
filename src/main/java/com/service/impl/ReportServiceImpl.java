@@ -7,6 +7,7 @@ import com.domain.enums.InvoiceStatus;
 import com.service.ReportService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,22 +30,24 @@ public class ReportServiceImpl implements ReportService {
     private PaymentRepository paymentRepo;
     private ScheduleRepository schedRepo;
     private ExpenseRepository expenseRepo;
+    private AddressRepository addressRepo;
 
     @Autowired
     public ReportServiceImpl(InvoiceRepository invoiceRepo, MeterReadingRepository mrRepo, PaymentRepository paymentRepo,
-                             ScheduleRepository schedRepo, ExpenseRepository expenseRepo){
+                             ScheduleRepository schedRepo, ExpenseRepository expenseRepo, AddressRepository addressRepo){
 
         this.invoiceRepo = invoiceRepo;
         this.mrRepo = mrRepo;
         this.paymentRepo = paymentRepo;
         this.schedRepo = schedRepo;
         this.expenseRepo = expenseRepo;
+        this.addressRepo = addressRepo;
     }
 
     @Transactional(readOnly=true)
     @Override
     public JRDataSource getCollectiblesDataSource(String barangay, Schedule sched) {
-        List<Invoice> monthlyInvoiceByBarangay = (!barangay.equalsIgnoreCase("summary")) ? invoiceRepo.findByScheduleAndAccount_Address_Brgy(sched, barangay) :
+        List<Invoice> monthlyInvoiceByBarangay = (!barangay.equalsIgnoreCase("summary")) ? invoiceRepo.findByScheduleAndAccount_Address(sched, addressRepo.findByBrgy(barangay)) :
                 invoiceRepo.findBySchedule(sched);
         monthlyInvoiceByBarangay.add(0, new Invoice());
         return new JRBeanCollectionDataSource(monthlyInvoiceByBarangay);
@@ -53,8 +56,13 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly=true)
     @Override
     public JRDataSource getCollectionDataSource(String barangay, Schedule sched) {
-        List<Payment> monthlyPaymentByBarangay = (!barangay.equalsIgnoreCase("summary")) ? paymentRepo.findByInvoice_ScheduleAndAccount_Address_BrgyAndInvoice_StatusNot(sched, barangay, InvoiceStatus.DEBT) :
-                paymentRepo.findByInvoice_ScheduleAndInvoice_StatusNot(sched, InvoiceStatus.DEBT);
+        List<Payment> monthlyPaymentByBarangay = (!barangay.equalsIgnoreCase("summary")) ?
+                paymentRepo.findByInvoice_ScheduleAndAccount_AddressAndInvoice_StatusNot(sched.getId(), addressRepo.findByBrgy(barangay).getId(), InvoiceStatus.DEBT) :
+                paymentRepo.findByInvoice_ScheduleAndInvoice_StatusNot(sched.getId(), InvoiceStatus.DEBT);
+        /*for(Payment p: monthlyPaymentByBarangay){
+            Hibernate.initialize(p.getAccount());
+            Hibernate.initialize(p.getInvoice());
+        }*/
         monthlyPaymentByBarangay.add(0, new Payment());
         return new JRBeanCollectionDataSource(monthlyPaymentByBarangay);
     }
@@ -66,18 +74,12 @@ public class ReportServiceImpl implements ReportService {
         for(int i= 1; i <= 12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(new Integer(i), year);
             if(sched != null){
-                String month = new DateFormatSymbols().getMonths()[sched.getMonth()-1];
-                List<Invoice> invoices = invoiceRepo.findBySchedule(sched);
+                String month = new DateFormatSymbols().getShortMonths()[sched.getMonth()-1];
                 List<Expense> expenses = expenseRepo.findBySchedule(sched);
-                BigDecimal collectiblesTotal = BigDecimal.ZERO, collectionTotal = BigDecimal.ZERO,
+                BigDecimal queryCollectibles = invoiceRepo.findTotalCollectiblesBySchedule(sched.getId()), queryCollection = paymentRepo.findTotalCollectionBySchedule(sched.getId());
+                BigDecimal collectiblesTotal = (queryCollectibles != null) ? queryCollectibles: BigDecimal.ZERO,
+                        collectionTotal = (queryCollection != null) ? queryCollection : BigDecimal.ZERO,
                         wage1Total = BigDecimal.ZERO, wage2Total = BigDecimal.ZERO, powerUsageTotal = BigDecimal.ZERO;
-                for(Invoice invoice : invoices){
-                    collectiblesTotal = collectiblesTotal.add(invoice.getNetCharge());
-                    Payment payment = invoice.getPayment();
-                    if(payment  != null){
-                        collectionTotal = collectionTotal.add(payment.getAmountPaid());
-                    }
-                }
                 for(Expense expense : expenses){
                     switch(expense.getType()){
                         case 1:
@@ -109,14 +111,11 @@ public class ReportServiceImpl implements ReportService {
         for(int i = 1; i <= 12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(new Integer(i), year);
             if(sched != null){
-                String month = new DateFormatSymbols().getMonths()[sched.getMonth()-1];
-                List<MeterReading> readings = mrRepo.findBySchedule(sched);
-                BigDecimal readingTotal = BigDecimal.ZERO;
-                for(MeterReading reading : readings){
-                    readingTotal = readingTotal.add(new BigDecimal(reading.getConsumption()));
-                }
-                if(readingTotal.compareTo(BigDecimal.ZERO) > 0){
-                    ChartData readingData = new ChartData(readingTotal, month, "Consumption");
+                String month = new DateFormatSymbols().getShortMonths()[sched.getMonth()-1];
+                BigInteger queryReading = mrRepo.findTotalConsumptionBySchedule(sched.getId());
+                BigInteger readingTotal = (queryReading != null) ? queryReading : BigInteger.ZERO;
+                if(readingTotal.compareTo(BigInteger.ZERO) > 0){
+                    ChartData readingData = new ChartData(new BigDecimal(readingTotal), month, "Consumption");
                     list.add(readingData);
                 }
             }
@@ -135,15 +134,10 @@ public class ReportServiceImpl implements ReportService {
         for(int i=1; i<=12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
-                BigDecimal collectiblesTotal = BigDecimal.ZERO, collectionTotal = BigDecimal.ZERO, wage1Total = BigDecimal.ZERO,
-                        wage2Total = BigDecimal.ZERO, powerUsageTotal = BigDecimal.ZERO;
-                for(Invoice invoice: invoiceRepo.findBySchedule(sched)){
-                    collectiblesTotal = collectiblesTotal.add(invoice.getNetCharge());
-                    Payment payment = invoice.getPayment();
-                    if(payment != null){
-                        collectionTotal = collectionTotal.add(payment.getAmountPaid());
-                    }
-                }
+                BigDecimal queryCollectibles = invoiceRepo.findTotalCollectiblesBySchedule(sched.getId()), queryCollection = paymentRepo.findTotalCollectionBySchedule(sched.getId());
+                BigDecimal collectiblesTotal = (queryCollectibles != null) ? queryCollectibles: BigDecimal.ZERO,
+                        collectionTotal = (queryCollection != null) ? queryCollection : BigDecimal.ZERO,
+                        wage1Total = BigDecimal.ZERO, wage2Total = BigDecimal.ZERO, powerUsageTotal = BigDecimal.ZERO;
                 for(Expense expense : expenseRepo.findBySchedule(sched)){
                     switch(expense.getType()){
                         case 1:
@@ -159,7 +153,7 @@ public class ReportServiceImpl implements ReportService {
                 }
                 if(collectiblesTotal.compareTo(BigDecimal.ZERO) > 0 || collectionTotal.compareTo(BigDecimal.ZERO) > 0 ||
                         wage1Total.compareTo(BigDecimal.ZERO) > 0 || wage2Total.compareTo(BigDecimal.ZERO) > 0 || powerUsageTotal.compareTo(BigDecimal.ZERO) > 0) {
-                    months.add(new DateFormatSymbols().getMonths()[sched.getMonth() - 1]);
+                    months.add(new DateFormatSymbols().getShortMonths()[sched.getMonth() - 1]);
                     collectiblesData.add(collectiblesTotal);
                     collectionData.add(collectionTotal);
                     wage1Data.add(wage1Total);
@@ -213,12 +207,10 @@ public class ReportServiceImpl implements ReportService {
         for(int i=1; i<= 12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
-                BigInteger readingTotal = BigInteger.ZERO;
-                for(MeterReading reading: mrRepo.findBySchedule(sched)){
-                    readingTotal = readingTotal.add(new BigInteger(reading.getConsumption().toString()));
-                }
+                BigInteger queryReading = mrRepo.findTotalConsumptionBySchedule(sched.getId());
+                BigInteger readingTotal = (queryReading != null) ? queryReading: BigInteger.ZERO;
                 if(readingTotal.compareTo(BigInteger.ZERO) > 0){
-                    months.add(new DateFormatSymbols().getMonths()[sched.getMonth()-1]);
+                    months.add(new DateFormatSymbols().getShortMonths()[sched.getMonth()-1]);
                     readings.add(readingTotal);
                 }
             }

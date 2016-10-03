@@ -36,14 +36,14 @@
                                 <label class="control-label">New Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                                    <input id="new-pw" type="password" name="new" placeholder="Enter new password" class="form-control" required="true">
+                                    <input id="new-pw" type="password" name="new" placeholder="Enter new password" class="form-control pw-update" required="true">
                                 </div>
                             </div>
                             <div id="rt-profile-container" class="col-sm-4 has-feedback ">
                                 <label class="control-label" for="rt-new-pw">Retype New Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                                    <input id="rt-new-pw" name="retype" placeholder="Retype new password" class="form-control" required="true" type="password">
+                                    <input id="rt-new-pw" name="retype" placeholder="Retype new password" class="form-control pw-update" required="true" type="password">
                                 </div>
                             </div>
                         </div>

@@ -18,6 +18,14 @@
         <mvc:argument-resolvers>
            <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasResolver" />
         </mvc:argument-resolvers>
+        <mvc:message-converters>
+            <!-- Use the HibernateAware mapper instead of the default -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.dao.util.HibernateAwareObjectMapper" />
+                </property>
+            </bean>
+        </mvc:message-converters>
     </mvc:annotation-driven>
         
     

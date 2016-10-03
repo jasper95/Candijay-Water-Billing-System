@@ -9,10 +9,7 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 /**
  *
@@ -39,7 +36,7 @@ public class Settings implements java.io.Serializable {
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="basic", nullable=false, precision=7)
     private Double basic;
-    @NotNull
+    @NotNull @Max(value = 5, message = "Must be lesser than 5.")
     @Min(value=1, message="Must be greater than zero") @Digits(integer=2,fraction = 0, message="Must be a number")
     @Column(name="debts_allowed", nullable = false)
     private Integer debtsAllowed;

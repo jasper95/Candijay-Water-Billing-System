@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f405f9d-6f28-4019-92f1-eea95a7e17c7">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="23"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -66,26 +66,31 @@
 	<title>
 		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="169" y="0" width="279" height="20" uuid="6ee5eeeb-c085-4a47-9bbd-6c7d06cc1e01"/>
-				<textElement textAlignment="Center">
-					<font size="16" isBold="true"/>
+				<reportElement x="126" y="0" width="361" height="15" uuid="6ee5eeeb-c085-4a47-9bbd-6c7d06cc1e01"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Candijay Water Billing System]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="126" y="20" width="361" height="20" uuid="a4e41ee7-b807-4348-95fc-f433c47d5f4a"/>
-				<textElement textAlignment="Center">
-					<font size="14"/>
+				<reportElement x="126" y="30" width="361" height="15" uuid="a4e41ee7-b807-4348-95fc-f433c47d5f4a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Collectibles Report "+$P{month}+" "+$P{year}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="220" y="40" width="157" height="20" uuid="f3324768-cf0c-4330-9408-287c422fd8fa"/>
-				<textElement textAlignment="Center">
-					<font size="14"/>
+				<reportElement x="126" y="45" width="361" height="15" uuid="f3324768-cf0c-4330-9408-287c422fd8fa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{barangay}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="126" y="15" width="361" height="15" uuid="3d8eece2-6ff4-4c1b-898a-6ddf2a903b3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Candijay Bohol]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>

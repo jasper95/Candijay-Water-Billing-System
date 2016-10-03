@@ -44,9 +44,8 @@
                 <div class="col-md-12 main">
                     <div class="table-responsive">
                         <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                            <datatables:column title="ID" property="id" filterable="true" />
-                            <datatables:column visible="false" searchable="true" property="lastname" selector="last-name"/>
-                            <datatables:column visible="false" searchable="true" property="firstName" selector="first-name"/>
+                            <datatables:column visible="false" searchable="true" filterable="true" property="lastname" selector="last-name" sortInitDirection="asc" sortInitOrder="0"/>
+                            <datatables:column visible="false" searchable="true" property="firstName" selector="first-name" sortInitDirection="asc" sortInitOrder="1"/>
                             <datatables:column sortable="false" filterable="false" title="Name" renderFunction="custom-rendering#customerUrl"/>
                             <datatables:column title="Gender" filterable="false" sortable="false" property="gender"/>
                             <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>

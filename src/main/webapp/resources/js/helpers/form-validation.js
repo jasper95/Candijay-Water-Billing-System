@@ -16,8 +16,6 @@ function validateForm(form_id, response, display_error_form_id){
             }
             else if(result[i].code === 'typeMismatch') {
                 field_errors[field] = "Invalid input";
-            } else if(field === 'roles'){ //some other input exceptions here
-                global_errors.push(result[i].defaultMessage);
             }
             else field_errors[field] = result[i].defaultMessage
         }

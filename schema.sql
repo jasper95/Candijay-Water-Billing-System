@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2016 at 04:03 AM
+-- Generation Time: Oct 03, 2016 at 10:43 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `revised_cws_db`
+-- Database: `new_cws_db`
 --
 
 -- --------------------------------------------------------
@@ -30,16 +30,18 @@ CREATE TABLE IF NOT EXISTS `account` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `number` varchar(8) NOT NULL,
   `address_id` int(11) NOT NULL,
+  `purok` int(1) NOT NULL,
   `status` varchar(45) NOT NULL,
   `customer_id` bigint(20) NOT NULL,
   `account_type` varchar(45) DEFAULT NULL,
   `account_standing_balance` decimal(9,2) NOT NULL DEFAULT '0.00',
   `penalty` decimal(9,2) NOT NULL,
+  `status_updated` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number UNIQUE` (`number`),
   KEY `customer_idx` (`customer_id`),
   KEY `accountAddress_idx` (`address_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
 
 -- --------------------------------------------------------
 
@@ -49,43 +51,13 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 CREATE TABLE IF NOT EXISTS `address` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `address_group` int(2) NOT NULL,
-  `street` varchar(45) NOT NULL,
   `brgy` varchar(45) NOT NULL,
   `location_code` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `adress_group` (`address_group`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `address`
---
-
-INSERT INTO `address` (`id`, `address_group`, `street`, `brgy`, `location_code`) VALUES
-(3, 1, 'Purok 1', 'Tugas', 1),
-(4, 2, 'Purok 1', 'Poblacion', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `address_group`
---
-
-CREATE TABLE IF NOT EXISTS `address_group` (
-  `id` int(2) NOT NULL AUTO_INCREMENT,
-  `account_prefix` varchar(2) CHARACTER SET utf8 NOT NULL,
+  `account_prefix` varchar(2) NOT NULL,
   `accounts_count` int(5) NOT NULL,
   `due_day` int(2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `address_group`
---
-
-INSERT INTO `address_group` (`id`, `account_prefix`, `accounts_count`, `due_day`) VALUES
-(1, '01', 8, 10),
-(2, '02', 14, 15);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -95,16 +67,15 @@ INSERT INTO `address_group` (`id`, `account_prefix`, `accounts_count`, `due_day`
 
 CREATE TABLE IF NOT EXISTS `customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `birth_date` date NOT NULL,
   `first_name` varchar(45) NOT NULL,
-  `lastname` varchar(45) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
   `middle_name` varchar(45) NOT NULL,
   `gender` char(1) NOT NULL,
   `contact_number` varchar(50) DEFAULT NULL,
   `family_members_count` int(11) NOT NULL,
   `occupation` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
 
 -- --------------------------------------------------------
 
@@ -122,10 +93,28 @@ CREATE TABLE IF NOT EXISTS `device` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `meter_code_UNIQUE` (`meter_code`),
   KEY `owner_idx` (`owner_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expense`
+--
+
+CREATE TABLE IF NOT EXISTS `expense` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` int(3) NOT NULL,
+  `schedule_id` bigint(20) NOT NULL,
+  `amount` decimal(9,2) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  `modified_by_user` varchar(45) NOT NULL,
+  `modification_time` datetime NOT NULL,
+  `version` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `schedule_id` (`schedule_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
 
 -- --------------------------------------------------------
 
@@ -152,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   KEY `account_idx` (`account_id`),
   KEY `invoice_schedule_idx` (`schedule_id`),
   KEY `reading_idx` (`reading_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66346 ;
 
 -- --------------------------------------------------------
 
@@ -166,24 +155,72 @@ CREATE TABLE IF NOT EXISTS `meter_reading` (
   `reading_value` int(11) NOT NULL,
   `consumption` int(11) NOT NULL,
   `schedule_id` bigint(20) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  `modification_time` datetime NOT NULL,
+  `modified_by_user` varchar(45) NOT NULL,
+  `version` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `account_idx` (`account_id`),
   KEY `reading_schedule_idx` (`schedule_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=55 ;
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66346 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `occupation`
+-- Table structure for table `modified_expense`
 --
 
-CREATE TABLE IF NOT EXISTS `occupation` (
-  `customer_id` bigint(20) NOT NULL,
-  `position` varchar(16) NOT NULL,
-  `industry` varchar(255) NOT NULL,
-  PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `modified_expense` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `expense_id` bigint(20) NOT NULL,
+  `schedule_id` bigint(20) NOT NULL,
+  `type` int(3) NOT NULL,
+  `amount` decimal(9,2) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `expense_id` (`expense_id`),
+  KEY `schedule_id` (`schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `modified_payment`
+--
+
+CREATE TABLE IF NOT EXISTS `modified_payment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `payment_id` bigint(20) NOT NULL,
+  `or_number` varchar(20) NOT NULL,
+  `amount_paid` decimal(9,2) NOT NULL,
+  `discount` decimal(9,2) NOT NULL,
+  `date` date NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `payment_id` (`payment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `modified_reading`
+--
+
+CREATE TABLE IF NOT EXISTS `modified_reading` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `reading_id` bigint(20) NOT NULL,
+  `schedule_id` bigint(20) NOT NULL,
+  `consumption` int(11) NOT NULL,
+  `reading_value` int(11) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `reading_orig_idx` (`reading_id`),
+  KEY `reading_orig_schedule_idx` (`schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -198,10 +235,16 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `date` date NOT NULL,
   `amount_paid` decimal(9,2) NOT NULL,
   `discount` decimal(9,2) NOT NULL,
+  `or_number` varchar(20) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  `modified_by_user` varchar(45) NOT NULL,
+  `version` bigint(20) NOT NULL,
+  `modification_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `account_payment` (`account_id`),
   KEY `invoice_payment` (`invoice_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38015 ;
 
 -- --------------------------------------------------------
 
@@ -216,17 +259,6 @@ CREATE TABLE IF NOT EXISTS `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `role`
---
-
-INSERT INTO `role` (`id`, `role_name`, `description`) VALUES
-(1, 'CUSTOMER_ACCOUNTS', 'Customers and Accounts'),
-(2, 'METER_READING', 'Meter Readings'),
-(3, 'BILLS_REPORTS', 'Bills and Reports'),
-(4, 'PAYMENTS', 'Payments'),
-(5, 'SYSTEM_USERS', 'System Users');
-
 -- --------------------------------------------------------
 
 --
@@ -238,9 +270,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `month` int(2) NOT NULL,
   `year` int(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
-
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=75 ;
 
 -- --------------------------------------------------------
 
@@ -255,15 +285,9 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `pes` double(5,2) NOT NULL,
   `basic` double(5,2) NOT NULL,
   `penalty` double(5,2) NOT NULL,
+  `debts_allowed` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `settings`
---
-
-INSERT INTO `settings` (`id`, `system_loss`, `depreciation_fund`, `pes`, `basic`, `penalty`) VALUES
-(1, 0.50, 0.50, 5.00, 5.00, 0.10);
 
 -- --------------------------------------------------------
 
@@ -277,14 +301,7 @@ CREATE TABLE IF NOT EXISTS `tax` (
   `description` varchar(255) NOT NULL,
   `value` decimal(9,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `tax`
---
-
-INSERT INTO `tax` (`id`, `code`, `description`, `value`) VALUES
-(1, 'MRT', 'Meter Reading Tax', '0.00');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -299,15 +316,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(100) NOT NULL,
   `type` varchar(45) NOT NULL,
   `status` varchar(45) NOT NULL,
+  `creation_time` datetime NOT NULL,
+  `modification_time` datetime NOT NULL,
+  `created_by_user` varchar(45) NOT NULL,
+  `modified_by_user` varchar(45) NOT NULL,
+  `version` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `type`, `status`) VALUES
-(1, 'Jasper Bernales', 'jasper', '$2a$10$e2/kWwM1esM39yI1koc77Om6eJUrySd83r3aE0/UWmIBDN7coOkGO', 'SUPERUSER', 'ACTIVE'),--------------------------------------------
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `usersandroles`
@@ -321,17 +338,6 @@ CREATE TABLE IF NOT EXISTS `usersandroles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `usersandroles`
---
-
-INSERT INTO `usersandroles` (`user_id`, `role_id`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5),
-
---
 -- Constraints for dumped tables
 --
 
@@ -339,14 +345,8 @@ INSERT INTO `usersandroles` (`user_id`, `role_id`) VALUES
 -- Constraints for table `account`
 --
 ALTER TABLE `account`
-  ADD CONSTRAINT `accountAddress` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `accountAddress` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `address`
---
-ALTER TABLE `address`
-  ADD CONSTRAINT `address_ibfk_1` FOREIGN KEY (`address_group`) REFERENCES `address_group` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `device`
@@ -355,11 +355,17 @@ ALTER TABLE `device`
   ADD CONSTRAINT `owner` FOREIGN KEY (`owner_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE;
 
 --
+-- Constraints for table `expense`
+--
+ALTER TABLE `expense`
+  ADD CONSTRAINT `expense_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE;
+
+--
 -- Constraints for table `invoice`
 --
 ALTER TABLE `invoice`
   ADD CONSTRAINT `account_invoice` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `invoice_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `invoice_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `reading_invoice` FOREIGN KEY (`reading_id`) REFERENCES `meter_reading` (`id`) ON UPDATE CASCADE;
 
 --
@@ -370,10 +376,24 @@ ALTER TABLE `meter_reading`
   ADD CONSTRAINT `reading_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `occupation`
+-- Constraints for table `modified_expense`
 --
-ALTER TABLE `occupation`
-  ADD CONSTRAINT `customer_occupation` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON UPDATE CASCADE;
+ALTER TABLE `modified_expense`
+  ADD CONSTRAINT `modifiedExpenseSched` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `originalExpense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `modified_payment`
+--
+ALTER TABLE `modified_payment`
+  ADD CONSTRAINT `modified_payment_copy` FOREIGN KEY (`payment_id`) REFERENCES `payment` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `modified_reading`
+--
+ALTER TABLE `modified_reading`
+  ADD CONSTRAINT `reading_original` FOREIGN KEY (`reading_id`) REFERENCES `meter_reading` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `reading_original_shcedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `payment`
@@ -386,8 +406,8 @@ ALTER TABLE `payment`
 -- Constraints for table `usersandroles`
 --
 ALTER TABLE `usersandroles`
-  ADD CONSTRAINT `role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

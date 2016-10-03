@@ -2,31 +2,29 @@ package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
 
+import com.dao.util.StandardDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
 import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -38,11 +36,6 @@ public class Customer  implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @NotNull @Past
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    @Column(name="birth_date", nullable=false, length=10)
-    private Date birthDate;
     @NotBlank @NotEmpty
     @Column(name="first_name", nullable=false, length=45)
     private String firstName;
@@ -57,23 +50,22 @@ public class Customer  implements java.io.Serializable {
     @Column(name="gender", nullable=false, length=1)
     private String gender;
     @NotEmpty
-    @Digits(fraction = 0, integer = 10, message="10 digit format is required")
+    @Digits(fraction = 0, integer = 11, message="11 digit format is required")
     @Column(name="contact_number")
     private String contactNumber;
     @NotEmpty @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Invalid number")
     @Column(name="family_members_count", nullable=false)
     private String familyMembersCount;
     @Column(name="occupation", nullable=false, length=45)
-    private String occupation;  
+    private String occupation;
     @OneToMany(fetch=FetchType.LAZY, mappedBy="customer", cascade={CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Account> accounts = new HashSet<Account>(0);
     
     public Customer() { }
 
 	
-    public Customer(Long id, Date birthDate, String firstName, String lastname, String middleName, String gender, String familyMembersCount, String occupation, boolean active) {
+    public Customer(Long id, String firstName, String lastname, String middleName, String gender, String familyMembersCount, String occupation, boolean active) {
         this.id = id;
-        this.birthDate = birthDate;
         this.firstName = firstName;
         this.lastname = lastname;
         this.middleName = middleName;
@@ -81,9 +73,8 @@ public class Customer  implements java.io.Serializable {
         this.familyMembersCount = familyMembersCount;
         this.occupation = occupation;
     }
-    public Customer(Long id, Address address, Date birthDate, String firstName, String middleName, String gender, String contactNumber, String familyMembersCount, String occupation, Set<Account> accounts) {
+    public Customer(Long id, String firstName, String middleName, String gender, String contactNumber, String familyMembersCount, String occupation, Set<Account> accounts) {
        this.id = id;
-       this.birthDate = birthDate;
        this.firstName = firstName;
        this.middleName = middleName;
        this.gender = gender;
@@ -101,17 +92,10 @@ public class Customer  implements java.io.Serializable {
         this.id = id;
     }
 
-    public Date getBirthDate() {
-        return this.birthDate;
-    }
-    
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getFirstName() {
         return this.firstName;
     }
+
     public String getLastname() {
         return lastname;
     }

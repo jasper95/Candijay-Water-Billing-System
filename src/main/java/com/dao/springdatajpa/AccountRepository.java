@@ -13,17 +13,24 @@ import java.util.Collection;
 import java.util.List;
 
 import com.domain.enums.AccountStatus;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 
 /**
  *
  * @author Bert
  */
+@Repository
 public interface AccountRepository extends JpaRepository<Account,Long>{
-    List<Account> findByCustomer(Customer customer);
+    @EntityGraph(attributePaths = {"address", "customer"})
+    List<Account> getByCustomer(Customer customer);
+    List<Account> getByCustomer_Id(Long id);
     Account findByNumber(String number);
-    List<Account> findByStatus(AccountStatus status);
+    Long countByStatus(AccountStatus status);
+    Long countByAddressIn(Collection<Address> address);
+    Long countByAddressInAndStatusUpdated(Collection<Address> address, boolean statusUpdated);
     List<Account> findByAddressAndStatus(Address address, AccountStatus status);
     List<Account> findByAddressIn(Collection<Address> addresses);
     List<Account> findByAddressInAndStatusUpdatedAndStatusIn(Collection<Address> addresses, boolean statusUpdated, Collection<AccountStatus> statuses);

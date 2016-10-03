@@ -7,19 +7,9 @@ import com.domain.enums.InvoiceStatus;
 import com.fasterxml.jackson.annotation.*;
 
 import java.math.BigDecimal;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
 import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -39,10 +29,10 @@ public class Invoice  implements java.io.Serializable {
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id;
-    @OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="reading_id", nullable=false)
     private MeterReading reading;
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="account_id", nullable=false)
     private Account account;
     @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
@@ -72,7 +62,7 @@ public class Invoice  implements java.io.Serializable {
     @Column(name="status", nullable=false)
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
-    @OneToOne(fetch=FetchType.EAGER, mappedBy="invoice")
+    @OneToOne(fetch=FetchType.LAZY, mappedBy="invoice")
     private Payment payment;
 
     public Invoice() {

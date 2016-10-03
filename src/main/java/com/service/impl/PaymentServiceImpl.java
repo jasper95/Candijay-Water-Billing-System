@@ -47,11 +47,12 @@ public class PaymentServiceImpl implements PaymentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public JRDataSource paymentHistoryDataSource(List<Long> paymentIds) {
         List<Payment> report = new ArrayList();
         report.add(new Payment());
         for(Long id : paymentIds)
-            report.add(paymentRepo.findOne(id));
+            report.add(paymentRepo.findById(id));
         return new JRBeanCollectionDataSource(report);
     }
 
@@ -171,7 +172,7 @@ public class PaymentServiceImpl implements PaymentService{
     @Transactional(readOnly=true)
     @Override
     public Payment findPaymentById(Long id) {
-        return paymentRepo.findOne(id);
+        return paymentRepo.findById(id);
     }
 
     @Transactional(readOnly=true)

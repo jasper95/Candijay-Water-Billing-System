@@ -100,7 +100,8 @@ public class CustomerController {
         Customer customer = null;
         Address address = addressRepo.findByBrgy(customerForm.getAddress().getBrgy());
         customerForm.setAddress(address);
-        if(deviceRepo.findByMeterCode(customerForm.getDevice().getMeterCode().trim()) != null)
+        String meterCode = customerForm.getDevice().getMeterCode().trim();
+        if(!meterCode.isEmpty() && deviceRepo.findByMeterCode(meterCode) != null)
             result.rejectValue("device.meterCode", "", "Metercode already exists");
         if(!result.hasErrors())
             customer = custService.createCustomer(customerForm);
@@ -188,6 +189,6 @@ public class CustomerController {
     
     @RequestMapping("/{customer_id}/accounts")
     public @ResponseBody List<Account> getAllAccounts(@PathVariable("customer_id") Long id){
-        return accountRepo.findByCustomer(customerRepo.findOne(id));
+        return accountRepo.getByCustomer_Id(id);
     }
 }

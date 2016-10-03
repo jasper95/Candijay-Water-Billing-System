@@ -9,6 +9,7 @@ import com.dao.springdatajpa.AccountRepository;
 import com.dao.springdatajpa.AddressRepository;
 import com.dao.springdatajpa.CustomerRepository;
 import com.dao.springdatajpa.DeviceRepository;
+import com.dao.util.EnglishNumberToWords;
 import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
@@ -126,16 +127,14 @@ public class AccountController {
     @RequestMapping(value="{accountNumber}/update", method=RequestMethod.POST)
     public @ResponseBody HashMap processUpdateAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
                                      BindingResult result,@PathVariable("accountNumber") String number) {
-        Address address = addressRepo.findByBrgyAndLocationCode(accountForm.getAddress().getBrgy(), accountForm.getAddress().getLocationCode());
         HashMap response = new HashMap();
-        if(address == null){
-            result.rejectValue("address.locationCode", "locationCode", "Invalid Zone for Barangay");
-        } else{
-            accountForm.setAddress(address);
-        }
         if(!result.hasErrors()){
+            Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
+            accountForm.setAddress(address);
             try{
-                accountForm.setAccount(accountRepo.findByNumber(number));
+                Account account = accountRepo.findByNumber(number);
+                account.setPurok(accountForm.getAccount().getPurok());
+                accountForm.setAccount(account);
                 response.put("result", custService.updateAccount(accountForm));
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("global","This record was modified by another user. Try refreshing the page.");
@@ -308,6 +307,7 @@ public class AccountController {
         }
         map.put("datasource", new JRBeanCollectionDataSource(accounts));
         map.put("format", "pdf");
+        map.put("DEBTS_ALLOWED", EnglishNumberToWords.covertIntNumberToBisaya(settingsService.getCurrentSettings().getDebtsAllowed()));
         return "rpt_disconnection_notice";
     }
     @RequestMapping(value="/find-device", method = RequestMethod.POST)

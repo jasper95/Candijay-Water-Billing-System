@@ -6,6 +6,9 @@
 package com.dao.util;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author Bert
@@ -129,5 +132,14 @@ public class EnglishNumberToWords {
         result =  result + tradThousand;
         // remove extra spaces!
         return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ");
+    }
+
+    public static String covertIntNumberToBisaya(int num){
+        List<String> bisaya = Arrays.asList("isa", "duha", "tulo", "upat", "lima");
+        if(num < 0)
+            num = 1;
+        else if(num > bisaya.size())
+            num = bisaya.size();
+        return bisaya.get(num-1);
     }
 }

@@ -9,10 +9,8 @@ import com.dao.springdatajpa.AccountRepository;
 import com.dao.springdatajpa.AddressRepository;
 import com.dao.springdatajpa.InvoiceRepository;
 import com.dao.springdatajpa.ScheduleRepository;
-import com.domain.Account;
-import com.domain.Address;
-import com.domain.Invoice;
-import com.domain.Schedule;
+import com.dao.util.EnglishNumberToWords;
+import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountabilityReportForm;
 import com.forms.ChartForm;
@@ -23,9 +21,11 @@ import java.util.*;
 import javax.validation.Valid;
 
 import com.service.ReportService;
+import com.service.SettingsService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -49,15 +49,17 @@ public class ReportsController {
     private AddressRepository addressRepo;
     private AccountRepository accountRepo;
     private InvoiceRepository invoiceRepo;
+    private SettingsService settingsService;
     @Autowired
     public ReportsController(ReportService reportService, ScheduleRepository schedRepo, FormOptionsService formOptionsService,
-                             AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo){
+                             AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo, SettingsService settingsService){
         this.reportService = reportService;
         this.schedRepo = schedRepo;
         this.formOptionsService = formOptionsService;
         this.addressRepo = addressRepo;
         this.accountRepo = accountRepo;
         this.invoiceRepo = invoiceRepo;
+        this.settingsService = settingsService;
     }
     
     @RequestMapping(method=RequestMethod.GET)
@@ -124,23 +126,18 @@ public class ReportsController {
         if(!result.hasErrors()){
             Integer type = Integer.valueOf(form.getType());
             boolean billsFlag = type.equals(1);
-            for(Account account : accountRepo.findByAddressIn(addresses)){
-                if(account.isStatusUpdated() && billsFlag){
-                    if(isPrintBrgy)
-                        result.rejectValue("barangay", "", "");
-                    else
-                        result.rejectValue("zone", "", "");
-                    result.reject("global", "Not finished reading or payments already finalized for this address.");
-                    break;
-                } else if(!billsFlag && !account.isStatusUpdated()) {
-                    if(isPrintBrgy)
-                        result.rejectValue("barangay", "", "");
-                    else
-                        result.rejectValue("zone", "", "");
-                    result.reject("global", "Payments not finalized for this address");
-                    break;
-                }
+            Long ctrAccInAddress = accountRepo.countByAddressIn(addresses);
+            System.out.println("ctr in address "+ctrAccInAddress+" ctr updated "+accountRepo.countByAddressInAndStatusUpdated(addresses, true));
+            if(billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, false) != ctrAccInAddress){
+                result.reject("global", "Not finished reading or payments already finalized for this address.");
+            } else if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != ctrAccInAddress) {
+                result.reject("global", "Payments not finalized for this address");
             }
+            if(result.hasErrors())
+                if(isPrintBrgy)
+                    result.rejectValue("barangay", "", "");
+                else
+                    result.rejectValue("zone", "", "");
         }
         return validationResponse(result, form);
     }
@@ -153,7 +150,7 @@ public class ReportsController {
 
     @RequestMapping(value="/print-accountability", method=RequestMethod.POST)
     public String getAccountabilityReport(ModelMap model, @RequestParam Map<String,String> params){
-        boolean isPrintBrgy = Integer.valueOf(params.get("printBrgy")).equals(1);
+        boolean isPrintBrgy = Integer.valueOf(params.get("printBrgy")) == 1;
         Integer type = Integer.valueOf(params.get("type"));
         List<Address> addresses = new ArrayList();
         System.out.println(isPrintBrgy);
@@ -163,24 +160,28 @@ public class ReportsController {
         System.out.println(addresses.size());
         JRBeanCollectionDataSource dataSource;
         String viewName;
-        if(type.equals(1)) {
+        if(type == 1) {
             List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, false, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
-                invoices.add(invoiceRepo.findTopByAccountOrderByIdDesc(account));
+                invoices.add(invoiceRepo.findTopByAccount_IdOrderByIdDesc(account.getId()));
             dataSource = new JRBeanCollectionDataSource(invoices);
             viewName = "rpt_bill";
         } else {
             List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, true, Arrays.asList(AccountStatus.WARNING));
-            System.out.println(accounts.size());
             dataSource = new JRBeanCollectionDataSource(accounts);
+            model.put("DEBTS_ALLOWED", EnglishNumberToWords.covertIntNumberToBisaya(settingsService.getCurrentSettings().getDebtsAllowed()));
             viewName = "rpt_disconnection_notice";
         }
         if(dataSource.getData().size() > 0){
             model.put("datasource", dataSource);
         } else {
             model.put("type", "No data available for this report");
-            model.put("message", "No account in this address that has WARNING status.");
+            if(type == 1)
+                model.put("message", "Not finished encoding meter reading for this address.");
+            else
+                model.put("message", "No account in this address that has WARNING status.");
+
             return "errors";
         }
         model.put("format", "pdf");

@@ -15,7 +15,7 @@ import java.util.List;
  * @author Bert
  */
 public interface AddressRepository extends JpaRepository<Address, Long> {
-    Address findByBrgyAndLocationCode(String brgy, Integer locationCode);
+    List<Address> findAllByOrderByBrgyAsc();
     Address findByBrgy(String brgy);
     List<Address> findByLocationCode(Integer locationCode);
 }

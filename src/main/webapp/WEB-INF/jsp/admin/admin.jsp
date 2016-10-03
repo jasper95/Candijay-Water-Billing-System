@@ -29,10 +29,18 @@
                             </ul>
                             <div id="charts" class="tab-content">
                                 <div id="menu1" class="tab-pane fade in active">
-                                    <canvas id="chart1" width="300" height="300"></canvas>
+                                    <div class="chart-loader" style="text-align: center; padding: 10px 0">
+                                        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                                        <p style="display: none">No data available</p>
+                                    </div>
+                                    <canvas id="chart1" width="300" height="300" style="display: none"></canvas>
                                 </div>
                                 <div id="menu2" class="tab-pane fade">
-                                    <canvas id="chart2" width="300" height="300"></canvas>
+                                    <div class="chart-loader" style="text-align: center; padding: 10px 0">
+                                        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                                        <p style="display: none">No data available</p>
+                                    </div>
+                                    <canvas id="chart2" width="300" height="300" style="display: none"></canvas>
                                 </div>
                             </div>
                         </div>

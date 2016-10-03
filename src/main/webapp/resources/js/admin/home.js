@@ -85,12 +85,17 @@ $(document).ready(function(){
     function initFirstChart(){
         $.when(getChartData(1)).then(function(response){
             var chart = canvasList[0];
+            var loader = chart.parent().find('div.chart-loader i');
+            var noData = chart.parent().find('div.chart-loader p');
+            loader.hide();
             if(response.status === "SUCCESS")
-                currentChart = new Chart(chart,{
-                    type: 'groupableBar',
-                    data : response.result,
-                    options: chartOptions
-                })
+                chart.show();
+            else noData.show();
+            currentChart = new Chart(chart, {
+                type: 'groupableBar',
+                data: response.result,
+                options: chartOptions
+            });
         });
     }
     function getChartData(chartIndex){
@@ -108,15 +113,23 @@ $(document).ready(function(){
     }
     $('#chart-menu li a').on('shown.bs.tab', function() {
         var chartIndex = $(this).parent('li').index();
-        currentChart.destroy()
+        currentChart.destroy();
+        var chart = canvasList[chartIndex];
+        var loader = chart.parent().find('div.chart-loader i');
+        var noData = chart.parent().find('div.chart-loader p');
+        loader.show();
+        chart.hide();
+        noData.hide();
         $.when(getChartData(chartIndex+1)).then(function(response){
-            var chart = canvasList[chartIndex];
+            loader.hide();
             if(response.status === "SUCCESS")
-                currentChart = new Chart(chart,{
-                    type: 'groupableBar',
-                    data : response.result,
-                    options: chartOptions
-                })
+                chart.show();
+            else noData.show();
+            currentChart = new Chart(chart, {
+                type: 'groupableBar',
+                data: response.result,
+                options: chartOptions
+            });
 
         });
     });

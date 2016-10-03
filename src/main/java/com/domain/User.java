@@ -24,6 +24,12 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Entity
 @Table(name="user")
+@NamedEntityGraph(
+        name = "withRoles",
+        attributeNodes = {
+                @NamedAttributeNode("roles"),
+        }
+)
 public class User extends AuditableEntity implements java.io.Serializable, UserDetails {
 
     @Id @GeneratedValue(strategy=IDENTITY)
@@ -44,8 +50,7 @@ public class User extends AuditableEntity implements java.io.Serializable, UserD
     @Column(name="type", nullable=false)
     @Enumerated(EnumType.STRING)
     private UserType type;
-    @NotNull(message="Please select at least one privilege")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="usersandroles",
                 joinColumns=@JoinColumn(name="user_id"),
                 inverseJoinColumns=@JoinColumn(name="role_id"))

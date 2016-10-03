@@ -7,7 +7,7 @@ $(document).ready(function(){
             if(validateForm('#md-update-form', response)){
                 showSuccess('#md-update-form', "Reading successfully updated");
                 var reading = response.result;
-                var row = $('#reading tr:nth-child('+$('#row-num').val()+')');
+                var row = $('#reading tbody tr:nth-child('+$('#row-num').val()+')');
                 row.find('.year').text(reading.schedule.year);
                 row.find('.month').text(months[reading.schedule.month]);
                 row.find('.consumption').text(reading.consumption);

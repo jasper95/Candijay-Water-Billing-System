@@ -29,8 +29,9 @@ $(document).ready(function(){
            }
         });
     });
-    $('#rt-pw').keyup(function (){
-        var rtPw =  $(this).val();
+
+    $('input:password.pw-create').keyup(function(){
+        var rtPw =  $('#rt-pw').val();
         var pw = $('#pw').val();
         if(rtPw.length > 0 && rtPw != pw){
             if(!$('#rt-container').hasClass('has-error')){
@@ -44,13 +45,14 @@ $(document).ready(function(){
             $('#create-submit').prop('disabled', false);
         }
     });
-    window.updateUser = function(username){
-        $.getJSON($('#request-uri').val()+'/find/'+ username, function(response){
+
+    window.updateUser = function(id){
+        $.getJSON($('#request-uri').val()+'/find/'+ id, function(response){
             if(response.status === "SUCCESS"){
                 cleanUpFormFields('#user-update-form');
                 cleanUpFormMsgs('#user-update-form');
                 var user = response.user;
-                var roles = user.roles
+                var roles = user.roles;
                 //var checkboxes = $('div.checkbox-container').find('input[name=roles]')
                 for (var i=0; i<roles.length; i++)
                     $('#roles-item-'+roles[i].id).bootstrapToggle('on');

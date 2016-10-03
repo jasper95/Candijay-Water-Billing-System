@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="312" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="5"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<field name="id" class="java.lang.Long"/>
 	<field name="reading" class="com.domain.MeterReading"/>
@@ -30,61 +30,68 @@
 	<pageHeader>
 		<band height="103" splitType="Stretch">
 			<staticText>
-				<reportElement x="231" y="0" width="127" height="18" uuid="6868a2c2-3bac-4cd3-b3d1-259858eebe04"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="12" isBold="true"/>
+				<reportElement x="132" y="30" width="312" height="15" uuid="6868a2c2-3bac-4cd3-b3d1-259858eebe04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[WATER BILL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="231" y="18" width="127" height="16" uuid="e19a917a-bb82-4276-9cdb-d24f04168fc7"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="10"/>
-				</textElement>
-				<text><![CDATA[Municipality of Candijay]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="68" width="185" height="19" uuid="34703f4c-996b-4b8e-9b23-e70659d83321"/>
+				<reportElement x="0" y="74" width="185" height="19" uuid="34703f4c-996b-4b8e-9b23-e70659d83321"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Name of Consumer]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="196" y="68" width="176" height="19" uuid="ac883215-a2eb-4ec8-8604-00a6b63fc17a"/>
+				<reportElement x="196" y="74" width="176" height="19" uuid="ac883215-a2eb-4ec8-8604-00a6b63fc17a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Month Bill]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="65" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
+				<reportElement x="383" y="74" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<text><![CDATA[Due Date]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="48" width="185" height="20" uuid="3483b0a8-2423-4044-982f-60d79c6226f6"/>
+				<reportElement x="0" y="55" width="185" height="20" uuid="3483b0a8-2423-4044-982f-60d79c6226f6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{account}.getCustomer().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="196" y="48" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
+				<reportElement x="196" y="54" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{schedule}.getMonthSymbol()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
-				<reportElement x="383" y="45" width="176" height="19" uuid="56bf8cd7-5dea-4b14-b325-0f1cf9e9937c"/>
+				<reportElement x="383" y="55" width="176" height="19" uuid="56bf8cd7-5dea-4b14-b325-0f1cf9e9937c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dueDate}.toString("MM/dd/yyyy")]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="132" y="1" width="312" height="15" uuid="ddec090f-e74d-44ae-b968-0c014586beb6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CANDIJAY WATER BILLING SYSTEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="132" y="15" width="312" height="15" uuid="b4155b85-dc66-49c0-8ea1-6adb5e935312"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Candijay Bohol]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -167,97 +174,84 @@
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Penalty]]></text>
+				<text><![CDATA[Penalty:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="92" width="54" height="11" uuid="c2c5552e-6da9-43c8-a7e8-609b7ab1cf07"/>
+				<reportElement x="402" y="91" width="54" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Discount]]></text>
+				<text><![CDATA[PES:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="103" width="54" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<text><![CDATA[Others:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="402" y="115" width="54" height="11" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
+				<reportElement x="402" y="103" width="54" height="11" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Total Due:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="71" y="16" width="68" height="13" uuid="36299d8e-efd5-4169-83b9-e8ba0e91deef"/>
+				<reportElement x="72" y="16" width="68" height="13" uuid="36299d8e-efd5-4169-83b9-e8ba0e91deef"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{account}.getNumber()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{account}.getNumber()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="71" y="29" width="68" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="12" width="90" height="13" uuid="edce5fb7-7e6e-4b80-b6ad-3422ee483abc"/>
 				<textElement verticalAlignment="Top">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{account}.getAddress().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{account}.getAddress().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="26" width="90" height="14" uuid="cb081d5b-2798-4727-b715-bddb2ecf2294"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{reading}.getPrevious()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getPrevious()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="282" y="39" width="90" height="11" uuid="e8d07f0d-f615-43eb-ad9e-84464b98fc6f"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{reading}.getReadingValue()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getReadingValue()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="459" y="69" width="70" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{arrears}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{arrears}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="81" width="70" height="14" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
+				<reportElement x="459" y="81" width="70" height="11" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{penalty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{penalty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="92" width="70" height="11" uuid="ef23cb0e-700a-4b26-8b00-a57681015538"/>
+				<reportElement x="459" y="91" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{others}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="103" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
+				<reportElement x="459" y="103" width="70" height="11" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{others}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="459" y="115" width="70" height="11" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
-				<textElement>
-					<font fontName="SansSerif" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{netCharge}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{netCharge}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="196" y="50" width="84" height="11" uuid="49569f5c-4bef-4c67-9508-606d214c8e34"/>
@@ -292,28 +286,28 @@
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{reading}.getConsumption()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getConsumption()]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
-				<reportElement x="282" y="60" width="90" height="11" uuid="3420a130-35a7-4c89-805a-a196f27b3df7"/>
+				<reportElement x="281" y="60" width="90" height="11" uuid="3420a130-35a7-4c89-805a-a196f27b3df7"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{basic}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{basic}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="282" y="71" width="90" height="12" uuid="18d494b2-ace2-4f8e-9bfc-33d1073dd84d"/>
+				<reportElement x="281" y="71" width="90" height="12" uuid="18d494b2-ace2-4f8e-9bfc-33d1073dd84d"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{depreciationFund}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{depreciationFund}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="282" y="83" width="90" height="11" uuid="a46169b5-4067-450a-9a87-610f178d87b7"/>
+				<reportElement x="281" y="83" width="90" height="11" uuid="a46169b5-4067-450a-9a87-610f178d87b7"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{systemLoss}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$F{systemLoss}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

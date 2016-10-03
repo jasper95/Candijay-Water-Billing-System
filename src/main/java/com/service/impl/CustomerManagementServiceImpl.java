@@ -94,7 +94,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
         account.setAddress(accountForm.getAddress());
         return accountRepo.save(account);
     }
-    
+
     @Transactional
     @Override
     public void changeAccountStatus(Account account, AccountStatus status) {

@@ -21,14 +21,14 @@
                                 <label class="control-label" for="pw">Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                                    <input id="pw" type="password" name="password" placeholder="Enter Password" class="form-control" required="true">
+                                    <input id="pw" type="password" name="password" placeholder="Enter Password" class="form-control pw-create" required="true">
                                 </div>
                             </div>
                             <div id="rt-container" class="col-sm-6 has-feedback ">
                                 <label class="control-label" for="rt-pw">Retype Password <span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                                    <input id="rt-pw" name="retype" placeholder="Retype password" class="form-control" required="true" type="password">
+                                    <input id="rt-pw" name="retype" placeholder="Retype password" class="form-control pw-create" required="true" type="password">
                                 </div>
                             </div>
                         </div>
@@ -54,8 +54,7 @@
                     </form:form>
                     <form:form id="user-update-form" cssStyle="display: hidden;" modelAttribute="user" role="form">
                         <div class="col-sm-12">
-                            <div class="col-sm-12 alert alert-danger global-errors"></div>
-                            <div class="col-sm-12 alert alert-success success-msg"></div>
+                            <jsp:include page="../postAuth/form-alerts.jsp"/>
                         </div>
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-12 checkbox-container">

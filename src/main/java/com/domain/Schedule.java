@@ -86,4 +86,13 @@ public class Schedule  implements java.io.Serializable {
                 append(this.id, other.id).
                 isEquals();
     }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", month=" + month +
+                ", year=" + year +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@
 package com.dao.util;
 
 import com.dao.DataTableDao;
+import com.domain.Account;
 import com.github.dandelion.datatables.core.ajax.ColumnDef;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import java.util.ArrayList;
@@ -54,10 +55,10 @@ public class DataTableQueryHelper implements DataTableDao{
 
     @Override
     public Long getFilteredCount(DatatablesCriterias criterias, Class clazz) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT p FROM "+ clazz.getName()+" p");
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(p) FROM "+ clazz.getName()+" p");
         queryBuilder.append(DataTableDaoUtil.getFilterQuery(criterias));
         Query query = entityManager.createQuery(queryBuilder.toString());
-        return Long.parseLong(String.valueOf(query.getResultList().size()));
+        return (Long) query.getSingleResult();
     }
 
     @Override

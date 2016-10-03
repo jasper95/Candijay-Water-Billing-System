@@ -95,7 +95,6 @@ public class MeterReadingController {
         //form is valid with no transaction constraints
         if(!result.hasErrors()){
             Account account = accountRepo.findOne(meterReadingForm.getAccountId());
-            MeterReading reading = mrService.findAccountLastMeterReading(account, 1);
             Schedule sched = schedRepo.findByMonthAndYear(meterReadingForm.getMeterReading().getSchedule().getMonth(), meterReadingForm.getMeterReading().getSchedule().getYear());
             Device device = deviceRepo.findByOwnerAndActive(account, true);
             meterReadingForm.getMeterReading().setConsumption(meterReadingForm.getMeterReading().getReadingValue() - device.getLastReading());
@@ -106,7 +105,6 @@ public class MeterReadingController {
                     result.rejectValue("meterReading.schedule.year", "", "");
                     result.reject("global", "Duplicate meter reading for this user in this period.");
                 }
-
             }
             else
                 meterReadingForm.getMeterReading().setSchedule(new Schedule(meterReadingForm.getMeterReading().getSchedule().getMonth(),meterReadingForm.getMeterReading().getSchedule().getYear()));
@@ -130,16 +128,16 @@ public class MeterReadingController {
     }
     @RequestMapping(value="/{readingId}/check-can-edit")
     public @ResponseBody HashMap updateMeterReading(@PathVariable("readingId") Long id){
-        MeterReading reading = mrRepo.findOne(id);
+        MeterReading reading = mrRepo.findByIdWithAccount(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 1);
         HashMap response = new HashMap();
-        if(!reading.equals(mrService.findAccountLastMeterReading(reading.getAccount(), 1)) || reading.getAccount().isStatusUpdated()){
+        if(!reading.equals(lastMeterReading) || reading.getAccount().isStatusUpdated()){
             response.put("status", "FAILED");
             return response;
         }
         response.put("status", "SUCCESS");
         response.put("reading", reading);
-        MeterReading lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 2);
-        int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() : 0;
+        //MeterReading lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 2);
+        int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption(): 0;
         response.put("last_reading",  lastReading);
         return response;
     }
@@ -156,8 +154,8 @@ public class MeterReadingController {
             formReading = mForm.getMeterReading();
             newSchedule = schedRepo.findByMonthAndYear(mForm.getMeterReading().getSchedule().getMonth(), mForm.getMeterReading().getSchedule().getYear());
             Account account = accountRepo.findOne(mForm.getAccountId());
-            MeterReading lastMeterReading = mrService.findAccountLastMeterReading(account, 2);
-            Integer lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() : 0;
+            MeterReading lastMeterReading = mrService.findAccountLastMeterReading(account, 1);
+            Integer lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption() : 0;
             mForm.getMeterReading().setConsumption(mForm.getMeterReading().getReadingValue() - lastReading);
             //check if reading is paid
             if(mrService.isReadingPaid(reading)){
@@ -172,7 +170,7 @@ public class MeterReadingController {
                         result.reject("global", "Duplicate meter reading for this user in this period.");
                     } else mForm.getMeterReading().setSchedule(newSchedule);
                 }
-            }
+            } else newSchedule = mForm.getMeterReading().getSchedule();
             //check if reading value is valid
             if(lastReading.compareTo(formReading.getReadingValue()) >= 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
@@ -207,13 +205,15 @@ public class MeterReadingController {
     public HashMap fetchAccount(@ModelAttribute("searchForm") @Valid SearchForm searchForm, BindingResult result){
         HashMap response = new HashMap();
         Account account = null;
-        Device device = deviceRepo.findByOwnerAndActive(account, true);
-        if(!result.hasErrors())
+        Device device = null;
+        if(!result.hasErrors()) {
             account = accountRepo.findByNumber(searchForm.getAccountNumber());
+            device = deviceRepo.findByOwnerAndActive(account, true);
+        }
         if(result.hasErrors() || account == null || device == null) {
             if(account == null)
                 result.rejectValue("accountNumber", "", "Account does not exists");
-            if(device == null)
+            else if(device == null)
                 result.rejectValue("accountNumber", "", "Account has no active device.");
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());

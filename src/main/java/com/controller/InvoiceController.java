@@ -72,7 +72,7 @@ public class InvoiceController {
     public String getBill(ModelMap modelMap, @ModelAttribute("checkboxes") Checkboxes checkboxes) {
         List<Invoice> invoices = new ArrayList();
         for(Long id : checkboxes.getCheckboxValues())
-            invoices.add(invoiceRepo.findOne(id));
+            invoices.add(invoiceRepo.findById(id));
         modelMap.put("datasource", new JRBeanCollectionDataSource(invoices));
         modelMap.put("format", "pdf");
         return "rpt_bill";

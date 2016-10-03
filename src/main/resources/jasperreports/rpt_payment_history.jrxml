@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a39c5c3f-b6ad-4bf6-8eb5-dc6ecdc34cd9">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -85,26 +85,31 @@
 	<title>
 		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="160" y="0" width="280" height="20" uuid="fb00c921-a781-465d-8e15-4ca765c2c146"/>
-				<textElement textAlignment="Center">
-					<font size="16" isBold="true"/>
+				<reportElement x="160" y="0" width="280" height="15" uuid="fb00c921-a781-465d-8e15-4ca765c2c146"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Candijay Water Billing System]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="160" y="20" width="280" height="20" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
-				<textElement textAlignment="Center">
-					<font size="14"/>
+				<reportElement x="160" y="30" width="280" height="14" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{IS_HISTORY} ? "Payment History ": "Collection Report "+$P{month}+" "+$P{year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{IS_HISTORY} ? "PAYMENT HISTORY ": "COLLECTION REPORT "+$P{month}+" "+$P{year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="159" y="40" width="280" height="20" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
-				<textElement textAlignment="Center">
-					<font size="14"/>
+				<reportElement x="160" y="43" width="280" height="15" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{barangay}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="160" y="15" width="280" height="15" uuid="fa3b5f9a-8c5e-4086-9e42-30658963348c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Candijay Bohol]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
