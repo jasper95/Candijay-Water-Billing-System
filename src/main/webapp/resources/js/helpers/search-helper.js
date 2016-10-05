@@ -1,8 +1,8 @@
 $(document).ready(function(){
     $('#fetchAccount').on('submit', function(e){
         e.preventDefault();
-        cleanUpFormMsgs('#add-meterReading-form')
-        cleanUpFormMsgs('#add-payment-form')
+        cleanUpFormMsgs('#add-meterReading-form');
+        cleanUpFormMsgs('#add-payment-form');
         $('#readingVal').val('');
         $.ajax({
             data:$(this).serialize(),
@@ -14,10 +14,18 @@ $(document).ready(function(){
                     $('#accountId').val(response.account.id);
                     displayData(response);
                     $('#crt-mr-found').show();
+                    $('#crt-mr-found').focus();
                 } else $('#crt-mr-found').hide();
             }
         });
     });
+    $('a.list-filter-btn').on('click', function(){
+        $('#crt-mr-found').hide();
+    });
+    window.selectAccount = function(number){
+        $('#acc-nb').val(number);
+        $('#fetchAccount').submit();
+    };
     window.displayData = function (response){
         var account = response.account;
         var fullname =  account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;

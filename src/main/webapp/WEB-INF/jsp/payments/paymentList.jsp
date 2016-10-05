@@ -31,7 +31,7 @@
                     <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/payments/new">Create Payments</a>
                 </div>
             </div>
-            <div class="alert alert-info form-wrapper">
+            <div class="alert alert-info form-wrapper" style="padding-bottom: 0px">
                 <div class="col-sm-12 form-group">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
@@ -60,8 +60,8 @@
                         <label>Payment Date</label>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
-                    <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
+                <div class="col-sm-12">
+                    <div class="pull-align-right col-md-3 filter-btn-wrapper">
                         <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
                         <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
                     </div>

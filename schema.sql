@@ -412,3 +412,39 @@ ALTER TABLE `usersandroles`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+INSERT INTO `address` (`id`, `brgy`, `location_code`, `account_prefix`, `accounts_count`, `due_day`) VALUES
+(1, 'Cogtong', 1, '01', 572, 20),
+(2, 'Tawid', 1, '02', 199, 20),
+(3, 'Can-olin', 1, '03', 428, 19),
+(4, 'Cadapdapan', 2, '04', 117, 16),
+(5, 'Tambongan', 2, '05', 327, 16),
+(6, 'Abihilan', 2, '06', 119, 17),
+(7, 'La Union', 3, '07', 257, 15),
+(8, 'Panadtaran', 3, '08', 172, 15),
+(9, 'Poblacion', 4, '09', 895, 10),
+(10, 'Boyoan', 4, '10', 42, 10),
+(11, 'Pagahat', 5, '11', 111, 15);
+
+INSERT INTO `settings` (`id`, `system_loss`, `depreciation_fund`, `pes`, `basic`, `penalty`, `debts_allowed`) VALUES
+(1, 0.50, 0.50, 5.00, 5.00, 0.10, 3);
+
+INSERT INTO `tax` (`id`, `code`, `description`, `value`) VALUES
+(1, 'MRT', 'Meter Reading Tax', '0.00');
+
+INSERT INTO `role` (`id`, `role_name`, `description`) VALUES
+(1, 'ACCOUNTS', 'Customers and Accounts'),
+(2, 'READINGS', 'Meter Readings'),
+(3, 'REPORTS', 'Bills and Reports'),
+(4, 'TRANSACTIONS', 'Payments'),
+(5, 'SYSTEM', 'System Users');
+
+INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `type`, `status`, `creation_time`, `modification_time`, `created_by_user`, `modified_by_user`, `version`) VALUES
+(1, 'Jasper Bernales', 'developer', '$2a$10$LvDVKusRSmMloHpVEC76yezPitaVReTXBRexN8KJvNUVwurvLhnVy', 'SUPERUSER', 'ACTIVE', '2016-08-01 00:00:00', '2016-10-02 13:27:30', 'jasper', 'jasper', 5);
+
+INSERT INTO `usersandroles` (`user_id`, `role_id`) VALUES
+(1, 2),
+(1, 5),
+(1, 1),
+(1, 3),
+(1, 4);

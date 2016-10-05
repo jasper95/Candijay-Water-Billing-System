@@ -21,22 +21,60 @@
         <div id="main-content" style="display: none;" class="container">
             <h2>Create Payment</h2>
             <hr/>
-            <form:form cssClass="row" action="${pageContext.servletContext.contextPath}/admin/payments" modelAttribute="searchForm" id="fetchAccount">
-                <div class="col-sm-4">
-                    <div class="search-wrapper">
-                        <div class="search-in-wrapper">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-                                <form:input id="acc-nb" path="accountNumber" class="form-control" required="true" placeholder="Enter Account no." autocomplete="off"/>
-                            </div>
-                            <span class="field-error"></span>
-                        </div>
-                        <button id="search-btn"  class="btn btn-primary btn-search"><i class="fa fa-search fa-fw"></i> Search </button>
+            <div class="alert alert-success form-wrapper">
+                <div class="col-sm-12 form-group">
+                    <div class="col-md-3" id="acct-no">
+                        <label>Account Number</label>
+                    </div>
+                    <div class="col-md-3" id="acct-lastname">
+                        <label>Lastname</label>
+                    </div>
+                    <div class="col-md-3" id="acct-firstname">
+                        <label>Firstname</label>
+                    </div>
+                    <div class="col-md-3" id="acct-brgy">
+                        <label>Barangay</label>
                     </div>
                 </div>
-            </form:form>
+                <div class="col-sm-12 form-group">
+                    <div class="col-md-3" id="acct-zone">
+                        <label>Zone</label>
+                    </div>
+                    <div class="col-md-3 pull-align-right vertical-center filter-btn-wrapper">
+                        <a id="filterClearButton2" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
+                        <a id="filterButton2" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <form:form cssClass="row" action="${pageContext.servletContext.contextPath}/admin/payments" modelAttribute="searchForm" id="fetchAccount">
+                        <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
+                        <form:hidden id="acc-nb" path="accountNumber"/>
+                    </form:form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 main">
+                    <div class="table-responsive">
+                        <datatables:table deferLoading="0" deferRender="true" dom="tp" displayLength="3" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton2" filterClearSelector="#filterClearButton2">
+                            <datatables:column sortable="false" title="Select" renderFunction="custom-rendering#selectAcountBtn"/>
+                            <datatables:column title="Acct No." name="number" filterable="true" property="number" sortable="false"/>
+                            <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc" sortable="false"/>
+                            <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc" sortable="false"/>
+                            <datatables:column name="gender" title="Gender" property="customer.gender" sortable="false"/>
+                            <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
+                            <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
+                            <datatables:column visible="false" property="id" />
+                            <dandelion:bundle excludes="jquery"/>
+                            <datatables:extraJs bundles="search-helper" placeholder="before_end_document_ready" />
+                            <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
+                        </datatables:table>
+                    </div>
+                </div>
+            </div>
             <hr/>
-            <div id="crt-mr-found">
+            <div id="crt-mr-found" tabindex="0">
                 <div class="row">
                     <div class="col-sm-8">
                         <div class="panel panel-default">

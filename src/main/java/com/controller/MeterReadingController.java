@@ -212,9 +212,9 @@ public class MeterReadingController {
         }
         if(result.hasErrors() || account == null || device == null) {
             if(account == null)
-                result.rejectValue("accountNumber", "", "Account does not exists");
+                result.reject("global", "Account does not exists");
             else if(device == null)
-                result.rejectValue("accountNumber", "", "Account has no active device.");
+                result.reject("global", "Account has no active device.");
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
         }

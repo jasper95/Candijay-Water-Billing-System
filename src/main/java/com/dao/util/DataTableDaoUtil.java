@@ -87,13 +87,13 @@ public class DataTableDaoUtil{
 								paramList.add("p." + columnDef.getName() + " < '" + ins[1] + "'");
 							}
 						}
-						/*else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year")){
+						else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year") || q[q.length-1].equalsIgnoreCase("id")){
 							paramList.add(" LOWER(p." + columnDef.getName()
-											+ ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
-						}*/
+											+ ") = '?'".replace("?", columnDef.getSearch().toLowerCase()));
+						}
 						else {
 							paramList.add(" LOWER(p." + columnDef.getName()
-											+ ") LIKE '?'".replace("?", columnDef.getSearch().toLowerCase()));
+											+ ") LIKE '%?%'".replace("?", columnDef.getSearch().toLowerCase()));
 						}
 					}
 				}

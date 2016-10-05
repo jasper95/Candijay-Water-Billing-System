@@ -18,12 +18,12 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
-            <div class="row">
-                <div class="col-sm-10">
+            <div class="row" style="margin-bottom: 10px">
+                <div class="col-sm-9">
                     <h2>Customers</h2>
                 </div>
-                <div class="col-sm-2 vertical-center">
-                    <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/customers/new/">Create Customer</a>
+                <div class="col-sm-3 vertical-center">
+                    <a type="button" class="btn btn-ctm btn-default pull-right" href="${pageContext.servletContext.contextPath}/admin/customers/new/">Create Customer</a>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper">
@@ -44,8 +44,8 @@
                 <div class="col-md-12 main">
                     <div class="table-responsive">
                         <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                            <datatables:column visible="false" searchable="true" filterable="true" property="lastname" selector="last-name" sortInitDirection="asc" sortInitOrder="0"/>
-                            <datatables:column visible="false" searchable="true" property="firstName" selector="first-name" sortInitDirection="asc" sortInitOrder="1"/>
+                            <datatables:column visible="false" searchable="true" filterable="true" property="lastname" sortInitDirection="asc" sortInitOrder="0"/>
+                            <datatables:column visible="false" searchable="true" property="firstName" sortInitDirection="asc" sortInitOrder="1"/>
                             <datatables:column sortable="false" filterable="false" title="Name" renderFunction="custom-rendering#customerUrl"/>
                             <datatables:column title="Gender" filterable="false" sortable="false" property="gender"/>
                             <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>

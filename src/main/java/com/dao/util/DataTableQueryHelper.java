@@ -35,7 +35,6 @@ public class DataTableQueryHelper implements DataTableDao{
             List<String> orderParams = new ArrayList<String>();
             queryBuilder.append(" ORDER BY ");
             for (ColumnDef columnDef : criterias.getSortingColumnDefs()) {
-                System.out.println(columnDef.getName());    
                 orderParams.add("p." + columnDef.getName() + " " + columnDef.getSortDirection());
             }
             Iterator<String> itr2 = orderParams.iterator();

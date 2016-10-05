@@ -25,11 +25,11 @@
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display: none;" class="container">
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-9">
                     <h2>Meter Reading</h2>
                 </div>
-                <div class="col-sm-2 vertical-center">
-                    <a type="button" class="btn btn-ctm btn-default"  href="${pageContext.servletContext.contextPath}/admin/reading/new/">Create Reading</a>
+                <div class="col-sm-3 vertical-center">
+                    <a type="button" class="btn btn-ctm btn-default pull-right"  href="${pageContext.servletContext.contextPath}/admin/reading/new/">Create Reading</a>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper">

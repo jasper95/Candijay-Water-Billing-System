@@ -62,10 +62,8 @@ public class DataTableServiceImpl implements DataTableService{
                 for (T a: results){
                     ModifiedReading modifiedReading = (ModifiedReading) a;
                     Hibernate.initialize(modifiedReading.getReading());
-                    //Hibernate.initialize(modifiedReading.getReading().getAccount());
                 }
             }
-            System.out.println("heree heree");
             return new DataSet<T>(results, count, countFiltered);
         }
         else return new DataSet<T>(new ArrayList(), count, Long.valueOf(0));
