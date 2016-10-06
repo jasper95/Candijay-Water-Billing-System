@@ -110,7 +110,7 @@ public class MeterReadingController {
                 meterReadingForm.getMeterReading().setSchedule(new Schedule(meterReadingForm.getMeterReading().getSchedule().getMonth(),meterReadingForm.getMeterReading().getSchedule().getYear()));
             if(!account.isStatusUpdated())
                 result.reject("global", "This account has not paid its previous bill. Please finalize the payment for "+account.getAddress().getBrgy()+", Zone "+account.getAddress().getLocationCode()+" before creating this reading.");
-            if(device.getLastReading().compareTo(meterReadingForm.getMeterReading().getReadingValue()) >= 0)
+            if(device.getLastReading().compareTo(meterReadingForm.getMeterReading().getReadingValue()) > 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
             if(!account.getStatus().equals(AccountStatus.ACTIVE))
                 result.reject("global", "You can add reading to ACTIVE accounts only");
@@ -172,7 +172,7 @@ public class MeterReadingController {
                 }
             } else newSchedule = mForm.getMeterReading().getSchedule();
             //check if reading value is valid
-            if(lastReading.compareTo(formReading.getReadingValue()) >= 0)
+            if(lastReading.compareTo(formReading.getReadingValue()) > 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
             //check if account is active
             if(!account.getStatus().equals(AccountStatus.ACTIVE))

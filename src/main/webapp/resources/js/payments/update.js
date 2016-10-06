@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    $("#pm-date").datepicker({ dateFormat: 'yy/mm/dd'});
+    $("#pm-date").datepicker({ changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});
 
     window.viewChanges = function(id){
         $('#auditPayment-id').find('input:first').val(id);

@@ -89,32 +89,50 @@
                         <div class="panel-body">
                             <div class="col-sm-4">
                                 <div class="overview-wrapper">
+                                    <em>Depreciation Fund Rate</em>
+                                    <span>${settings.depreciationFundRate}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
+                                    <em>System Loss Rate</em>
+                                    <span>${settings.systemLossRate}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
+                                    <em>Basic Rate</em>
+                                    <span>${settings.basicRate}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
+                                    <em>Depreciation Fund Minimum</em>
+                                    <span>${settings.depreciationFundMinimum}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
+                                    <em>System Loss Minimum</em>
+                                    <span>${settings.systemLossMinimum}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
+                                    <em>Basic Minimum</em>
+                                    <span>${settings.basicMinimum}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="overview-wrapper">
                                     <em>Penalty Rate</em>
                                     <span>${settings.penalty}</span>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="overview-wrapper">
-                                    <em>Basic Rate</em>
-                                    <span>${settings.basic}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="overview-wrapper">
-                                    <em>PES Rate</em>
+                                    <em>PES</em>
                                     <span>${settings.pes}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="overview-wrapper">
-                                    <em>Depreciation Fund Rate</em>
-                                    <span>${settings.depreciationFund}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="overview-wrapper">
-                                    <em>System Loss Rate</em>
-                                    <span>${settings.systemLoss}</span>
                                 </div>
                             </div>
                             <div class="col-sm-4">

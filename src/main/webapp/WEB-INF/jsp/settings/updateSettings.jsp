@@ -31,13 +31,18 @@
             <form:form modelAttribute="settings" id="settingsForm" method="POST">
                 <div class="form-wrapper">
                     <div class="col-sm-12 form-group">
-                        <cws:input id="s-penalty" name="penalty" label="Penalty" icon="money" placeholder="Enter penalty" required="true"/>
-                        <cws:input id="s-basic" name="basic" label="Basic" icon="money" placeholder="Enter basic" required="true"/>
-                        <cws:input id="s-pes" name="pes" label="PES" icon="money" placeholder="Enter pes" required="true"/>
+                        <cws:input id="s-depFundMin" name="depreciationFundMinimum" label="Depreciation Fund Minimum" icon="money" placeholder="Enter depfund minimum" required="true"/>
+                        <cws:input id="s-syslossMin" name="systemLossMinimum" label="System Loss Minimum" icon="money" placeholder="Enter sysloss minimum" required="true"/>
+                        <cws:input id="s-basicMin" name="basicMinimum" label="Basic Minimum" icon="money" placeholder="Enter basic minimum" required="true"/>
                     </div>
                     <div class="col-sm-12 form-group">
-                        <cws:input id="s-depFund" name="depreciationFund" label="Depreciation Fund" icon="money" placeholder="Enter depfund" required="true"/>
-                        <cws:input id="s-sysloss" name="systemLoss" label="System Loss" icon="money" placeholder="Enter sysloss" required="true"/>
+                        <cws:input id="s-depFundRate" name="depreciationFundRate" label="Depreciation Fund Rate" icon="money" placeholder="Enter depfund rate" required="true"/>
+                        <cws:input id="s-syslossRate" name="systemLossRate" label="System Loss Rate" icon="money" placeholder="Enter sysloss rate" required="true"/>
+                        <cws:input id="s-basicRate" name="basicRate" label="Basic Rate" icon="money" placeholder="Enter basic rate" required="true"/>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <cws:input id="s-penalty" name="penalty" label="Penalty Rate" icon="money" placeholder="Enter penalty rate" required="true"/>
+                        <cws:input id="s-pes" name="pes" label="PES" icon="money" placeholder="Enter pes" required="true"/>
                         <cws:input id="s-debtsOK" name="debtsAllowed" label="Debts Allowed" icon="money" placeholder="Enter debts allowed" required="true"/>
                     </div>
                     <div class="col-sm-12 form-group">

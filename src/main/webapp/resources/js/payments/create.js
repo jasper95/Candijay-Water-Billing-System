@@ -9,14 +9,14 @@ $(document).ready(function(){
                 cleanUpFormFields('#add-payment-form');
                 var status = $('#status');
                 var account = response.result.account;
-                if(account.status === "ACTIVE"){
-                 status.removeClass().addClass("label label-success");
-                 } else status.removeClass().addClass("label label-danger");
+                if(account.status === "ACTIVE")
+                    status.removeClass().addClass("label label-success");
+                else status.removeClass().addClass("label label-danger");
                  status.text(account.status);
                 $('#acc-no').find('input:first').val(account.id);
                 $('#filterButton').trigger('click');
             }
         })
     })
-    $("#date").datepicker({ dateFormat: 'yy/mm/dd'});
+    $("#date").datepicker({ changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});;
 });

@@ -13,6 +13,9 @@ function accountUrl(data, type, full){
 function checkboxAccount(data, type, full){
     return full.statusUpdated ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
 };
+function checkboxPayment(data, type, full){
+    return full.invoice.status !== 'DEBT' ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
+}
 function selectAcountBtn(data, type, full){
     var accNum = "\'"+full.number+"\'";
     return '<a type="button" onClick="selectAccount('+accNum+')" class="btn btn-xs btn-primary"><i class="fa fa-hand-pointer-o fa-fw"></i></a>'

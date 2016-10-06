@@ -4,23 +4,16 @@
  * and open the template in the editor.
  */
 package com.service.impl;
-import com.charts.ChartData;
 import com.dao.springdatajpa.*;
 import com.domain.*;
 import com.domain.enums.InvoiceStatus;
 import com.service.InvoicingService;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.DateFormatSymbols;
-import java.util.*;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -46,9 +39,19 @@ public class InvoicingServiceImpl implements InvoicingService {
     public void generateInvoiceMeterReading(MeterReading reading) {
         Settings settings = settingsRepo.findAll().get(0);
         BigDecimal others = new BigDecimal(settings.getPes()), 
-                    basic = new BigDecimal( reading.getConsumption()).multiply(new BigDecimal(settings.getBasic())),
-                    total, systemLoss = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getSystemLoss())), 
-                    depreciationFund = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getDepreciationFund())); 
+                    basic = new BigDecimal(settings.getBasicMinimum()),
+                    total, systemLoss = new BigDecimal(settings.getSystemLossMinimum()),
+                    depreciationFund = new BigDecimal(settings.getDepreciationFundMinimum());
+        if(reading.getConsumption() > 5){
+            BigDecimal adder = new BigDecimal(settings.getBasicRate());
+            for(int i= 6; i <= reading.getConsumption(); i++){
+                basic = basic.add(adder);
+                if(i%10 == 0)
+                    adder = adder.add(BigDecimal.ONE);
+            }
+            systemLoss = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getSystemLossRate()));
+            depreciationFund = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getDepreciationFundRate()));
+        }
         int month = reading.getSchedule().getMonth()+1;
         int year = reading.getSchedule().getYear();
         if(month > 12){

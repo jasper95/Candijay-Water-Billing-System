@@ -20,19 +20,17 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
-            <div class="row">
+            <div class="row" style="margin-bottom: 10px">
                 <div class="col-sm-8">
                     <h2>Payments</h2>
                 </div>
-                <div class="col-sm-2 vertical-center">
+                <div class="col-sm-4 vertical-center text-right">
                     <button type="button" id="fn-payment-btn" class="btn btn-default">Finalize Payments</button>
-                </div>
-                <div class="col-sm-2 vertical-center">
                     <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/payments/new">Create Payments</a>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper" style="padding-bottom: 0px">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
                     </div>
@@ -80,7 +78,7 @@
                         <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${pageContext.servletContext.contextPath}/admin/payments">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="payment" cssClass="table table-striped" url="/admin/payments/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton" >
                                 <datatables:column name="payment-id" property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
-                                <datatables:column sortable="false" renderFunction="custom-rendering#checkbox">
+                                <datatables:column sortable="false" renderFunction="custom-rendering#checkboxPayment">
                                     <datatables:columnHead>
                                         <input type="checkbox" id="master-checkbox" />
                                     </datatables:columnHead>

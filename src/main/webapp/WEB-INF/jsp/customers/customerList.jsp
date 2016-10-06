@@ -22,12 +22,12 @@
                 <div class="col-sm-9">
                     <h2>Customers</h2>
                 </div>
-                <div class="col-sm-3 vertical-center">
-                    <a type="button" class="btn btn-ctm btn-default pull-right" href="${pageContext.servletContext.contextPath}/admin/customers/new/">Create Customer</a>
+                <div class="col-sm-3 vertical-center text-right">
+                    <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/customers/new/">Create Customer</a>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="last-name">
                         <label>Lastname</label>
                     </div>

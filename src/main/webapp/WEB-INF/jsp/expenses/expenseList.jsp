@@ -23,12 +23,12 @@
                 <div class="col-sm-10">
                     <h2>Expenses</h2>
                 </div>
-                <div class="col-sm-2 vertical-center">
+                <div class="col-sm-2 vertical-center text-right">
                     <button id="create-expense" type="button" class="btn btn-ctm btn-default">Create Expenses</button>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="expense-type">
                         <label>Type</label>
                     </div>

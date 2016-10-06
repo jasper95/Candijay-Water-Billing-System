@@ -22,11 +22,11 @@ public class Settings implements java.io.Serializable {
     @Column(name="id", unique=true, nullable=false)
     private Long id;
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
-    @Column(name="system_loss", precision=7, nullable=false)
-    private Double systemLoss;
+    @Column(name="system_loss_rate", precision=7, nullable=false)
+    private Double systemLossRate;
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
-    @Column(name="depreciation_fund",precision=7, nullable=false)
-    private Double depreciationFund;
+    @Column(name="depreciation_fund_rate",precision=7, nullable=false)
+    private Double depreciationFundRate;
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
     @Column(name="pes", nullable=false, precision=7)
     private Double pes;
@@ -34,23 +34,37 @@ public class Settings implements java.io.Serializable {
     @Column(name="penalty", nullable=false, precision=7)
     private Double penalty;
     @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
-    @Column(name="basic", nullable=false, precision=7)
-    private Double basic;
+    @Column(name="basic_rate", nullable=false, precision=7)
+    private Double basicRate;
     @NotNull @Max(value = 5, message = "Must be lesser than 5.")
     @Min(value=1, message="Must be greater than zero") @Digits(integer=2,fraction = 0, message="Must be a number")
     @Column(name="debts_allowed", nullable = false)
     private Integer debtsAllowed;
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
+    @Column(name="min_basic", nullable = false)
+    private Double basicMinimum;
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
+    @Column(name="min_depreciation_fund", nullable = false)
+    private Double depreciationFundMinimum;
+    @NotNull @DecimalMin(value="0.01", message="Must be greater than zero")
+    @Column(name="min_system_loss", nullable = false)
+    private Double systemLossMinimum;
+
 
     public Settings() { }
 
-    public Settings(Double systemLoss, Double depreciationFund, Double pes, Double penalty, Double basic) {
-        this.systemLoss = systemLoss;
-        this.depreciationFund = depreciationFund;
+    public Settings(Double systemLossRate, Double depreciationFundRate, Double pes, Double penalty, Double basicRate, Integer debtsAllowed, Double basicMinimum, Double depreciationFundMinimum, Double systemLossMinimum) {
+        this.systemLossRate = systemLossRate;
+        this.depreciationFundRate = depreciationFundRate;
         this.pes = pes;
         this.penalty = penalty;
-        this.basic = basic;
+        this.basicRate = basicRate;
+        this.debtsAllowed = debtsAllowed;
+        this.basicMinimum = basicMinimum;
+        this.depreciationFundMinimum = depreciationFundMinimum;
+        this.systemLossMinimum = systemLossMinimum;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -59,20 +73,20 @@ public class Settings implements java.io.Serializable {
         this.id = id;
     }
 
-    public Double getSystemLoss() {
-        return systemLoss;
+    public Double getSystemLossRate() {
+        return systemLossRate;
     }
 
-    public void setSystemLoss(Double systemLoss) {
-        this.systemLoss = systemLoss;
+    public void setSystemLossRate(Double systemLossRate) {
+        this.systemLossRate = systemLossRate;
     }
 
-    public Double getDepreciationFund() {
-        return depreciationFund;
+    public Double getDepreciationFundRate() {
+        return depreciationFundRate;
     }
 
-    public void setDepreciationFund(Double depreciationFund) {
-        this.depreciationFund = depreciationFund;
+    public void setDepreciationFundRate(Double depreciationFundRate) {
+        this.depreciationFundRate = depreciationFundRate;
     }
 
     public Double getPes() {
@@ -91,12 +105,12 @@ public class Settings implements java.io.Serializable {
         this.penalty = penalty;
     }  
 
-    public Double getBasic() {
-        return basic;
+    public Double getBasicRate() {
+        return basicRate;
     }
 
-    public void setBasic(Double basic) {
-        this.basic = basic;
+    public void setBasicRate(Double basic) {
+        this.basicRate = basic;
     }
 
     public Integer getDebtsAllowed() {
@@ -105,6 +119,30 @@ public class Settings implements java.io.Serializable {
 
     public void setDebtsAllowed(Integer debtsAllowed) {
         this.debtsAllowed = debtsAllowed;
+    }
+
+    public Double getBasicMinimum() {
+        return basicMinimum;
+    }
+
+    public void setBasicMinimum(Double basicMinimum) {
+        this.basicMinimum = basicMinimum;
+    }
+
+    public Double getDepreciationFundMinimum() {
+        return depreciationFundMinimum;
+    }
+
+    public void setDepreciationFundMinimum(Double depreciationFundMinimum) {
+        this.depreciationFundMinimum = depreciationFundMinimum;
+    }
+
+    public Double getSystemLossMinimum() {
+        return systemLossMinimum;
+    }
+
+    public void setSystemLossMinimum(Double systemLossMinimum) {
+        this.systemLossMinimum = systemLossMinimum;
     }
 
     @Override

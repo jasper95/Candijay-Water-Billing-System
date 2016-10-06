@@ -24,17 +24,17 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display: none;" class="container">
-            <div class="row">
+            <div class="row" style="margin-bottom: 10px">
                 <div class="col-sm-9">
                     <h2>Meter Reading</h2>
                 </div>
-                <div class="col-sm-3 vertical-center">
-                    <a type="button" class="btn btn-ctm btn-default pull-right"  href="${pageContext.servletContext.contextPath}/admin/reading/new/">Create Reading</a>
+                <div class="col-sm-3 vertical-center text-right">
+                    <a type="button" class="btn btn-ctm btn-default"  href="${pageContext.servletContext.contextPath}/admin/reading/new/">Create Reading</a>
                 </div>
             </div>
             <div class="alert alert-info form-wrapper">
                 <div id="reading-id" style="display:none"></div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
                     </div>
@@ -48,7 +48,7 @@
                         <label>Barangay</label>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
                         <label>Zone</label>
                     </div>
