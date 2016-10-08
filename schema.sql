@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2016 at 10:43 AM
+-- Generation Time: Oct 08, 2016 at 02:25 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `new_cws_db`
+-- Database: `revised_cws_db`
 --
 
 -- --------------------------------------------------------
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   UNIQUE KEY `number UNIQUE` (`number`),
   KEY `customer_idx` (`customer_id`),
   KEY `accountAddress_idx` (`address_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -59,6 +59,23 @@ CREATE TABLE IF NOT EXISTS `address` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`id`, `brgy`, `location_code`, `account_prefix`, `accounts_count`, `due_day`) VALUES
+(1, 'Cogtong', 1, '01', 572, 20),
+(2, 'Tawid', 1, '02', 199, 20),
+(3, 'Can-olin', 1, '03', 428, 19),
+(4, 'Cadapdapan', 2, '04', 117, 16),
+(5, 'Tambongan', 2, '05', 327, 16),
+(6, 'Abihilan', 2, '06', 119, 17),
+(7, 'La Union', 3, '07', 257, 15),
+(8, 'Panadtaran', 3, '08', 172, 15),
+(9, 'Poblacion', 4, '09', 897, 10),
+(10, 'Boyoan', 4, '10', 42, 10),
+(11, 'Pagahat', 5, '11', 111, 15);
+
 -- --------------------------------------------------------
 
 --
@@ -75,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `family_members_count` int(11) NOT NULL,
   `occupation` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -94,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `device` (
   `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `owner_idx` (`owner_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3227 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -114,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `expense` (
   `version` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `schedule_id` (`schedule_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -131,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   `status` varchar(16) NOT NULL,
   `schedule_id` bigint(20) NOT NULL,
   `basic` decimal(9,2) NOT NULL,
+  `discount` decimal(9,2) NOT NULL,
   `dep_fund` decimal(9,2) NOT NULL,
   `sys_loss` decimal(9,2) NOT NULL,
   `arrears` decimal(9,2) NOT NULL,
@@ -141,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   KEY `account_idx` (`account_id`),
   KEY `invoice_schedule_idx` (`schedule_id`),
   KEY `reading_idx` (`reading_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66346 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -163,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `meter_reading` (
   PRIMARY KEY (`id`),
   KEY `account_idx` (`account_id`),
   KEY `reading_schedule_idx` (`schedule_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66346 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -195,7 +213,6 @@ CREATE TABLE IF NOT EXISTS `modified_payment` (
   `payment_id` bigint(20) NOT NULL,
   `or_number` varchar(20) NOT NULL,
   `amount_paid` decimal(9,2) NOT NULL,
-  `discount` decimal(9,2) NOT NULL,
   `date` date NOT NULL,
   `creation_time` datetime NOT NULL,
   `created_by_user` varchar(45) NOT NULL,
@@ -232,9 +249,9 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_id` bigint(20) NOT NULL,
   `invoice_id` bigint(20) NOT NULL,
+  `schedule_id` bigint(20) NOT NULL,
   `date` date NOT NULL,
   `amount_paid` decimal(9,2) NOT NULL,
-  `discount` decimal(9,2) NOT NULL,
   `or_number` varchar(20) NOT NULL,
   `creation_time` datetime NOT NULL,
   `created_by_user` varchar(45) NOT NULL,
@@ -243,8 +260,9 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `modification_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `account_payment` (`account_id`),
-  KEY `invoice_payment` (`invoice_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38015 ;
+  KEY `invoice_payment` (`invoice_id`),
+  KEY `payment_schedule` (`schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -259,6 +277,17 @@ CREATE TABLE IF NOT EXISTS `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id`, `role_name`, `description`) VALUES
+(1, 'ACCOUNTS', 'Customers and Accounts'),
+(2, 'READINGS', 'Meter Readings'),
+(3, 'REPORTS', 'Bills and Reports'),
+(4, 'TRANSACTIONS', 'Payments'),
+(5, 'SYSTEM', 'System Users');
+
 -- --------------------------------------------------------
 
 --
@@ -270,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `month` int(2) NOT NULL,
   `year` int(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=75 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -280,14 +309,24 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `system_loss` double(5,2) NOT NULL,
-  `depreciation_fund` double(5,2) NOT NULL,
+  `system_loss_rate` double(5,2) NOT NULL,
+  `depreciation_fund_rate` double(5,2) NOT NULL,
   `pes` double(5,2) NOT NULL,
-  `basic` double(5,2) NOT NULL,
+  `basic_rate` double(5,2) NOT NULL,
+  `min_system_loss` double(5,2) NOT NULL,
+  `min_depreciation_fund` double(5,2) NOT NULL,
+  `min_basic` double(5,2) NOT NULL,
   `penalty` double(5,2) NOT NULL,
   `debts_allowed` int(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `system_loss_rate`, `depreciation_fund_rate`, `pes`, `basic_rate`, `min_system_loss`, `min_depreciation_fund`, `min_basic`, `penalty`, `debts_allowed`) VALUES
+(1, 0.50, 0.50, 5.00, 10.00, 2.50, 2.50, 50.00, 0.10, 3);
 
 -- --------------------------------------------------------
 
@@ -301,7 +340,14 @@ CREATE TABLE IF NOT EXISTS `tax` (
   `description` varchar(255) NOT NULL,
   `value` decimal(9,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `tax`
+--
+
+INSERT INTO `tax` (`id`, `code`, `description`, `value`) VALUES
+(1, 'MRT', 'Meter Reading Tax', '0.00');
 
 -- --------------------------------------------------------
 
@@ -322,7 +368,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   `modified_by_user` varchar(45) NOT NULL,
   `version` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `type`, `status`, `creation_time`, `modification_time`, `created_by_user`, `modified_by_user`, `version`) VALUES
+(1, 'Jasper Bernales', 'developer', '$2a$10$LvDVKusRSmMloHpVEC76yezPitaVReTXBRexN8KJvNUVwurvLhnVy', 'SUPERUSER', 'ACTIVE', '2016-08-01 00:00:00', '2016-10-02 13:27:30', 'developer', 'developer', 5);
 
 -- --------------------------------------------------------
 
@@ -336,6 +389,17 @@ CREATE TABLE IF NOT EXISTS `usersandroles` (
   KEY `user_idx` (`user_id`),
   KEY `role_idx` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `usersandroles`
+--
+
+INSERT INTO `usersandroles` (`user_id`, `role_id`) VALUES
+(1, 2),
+(1, 5),
+(1, 1),
+(1, 3),
+(1, 4);
 
 --
 -- Constraints for dumped tables
@@ -400,7 +464,8 @@ ALTER TABLE `modified_reading`
 --
 ALTER TABLE `payment`
   ADD CONSTRAINT `account_payment` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `invoice_payment` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `invoice_payment` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `payment_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `usersandroles`
@@ -412,39 +477,3 @@ ALTER TABLE `usersandroles`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-INSERT INTO `address` (`id`, `brgy`, `location_code`, `account_prefix`, `accounts_count`, `due_day`) VALUES
-(1, 'Cogtong', 1, '01', 572, 20),
-(2, 'Tawid', 1, '02', 199, 20),
-(3, 'Can-olin', 1, '03', 428, 19),
-(4, 'Cadapdapan', 2, '04', 117, 16),
-(5, 'Tambongan', 2, '05', 327, 16),
-(6, 'Abihilan', 2, '06', 119, 17),
-(7, 'La Union', 3, '07', 257, 15),
-(8, 'Panadtaran', 3, '08', 172, 15),
-(9, 'Poblacion', 4, '09', 895, 10),
-(10, 'Boyoan', 4, '10', 42, 10),
-(11, 'Pagahat', 5, '11', 111, 15);
-
-INSERT INTO `settings` (`id`, `system_loss`, `depreciation_fund`, `pes`, `basic`, `penalty`, `debts_allowed`) VALUES
-(1, 0.50, 0.50, 5.00, 5.00, 0.10, 3);
-
-INSERT INTO `tax` (`id`, `code`, `description`, `value`) VALUES
-(1, 'MRT', 'Meter Reading Tax', '0.00');
-
-INSERT INTO `role` (`id`, `role_name`, `description`) VALUES
-(1, 'ACCOUNTS', 'Customers and Accounts'),
-(2, 'READINGS', 'Meter Readings'),
-(3, 'REPORTS', 'Bills and Reports'),
-(4, 'TRANSACTIONS', 'Payments'),
-(5, 'SYSTEM', 'System Users');
-
-INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `type`, `status`, `creation_time`, `modification_time`, `created_by_user`, `modified_by_user`, `version`) VALUES
-(1, 'Jasper Bernales', 'developer', '$2a$10$LvDVKusRSmMloHpVEC76yezPitaVReTXBRexN8KJvNUVwurvLhnVy', 'SUPERUSER', 'ACTIVE', '2016-08-01 00:00:00', '2016-10-02 13:27:30', 'jasper', 'jasper', 5);
-
-INSERT INTO `usersandroles` (`user_id`, `role_id`) VALUES
-(1, 2),
-(1, 5),
-(1, 1),
-(1, 3),
-(1, 4);
