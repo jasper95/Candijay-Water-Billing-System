@@ -24,14 +24,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AccountRepository extends JpaRepository<Account,Long>{
-    @EntityGraph(attributePaths = {"address", "customer"})
-    List<Account> getByCustomer(Customer customer);
     List<Account> getByCustomer_Id(Long id);
     Account findByNumber(String number);
     Long countByStatus(AccountStatus status);
     Long countByAddressIn(Collection<Address> address);
     Long countByAddressInAndStatusUpdated(Collection<Address> address, boolean statusUpdated);
-    List<Account> findByAddressAndStatus(Address address, AccountStatus status);
-    List<Account> findByAddressIn(Collection<Address> addresses);
+    Long countByAddressInAndStatus(Collection<Address> addresses, AccountStatus status);
+    List<Account> findByAddressInAndStatusIn(Collection<Address> address, Collection<AccountStatus> statuses);
     List<Account> findByAddressInAndStatusUpdatedAndStatusIn(Collection<Address> addresses, boolean statusUpdated, Collection<AccountStatus> statuses);
 }

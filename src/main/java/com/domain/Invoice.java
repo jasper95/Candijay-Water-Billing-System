@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.math.BigDecimal;
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -50,6 +52,8 @@ public class Invoice  implements java.io.Serializable {
     private BigDecimal arrears;
     @Column(name="basic", nullable=false, precision=9)
     private BigDecimal basic;
+    @Column(name="discount", nullable=false, precision=10, scale=0)
+    private BigDecimal discount = BigDecimal.ZERO;
     @Column(name="sys_loss", nullable=false, precision=9)
     private BigDecimal systemLoss;
     @Column(name="dep_fund", nullable=false, precision=9)
@@ -67,40 +71,24 @@ public class Invoice  implements java.io.Serializable {
 
     public Invoice() {
     }
-    
-    public Invoice(Account account, Schedule schedule, BigDecimal grossCharge, 
-            BigDecimal netCharge, InvoiceStatus status, BigDecimal arrears, BigDecimal penalty,
-            BigDecimal others, DateTime dueDate) {
-        this.account = account;
-        this.grossCharge = grossCharge;
-        this.netCharge = netCharge;
-        this.status = status;
-        this.schedule = schedule;
-        this.penalty = penalty;
-        this.others = others;
-        this.arrears = arrears;
-        this.dueDate = dueDate;
-    }
 
-    public Invoice(MeterReading reading, Account account, Schedule schedule, BigDecimal grossCharge, BigDecimal netCharge, BigDecimal penalty, BigDecimal others, BigDecimal arrears, BigDecimal basic, BigDecimal systemLoss, BigDecimal depreciationFund, DateTime dueDate, InvoiceStatus status, Payment payment) {
-        this.reading = reading;
-        this.account = account;
-        this.schedule = schedule;
-        this.grossCharge = grossCharge;
-        this.netCharge = netCharge;
-        this.penalty = penalty;
-        this.others = others;
-        this.arrears = arrears;
-        this.basic = basic;
-        this.systemLoss = systemLoss;
+    public Invoice(InvoiceStatus status, DateTime dueDate, BigDecimal depreciationFund, BigDecimal systemLoss, BigDecimal discount, BigDecimal basic, BigDecimal arrears, BigDecimal others, BigDecimal penalty, BigDecimal netCharge, BigDecimal grossCharge, Schedule schedule, Account account, MeterReading reading) {
+        this.status = status;
+        this.dueDate = dueDate;
         this.depreciationFund = depreciationFund;
-        this.dueDate = dueDate;
-        this.status = status;
-        this.payment = payment;
+        this.systemLoss = systemLoss;
+        this.discount = discount;
+        this.basic = basic;
+        this.arrears = arrears;
+        this.others = others;
+        this.penalty = penalty;
+        this.netCharge = netCharge;
+        this.grossCharge = grossCharge;
+        this.schedule = schedule;
+        this.account = account;
+        this.reading = reading;
     }
 
-    
-        
     public Long getId() {
         return this.id;
     }
@@ -206,6 +194,14 @@ public class Invoice  implements java.io.Serializable {
 
     public void setBasic(BigDecimal basic) {
         this.basic = basic;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 
     public BigDecimal getSystemLoss() {

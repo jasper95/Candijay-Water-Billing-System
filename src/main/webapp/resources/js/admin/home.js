@@ -75,7 +75,8 @@ $(document).ready(function(){
                 stacked: true
             }]
         },
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        responsive: true
     };
     var canvasList = [];
     $('#charts canvas').each(function(index){
@@ -88,14 +89,18 @@ $(document).ready(function(){
             var loader = chart.parent().find('div.chart-loader i');
             var noData = chart.parent().find('div.chart-loader p');
             loader.hide();
-            if(response.status === "SUCCESS")
+            if(response.status === "SUCCESS"){
                 chart.show();
-            else noData.show();
-            currentChart = new Chart(chart, {
-                type: 'groupableBar',
-                data: response.result,
-                options: chartOptions
-            });
+                currentChart = new Chart(chart, {
+                    type: 'groupableBar',
+                    data: response.result,
+                    options: chartOptions
+                });
+            }
+            else{
+                noData.show();
+                currentChart = null;
+            }
         });
     }
     function getChartData(chartIndex){
@@ -113,7 +118,8 @@ $(document).ready(function(){
     }
     $('#chart-menu li a').on('shown.bs.tab', function() {
         var chartIndex = $(this).parent('li').index();
-        currentChart.destroy();
+        if(currentChart !== null)
+            currentChart.destroy();
         var chart = canvasList[chartIndex];
         var loader = chart.parent().find('div.chart-loader i');
         var noData = chart.parent().find('div.chart-loader p');
@@ -122,15 +128,18 @@ $(document).ready(function(){
         noData.hide();
         $.when(getChartData(chartIndex+1)).then(function(response){
             loader.hide();
-            if(response.status === "SUCCESS")
+            if(response.status === "SUCCESS"){
                 chart.show();
-            else noData.show();
-            currentChart = new Chart(chart, {
-                type: 'groupableBar',
-                data: response.result,
-                options: chartOptions
-            });
-
+                currentChart = new Chart(chart, {
+                    type: 'groupableBar',
+                    data: response.result,
+                    options: chartOptions
+                });
+            }
+            else{
+                noData.show();
+                currentChart = null;
+            }
         });
     });
     initFirstChart();

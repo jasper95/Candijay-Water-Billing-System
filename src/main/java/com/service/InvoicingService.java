@@ -5,7 +5,9 @@
  */
 package com.service;
 
+import com.domain.Invoice;
 import com.domain.MeterReading;
+import com.forms.BillDiscountForm;
 
 /**
  *
@@ -13,4 +15,5 @@ import com.domain.MeterReading;
  */
 public interface InvoicingService{
     void generateInvoiceMeterReading(MeterReading reading);
+    Invoice updateDiscount(BillDiscountForm form);
 }

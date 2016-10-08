@@ -136,7 +136,6 @@ public class MeterReadingController {
         }
         response.put("status", "SUCCESS");
         response.put("reading", reading);
-        //MeterReading lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 2);
         int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption(): 0;
         response.put("last_reading",  lastReading);
         return response;

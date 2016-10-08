@@ -86,11 +86,10 @@
                                 <datatables:column title="Acct #" name="account-number" property="account.number" sortable="false"/>
                                 <datatables:column title="Lastname" name="lastname" property="account.customer.lastname" sortable="false"/>
                                 <datatables:column title="Firstname" name="firstName" property="account.customer.firstName" sortable="false"/>
-                                <datatables:column title="Month" name="month" property="invoice.schedule.month" renderFunction="custom-rendering#month" />
-                                <datatables:column title="Year" name ="year" property="invoice.schedule.year"/>
+                                <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
+                                <datatables:column title="Year" name ="year" property="schedule.year"/>
                                 <datatables:column name="brgy" visible="false" property="account.address.brgy" sortable="false"/>
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
-                                <datatables:column title="Discount" name="discount" property="discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                 <datatables:column title="Paid" name="amount-paid" property="amountPaid" sortable="false"  renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
                                 <datatables:column title="Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>

@@ -48,9 +48,6 @@
                                 <cws:input id="pm-paid" name="payment.amountPaid" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>
                             </div>
                             <div class="col-sm-12 form-group">
-                                <cws:input id="pm-discount" name="payment.discount" label="Discount" icon="money" placeholder="Enter discount" required="true" size="12"/>
-                            </div>
-                            <div class="col-sm-12 form-group">
                                 <cws:input id="pm-date" name="payment.date" label="Date" icon="calendar" placeholder="Choose date" required="true" readOnly="true" size="12"/>
                             </div>
                             <input type="hidden" name="update" id="pid"/>

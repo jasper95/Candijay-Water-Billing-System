@@ -7,14 +7,14 @@ package com.service.impl;
 
 import com.dao.springdatajpa.*;
 import com.domain.*;
+import com.domain.enums.AccountStatus;
 import com.domain.enums.InvoiceStatus;
 import com.forms.MeterReadingForm;
 import com.service.InvoicingService;
 import com.service.MeterReadingService;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,4 +99,24 @@ public class MeterReadingServiceImpl implements MeterReadingService{
             return !invoice.getStatus().equals(InvoiceStatus.UNPAID);
         
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isDoneReadingAddressIn(Collection<Address> addresses) throws Exception {
+        Calendar c = Calendar.getInstance();
+        Integer currentYear = c.get(Calendar.YEAR);
+        Integer currentMonth = c.get(Calendar.MONTH)+1;
+        if(currentMonth == 1){
+            currentMonth = 12;
+            currentYear--;
+        } else currentMonth --;
+        Schedule schedule = schedRepo.findByMonthAndYear(currentMonth, currentYear);
+        if(schedule == null)
+            throw new Exception("No meter reading data for previous month");
+        Long meterReadingCount = mrRepo.countByScheduleAndAccount_AddressIn(schedule, addresses);
+        Long accountsCount = accountRepo.countByAddressInAndStatus(addresses, AccountStatus.ACTIVE);
+        return meterReadingCount >= accountsCount;
+    }
+
+
 }

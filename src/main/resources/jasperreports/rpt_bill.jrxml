@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="312" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="936" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -15,6 +15,7 @@
 	<field name="account" class="com.domain.Account"/>
 	<field name="dueDate" class="org.joda.time.DateTime"/>
 	<field name="schedule" class="com.domain.Schedule"/>
+	<field name="discount" class="java.math.BigDecimal"/>
 	<group name="id" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 		<groupHeader>
@@ -98,7 +99,7 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="126" splitType="Stretch">
+		<band height="169" splitType="Stretch">
 			<staticText>
 				<reportElement x="13" y="16" width="56" height="13" uuid="47c16780-d93e-46f0-912f-6007ebf5f445"/>
 				<textElement textAlignment="Right">
@@ -163,30 +164,30 @@
 				<text><![CDATA[Add:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="69" width="54" height="12" uuid="e9c0fd3f-5536-466d-9dcf-918bedcd117d"/>
+				<reportElement x="402" y="71" width="54" height="12" uuid="e9c0fd3f-5536-466d-9dcf-918bedcd117d"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Arrears:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="81" width="54" height="11" uuid="716600f2-6404-4f7e-9a3a-e56337f065e9"/>
+				<reportElement x="402" y="83" width="54" height="12" uuid="716600f2-6404-4f7e-9a3a-e56337f065e9"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Penalty:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="91" width="54" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
+				<reportElement x="402" y="95" width="54" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[PES:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="103" width="54" height="11" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
+				<reportElement x="402" y="118" width="54" height="12" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
 				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="SansSerif" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Due:]]></text>
 			</staticText>
@@ -226,30 +227,30 @@
 				<textFieldExpression><![CDATA[" "+$F{reading}.getReadingValue()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="69" width="70" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
+				<reportElement x="459" y="71" width="70" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$F{arrears}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="81" width="70" height="11" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
+				<reportElement x="459" y="83" width="70" height="12" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$F{penalty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="91" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
+				<reportElement x="459" y="95" width="70" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$F{others}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="103" width="70" height="11" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
+				<reportElement x="459" y="118" width="70" height="12" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
 				<textElement>
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="SansSerif" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$F{netCharge}]]></textFieldExpression>
 			</textField>
@@ -309,28 +310,41 @@
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$F{systemLoss}]]></textFieldExpression>
 			</textField>
-		</band>
-	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="43" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="10" width="100" height="11" uuid="a9976406-4def-4a10-a020-b58b9081f9d8"/>
+				<reportElement x="2" y="136" width="100" height="11" uuid="a9976406-4def-4a10-a020-b58b9081f9d8"/>
 				<textElement>
 					<font fontName="SansSerif" size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[NOTICE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="21" width="383" height="22" uuid="9dd11829-18b3-4723-a1fa-a7953ca92ff8"/>
+				<reportElement x="2" y="147" width="383" height="22" uuid="9dd11829-18b3-4723-a1fa-a7953ca92ff8"/>
 				<textElement>
 					<font fontName="SansSerif" size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Please pay total amount in 10 days after hereof. Late charges will be added to your account and your service. Connection will be cut off without prior notice. If you settled the account please bring this with you.]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="402" y="107" width="54" height="12" uuid="d2824c23-d8cc-4687-82c8-9257ab3f1d37"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Discount:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="459" y="107" width="70" height="12" uuid="bac7f451-16e1-4e83-b4f1-37f8a6e0aedd"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{discount}]]></textFieldExpression>
+			</textField>
 		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>

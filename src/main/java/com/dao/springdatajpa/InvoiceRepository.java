@@ -31,9 +31,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
     Invoice findById(Long id);
     @EntityGraph(attributePaths = {"account"}, type= EntityGraph.EntityGraphType.LOAD)
-    List<Invoice> findByScheduleAndAccount_Address(Schedule sched, Address address);
+    List<Invoice> findByScheduleAndAccount_AddressOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched, Address address);
     @EntityGraph(attributePaths = {"account"}, type= EntityGraph.EntityGraphType.LOAD)
-    List<Invoice> findBySchedule(Schedule sched);
+    List<Invoice> findByScheduleOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched);
     @Query(value = "SELECT SUM(i.net_charge) FROM Invoice i WHERE i.schedule_id = ?1", nativeQuery = true)
     BigDecimal findTotalCollectiblesBySchedule(@Param("id") Long id);
     List<Invoice> findByAccountOrderByIdDesc(Account account, Pageable pageable);

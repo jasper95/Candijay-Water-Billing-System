@@ -6,8 +6,11 @@
 package com.service;
 
 import com.domain.Account;
+import com.domain.Address;
 import com.domain.MeterReading;
 import com.forms.MeterReadingForm;
+
+import java.util.Collection;
 import java.util.List;
 import org.springframework.validation.Errors;
 
@@ -19,4 +22,5 @@ public interface MeterReadingService {
     MeterReading findAccountLastMeterReading(Account account, int monthLag);
     MeterReading saveMeterReading(MeterReadingForm form);
     boolean isReadingPaid(MeterReading reading);
+    boolean isDoneReadingAddressIn(Collection<Address> addresses) throws Exception;
 }

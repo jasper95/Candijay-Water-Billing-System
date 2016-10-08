@@ -1,8 +1,19 @@
 $(document).ready(function(){
-    if($('#reading-year').val() === '')
-        $('#reading-year').val(new Date().getFullYear());
-    if($('#reading-month').val() === '')
-        $('#reading-month').val(new Date().getMonth()+1);
+    function setMonth(){
+        if($('#reading-year').val() === '' || $('#reading-month').val() === ''){
+            var currentMonth = new Date().getMonth()+1, currentYear = new Date().getFullYear();
+            if(currentMonth == 1){
+                currentMonth = 12;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            if($('#reading-year').val() === '')
+                $('#reading-year').val(currentYear)
+            if($('#reading-month').val() === '')
+                $('#reading-month').val(currentMonth)
+        }
+    }
     $('#add-meterReading-form').on('submit', function(e){
         e.preventDefault();
         $('#reading-error').hide();
@@ -39,4 +50,5 @@ $(document).ready(function(){
             }
         })
     })
+    setMonth();
 });

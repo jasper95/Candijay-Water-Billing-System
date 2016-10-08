@@ -16,7 +16,6 @@
                                 <datatables:column property="payment.id" filterable="true" visible="false" selector="auditPayment-id"/>
                                 <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" cssCellClass="or-number"/>
-                                <datatables:column title="Discount" name="discount" property="discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                 <datatables:column title="Amount Paid" name="amount-paid" property="amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
                                 <datatables:column title="Payment Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="Modified on" name="creationTime" property="creationTime"/>

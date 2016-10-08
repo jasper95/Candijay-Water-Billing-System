@@ -7,6 +7,7 @@ package com.service.impl;
 import com.dao.springdatajpa.*;
 import com.domain.*;
 import com.domain.enums.InvoiceStatus;
+import com.forms.BillDiscountForm;
 import com.service.InvoicingService;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -84,5 +86,18 @@ public class InvoicingServiceImpl implements InvoicingService {
         reading.getAccount().setAccountStandingBalance(total);
         reading.getAccount().setStatusUpdated(false);
         accountRepo.save(reading.getAccount());
+    }
+
+    @Transactional
+    @Override
+    public Invoice updateDiscount(BillDiscountForm form) {
+        Invoice invoice = invoiceRepo.findOne(form.getId());
+        BigDecimal oldDiscount = invoice.getDiscount();
+        invoice.setDiscount(form.getDiscount());
+        invoice.setNetCharge((invoice.getNetCharge().add(oldDiscount)).subtract(form.getDiscount()));
+        Account account = invoice.getAccount();
+        account.setAccountStandingBalance(invoice.getNetCharge());
+        accountRepo.save(account);
+        return invoiceRepo.save(invoice);
     }
 }

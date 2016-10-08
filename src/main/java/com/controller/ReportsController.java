@@ -20,6 +20,7 @@ import com.service.FormOptionsService;
 import java.util.*;
 import javax.validation.Valid;
 
+import com.service.MeterReadingService;
 import com.service.ReportService;
 import com.service.SettingsService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -50,9 +51,12 @@ public class ReportsController {
     private AccountRepository accountRepo;
     private InvoiceRepository invoiceRepo;
     private SettingsService settingsService;
+    private MeterReadingService mrService;
+
     @Autowired
     public ReportsController(ReportService reportService, ScheduleRepository schedRepo, FormOptionsService formOptionsService,
-                             AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo, SettingsService settingsService){
+                             AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo,
+                             SettingsService settingsService, MeterReadingService mrService){
         this.reportService = reportService;
         this.schedRepo = schedRepo;
         this.formOptionsService = formOptionsService;
@@ -60,6 +64,7 @@ public class ReportsController {
         this.accountRepo = accountRepo;
         this.invoiceRepo = invoiceRepo;
         this.settingsService = settingsService;
+        this.mrService = mrService;
     }
     
     @RequestMapping(method=RequestMethod.GET)
@@ -126,12 +131,14 @@ public class ReportsController {
         if(!result.hasErrors()){
             Integer type = Integer.valueOf(form.getType());
             boolean billsFlag = type.equals(1);
-            Long ctrAccInAddress = accountRepo.countByAddressIn(addresses);
-            System.out.println("ctr in address "+ctrAccInAddress+" ctr updated "+accountRepo.countByAddressInAndStatusUpdated(addresses, true));
-            if(billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, false) != ctrAccInAddress){
-                result.reject("global", "Not finished reading or payments already finalized for this address.");
-            } else if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != ctrAccInAddress) {
-                result.reject("global", "Payments not finalized for this address");
+            try{
+                if(billsFlag && !mrService.isDoneReadingAddressIn(addresses)){
+                    result.reject("global", "Not finished reading for this address.");
+                } else if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != accountRepo.countByAddressIn(addresses)) {
+                    result.reject("global", "Payments not finalized for this address");
+                }
+            } catch(Exception e){
+                result.reject("global", e.getMessage());
             }
             if(result.hasErrors())
                 if(isPrintBrgy)
@@ -153,15 +160,13 @@ public class ReportsController {
         boolean isPrintBrgy = Integer.valueOf(params.get("printBrgy")) == 1;
         Integer type = Integer.valueOf(params.get("type"));
         List<Address> addresses = new ArrayList();
-        System.out.println(isPrintBrgy);
         if(isPrintBrgy)
             addresses.add(addressRepo.findByBrgy(params.get("barangay")));
         else addresses = addressRepo.findByLocationCode(Integer.valueOf(params.get("zone")));
-        System.out.println(addresses.size());
         JRBeanCollectionDataSource dataSource;
         String viewName;
         if(type == 1) {
-            List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, false, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
+            List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
                 invoices.add(invoiceRepo.findTopByAccount_IdOrderByIdDesc(account.getId()));

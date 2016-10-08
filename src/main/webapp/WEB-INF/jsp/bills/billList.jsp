@@ -68,7 +68,7 @@
                     <div class="table-responsive">
                         <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${pageContext.servletContext.contextPath}/admin/bills">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="invoice" cssClass="table table-striped" url="/admin/bills/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                                <datatables:column title="Trans. #" name="bill-id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
+                                <datatables:column title="Trans. #" name="bill-id" property="id" filterable="true" cssCellClass="id" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
                                 <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
                                     <datatables:columnHead>
                                         <input type="checkbox" id="master-checkbox" />
@@ -78,26 +78,24 @@
                                 <datatables:column title="Lastname" property="account.customer.lastname" sortable="false"/>
                                 <datatables:column title="Firstname" property="account.customer.firstName" sortable="false"/>
                                 <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
-                                <datatables:column title="Year" name ="year" property="schedule.year"/>
+                                <datatables:column title="Year" name ="year" property="schedule.year" />
                                 <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
                                 <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
                                 <datatables:column title="Status" name="status" property="status" sortable="false"/>
                                 <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                <%--<datatables:column title="Basic" property="basic" sortable="false" />
-                                <datatables:column title="Arrears" property="arrears" sortable="false" />
-                                <datatables:column title="Penalty" property="penalty" sortable="false"/>
-                                <datatables:column title="DepFund" property="depreciationFund" sortable="false"/>
-                                <datatables:column title="SysLoss" property="systemLoss" sortable="false"/>
-                                <datatables:column title="PES" property="others" sortable="false"/>--%>
+                                <datatables:column title="Discount" name="discount" property="discount"  sortable="false" cssCellClass="discount" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" cssCellClass="total-due" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Edit Discount" sortable="false" renderFunction="custom-rendering#editDiscount"/>
                                 <dandelion:bundle excludes="jquery"/>
                                 <datatables:extraJs bundles="invoice" placeholder="before_end_document_ready" />
                             </datatables:table>
                         </form:form>
+                        <input type="hidden" id="row-num">
                     </div>
                 </div>
             </div>
         </div>
+        <jsp:include page="../fragments/modals/bill-discount-form.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>

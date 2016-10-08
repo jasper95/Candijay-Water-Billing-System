@@ -43,7 +43,6 @@ $(document).ready(function(){
                     closable: true, // <-- Default value is false
                     draggable: true, // <-- Default value is false
                 });
-
             }
         });
     };

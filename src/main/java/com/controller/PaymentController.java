@@ -5,10 +5,9 @@
  */
 package com.controller;
 
-import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.AddressRepository;
-import com.dao.springdatajpa.InvoiceRepository;
+import com.dao.springdatajpa.*;
 import com.domain.*;
+import com.domain.enums.AccountStatus;
 import com.forms.Checkboxes;
 import com.forms.PaymentForm;
 import com.forms.SearchForm;
@@ -18,6 +17,7 @@ import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
 import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import com.service.DataTableService;
 import com.service.FormOptionsService;
+import com.service.MeterReadingService;
 import com.service.PaymentService;
 
 import java.math.BigDecimal;
@@ -44,17 +44,19 @@ public class PaymentController {
     private InvoiceRepository invoiceRepo;
     private FormOptionsService formOptionsService;
     private AddressRepository addressRepo;
+    private MeterReadingService mrService;
     
     @Autowired
     public PaymentController(DataTableService dataTableService, PaymentService paymentService, 
                              AccountRepository accountRepo, InvoiceRepository invoiceRepo, FormOptionsService formOptionsService,
-                             AddressRepository addressRepo) {
+                             AddressRepository addressRepo, MeterReadingService mrService) {
         this.dataTableService = dataTableService;
         this.paymentService = paymentService;
         this.accountRepo = accountRepo;
         this.invoiceRepo = invoiceRepo;
         this.formOptionsService = formOptionsService;
         this.addressRepo = addressRepo;
+        this.mrService = mrService;
     }
 
     @RequestMapping(method=RequestMethod.GET)
@@ -92,7 +94,6 @@ public class PaymentController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody HashMap processPaymentForm(@ModelAttribute("paymentForm") @Valid PaymentForm paymentForm,
                                                     BindingResult result, @RequestParam(value="update", required = false) Long id){
-        System.out.println("FUCKKKKKKKKKKK");
         HashMap response = new HashMap();
         if(id != null)
             paymentForm.getPayment().setId(id);
@@ -112,7 +113,6 @@ public class PaymentController {
             response.put("result",result.getAllErrors());
             return response;
         }
-        System.out.println("HERE WTF");
         response.put("status","SUCCESS");
         return response;
     }
@@ -144,7 +144,6 @@ public class PaymentController {
 
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
     public @ResponseBody HashMap getaccountAndInvoiceData(@ModelAttribute("searchForm") @Valid SearchForm form, BindingResult result){
-        System.out.println("FETCH ACCOUNT");
         HashMap response = new HashMap();
         Account account = null;
         if(!result.hasErrors())
@@ -187,9 +186,18 @@ public class PaymentController {
         HashMap response = new HashMap();
         if(!result.hasErrors()){
             Address address = addressRepo.findByBrgy(addressForm.getBrgy());
-            response.put("result", paymentService.updateAccountsWithNoPayments(address));
-            response.put("status", "SUCCESS");
-        } else {
+            List<Address> list = new ArrayList();
+            list.add(address);
+            try{
+                if(mrService.isDoneReadingAddressIn(list)){
+                    response.put("result", paymentService.updateAccountsWithNoPayments(address));
+                    response.put("status", "SUCCESS");
+                } else result.reject("global", "Not finished reading for this barangay");
+            }catch(Exception e){
+                result.reject("global", e.getMessage());
+            }
+        }
+        if(result.hasErrors()){
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
         }

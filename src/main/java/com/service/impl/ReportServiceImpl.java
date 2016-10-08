@@ -7,7 +7,6 @@ import com.domain.enums.InvoiceStatus;
 import com.service.ReportService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,8 +46,9 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly=true)
     @Override
     public JRDataSource getCollectiblesDataSource(String barangay, Schedule sched) {
-        List<Invoice> monthlyInvoiceByBarangay = (!barangay.equalsIgnoreCase("summary")) ? invoiceRepo.findByScheduleAndAccount_Address(sched, addressRepo.findByBrgy(barangay)) :
-                invoiceRepo.findBySchedule(sched);
+        List<Invoice> monthlyInvoiceByBarangay = (!barangay.equalsIgnoreCase("summary")) ?
+                invoiceRepo.findByScheduleAndAccount_AddressOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched, addressRepo.findByBrgy(barangay)) :
+                invoiceRepo.findByScheduleOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched);
         monthlyInvoiceByBarangay.add(0, new Invoice());
         return new JRBeanCollectionDataSource(monthlyInvoiceByBarangay);
     }
@@ -57,12 +57,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public JRDataSource getCollectionDataSource(String barangay, Schedule sched) {
         List<Payment> monthlyPaymentByBarangay = (!barangay.equalsIgnoreCase("summary")) ?
-                paymentRepo.findByInvoice_ScheduleAndAccount_AddressAndInvoice_StatusNot(sched.getId(), addressRepo.findByBrgy(barangay).getId(), InvoiceStatus.DEBT) :
-                paymentRepo.findByInvoice_ScheduleAndInvoice_StatusNot(sched.getId(), InvoiceStatus.DEBT);
-        /*for(Payment p: monthlyPaymentByBarangay){
-            Hibernate.initialize(p.getAccount());
-            Hibernate.initialize(p.getInvoice());
-        }*/
+                paymentRepo.findByScheduleAndAccount_AddressAndInvoice_StatusNot(sched.getId(), addressRepo.findByBrgy(barangay).getId(), InvoiceStatus.DEBT) :
+                paymentRepo.findByScheduleAndInvoice_StatusNot(sched.getId(), InvoiceStatus.DEBT);
         monthlyPaymentByBarangay.add(0, new Payment());
         return new JRBeanCollectionDataSource(monthlyPaymentByBarangay);
     }
@@ -72,7 +68,7 @@ public class ReportServiceImpl implements ReportService {
     public JRDataSource getCollectionCollectiblesChartDataSource(Integer year) {
         List<ChartData> list = new ArrayList();
         for(int i= 1; i <= 12; i++){
-            Schedule sched = schedRepo.findByMonthAndYear(new Integer(i), year);
+            Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
                 String month = new DateFormatSymbols().getShortMonths()[sched.getMonth()-1];
                 List<Expense> expenses = expenseRepo.findBySchedule(sched);

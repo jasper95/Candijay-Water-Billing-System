@@ -26,24 +26,28 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @EntityGraph(attributePaths = {"account", "invoice"}, type= EntityGraph.EntityGraphType.LOAD)
     Payment findById(Long id);
     @Query("SELECT p FROM Payment p " +
+            "JOIN p.schedule s " +
             "JOIN FETCH p.account a " +
             "JOIN FETCH a.address ad " +
+            "JOIN a.customer c " +
             "JOIN FETCH p.invoice i " +
-            "JOIN FETCH i.schedule s " +
-            "WHERE i.status <> :status AND s.id = :schedule AND ad.id = :address")
-    List<Payment>  findByInvoice_ScheduleAndAccount_AddressAndInvoice_StatusNot(
+            "WHERE i.status <> :status AND s.id = :schedule AND ad.id = :address " +
+            "ORDER BY c.lastname ASC, c.firstName ASC")
+    List<Payment> findByScheduleAndAccount_AddressAndInvoice_StatusNot(
             @Param("schedule") Long schedId,
             @Param("address") Long addressId,
             @Param("status") InvoiceStatus status);
     @Query("SELECT p FROM Payment p " +
+            "JOIN p.schedule s " +
             "JOIN FETCH p.account a " +
+            "JOIN a.customer c " +
             "JOIN FETCH p.invoice i " +
-            "JOIN FETCH i.schedule s " +
-            "WHERE i.status <> :status AND s.id = :schedule")
-    List<Payment> findByInvoice_ScheduleAndInvoice_StatusNot(
+            "WHERE i.status <> :status AND s.id = :schedule " +
+            "ORDER BY c.lastname ASC, c.firstName ASC")
+    List<Payment> findByScheduleAndInvoice_StatusNot(
             @Param("schedule")Long schedId,
             @Param("status")InvoiceStatus status);
     Payment findByReceiptNumber(String receiptNumber);
-    @Query(value="SELECT SUM(p.amount_paid) FROM Payment p, Invoice i WHERE i.id = p.invoice_id AND i.schedule_id = ?1", nativeQuery = true)
+    @Query(value="SELECT SUM(p.amount_paid) FROM Payment p WHERE p.schedule_id = ?1", nativeQuery = true)
     BigDecimal findTotalCollectionBySchedule(Long id);
 }

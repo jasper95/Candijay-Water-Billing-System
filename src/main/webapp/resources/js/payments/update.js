@@ -14,7 +14,6 @@ $(document).ready(function(){
                 var payment = data.payment;
                 var account = payment.account;
                 $('#pm-paid').val(payment.amountPaid);
-                $('#pm-discount').val(payment.discount);
                 $('#pm-date').val(payment.date);
                 $('#pm-version').val(payment.version);
                 $('#pm-or').val(payment.receiptNumber)
@@ -60,7 +59,6 @@ $(document).ready(function(){
                 var invoice = payment.invoice;
                 var row = $('#payment tbody tr:nth-child('+$('#row-num').val()+')');
                 row.find('.invoice-status').text(invoice.status);
-                row.find('.payment-discount').html('&#8369 '+payment.discount);
                 row.find('.payment-amount').html('&#8369 '+payment.amountPaid);
                 row.find('.payment-date').text(payment.date);
                 row.find('.or-number').text(payment.receiptNumber);

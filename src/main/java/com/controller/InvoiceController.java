@@ -7,6 +7,8 @@ package com.controller;
 
 import com.dao.springdatajpa.InvoiceRepository;
 import com.domain.Invoice;
+import com.domain.enums.InvoiceStatus;
+import com.forms.BillDiscountForm;
 import com.forms.Checkboxes;
 import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
@@ -16,17 +18,16 @@ import com.service.DataTableService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 
+import com.service.InvoicingService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -39,17 +40,21 @@ public class InvoiceController {
     
     private InvoiceRepository invoiceRepo;
     private DataTableService dataTableService;
-    
+    private InvoicingService invoiceService;
+
     @Autowired
-    public InvoiceController(DataTableService dataTableService, InvoiceRepository invoiceRepo) {
+    public InvoiceController(DataTableService dataTableService, InvoiceRepository invoiceRepo,
+                             InvoicingService invoiceService) {
         this.dataTableService = dataTableService;
         this.invoiceRepo = invoiceRepo;
+        this.invoiceService = invoiceService;
     }
     
     
     @RequestMapping(method=RequestMethod.GET)
     public String allBills(ModelMap model){
         model.addAttribute("checkboxes", new Checkboxes());
+        model.addAttribute("billDiscountForm", new BillDiscountForm());
         return "bills/billList";
     }
     
@@ -77,7 +82,32 @@ public class InvoiceController {
         modelMap.put("format", "pdf");
         return "rpt_bill";
     }
-    
+
+    @RequestMapping(value="/find//{id}")
+    public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
+        Invoice invoice = invoiceRepo.findById(id),
+                latestInvoice = invoiceRepo.findTopByAccountOrderByIdDesc(invoice.getAccount());
+        HashMap response = new HashMap();
+        if(invoice != null && invoice.equals(latestInvoice) && invoice.getStatus().equals(InvoiceStatus.UNPAID)) {
+            response.put("invoice", invoice);
+            response.put("status", "SUCCESS");
+        } else response.put("status", "FAILURE");
+        return response;
+    }
+
+    @RequestMapping(value = "/update-discount", method = RequestMethod.POST)
+    public @ResponseBody HashMap updateDiscount(@ModelAttribute("billDiscountForm") @Valid BillDiscountForm form, BindingResult result){
+        HashMap response = new HashMap();
+        if(!result.hasErrors()){
+            response.put("invoice", invoiceService.updateDiscount(form));
+            response.put("status", "SUCCESS");
+        } if(result.hasErrors()){
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+        }
+        return response;
+    }
+
     @RequestMapping(value = "/datatable-search")
     public @ResponseBody
     DatatablesResponse<Invoice> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {

@@ -42,8 +42,6 @@ public class ModifiedPayment implements java.io.Serializable {
     private DateTime date;
     @Column(name="amount_paid", nullable=false, precision=10, scale=0)
     private BigDecimal amountPaid;
-    @Column(name="discount", nullable=false, precision=10, scale=0)
-    private BigDecimal discount;
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
     @JsonSerialize(using=AuditorDateTimeSerializer.class)
@@ -60,7 +58,6 @@ public class ModifiedPayment implements java.io.Serializable {
     public ModifiedPayment(Payment payment) {
         this.amountPaid = payment.getAmountPaid();
         this.date = payment.getDate();
-        this.discount = payment.getDiscount();
         this.receiptNumber = payment.getReceiptNumber();
     }
 
@@ -119,14 +116,6 @@ public class ModifiedPayment implements java.io.Serializable {
 
     public void setAmountPaid(BigDecimal amountPaid) {
         this.amountPaid = amountPaid;
-    }
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
     }
 
     @Override

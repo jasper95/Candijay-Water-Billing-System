@@ -40,6 +40,9 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="invoice_id", nullable=false)
     private Invoice invoice;
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name="schedule_id", nullable=false)
+    private Schedule schedule;
     @NotNull(message="Invalid date")
     @JsonSerialize(using= StandardDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -49,24 +52,21 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=0, message = "Invalid amount")
     private BigDecimal amountPaid;
-    @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
-    @Column(name="discount", nullable=false, precision=10, scale=0)
-    private BigDecimal discount = BigDecimal.ZERO;
     @Pattern(regexp = "(^$)|([\\s]*[0-9]*[1-9]+)",message="Invalid OR number format")
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
     public Payment() {
     }
 
-    public Payment(Account account, Invoice invoice, DateTime date, BigDecimal amountPaid, BigDecimal discount, String receiptNumber) {
-       this.account = account;
-       this.invoice = invoice;
-       this.date = date;
-       this.amountPaid = amountPaid;
-       this.discount = discount;
+    public Payment(Account account, Invoice invoice, Schedule schedule, DateTime date, BigDecimal amountPaid, String receiptNumber) {
+        this.account = account;
+        this.invoice = invoice;
+        this.schedule = schedule;
+        this.date = date;
+        this.amountPaid = amountPaid;
         this.receiptNumber = receiptNumber;
     }
-   
+
     public Long getId() {
         return this.id;
     }
@@ -108,18 +108,18 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
         this.amountPaid = amountPaid;
     }
 
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
-    }
-
     public String getReceiptNumber() { return receiptNumber; }
 
     public void setReceiptNumber(String receiptNumber) {
         this.receiptNumber = receiptNumber;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 
     @Override

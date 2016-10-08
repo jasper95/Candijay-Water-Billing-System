@@ -126,7 +126,6 @@
                                         <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false" cssCellClass="schedule"/>
                                         <datatables:column title="Total Due" name="totalDue" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="invoice-due"/>
                                         <datatables:column title="OR number" property="payment.receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
-                                        <datatables:column title="Discount" name="discount" property="payment.discount" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-discount"/>
                                         <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
                                         <datatables:column title="Payment Date" name="date" property="payment.date" cssCellClass="payment-date"/>
                                         <datatables:column title="Edit" renderFunction="custom-rendering#createPaymentAction" searchable="false" sortable="false"/>
@@ -153,9 +152,6 @@
                                     </div>
                                     <div class="col-sm-12 form-group">
                                         <cws:input id="amount-paid" name="payment.amountPaid" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>
-                                    </div>
-                                    <div class="col-sm-12 form-group">
-                                        <cws:input id="discount" name="payment.discount" label="Discount" icon="money" placeholder="Enter discount" required="true" size="12"/>
                                     </div>
                                     <div class="col-sm-12 form-group">
                                         <cws:input id="date" name="payment.date" label="Date" icon="calendar" placeholder="Choose date" required="true" readOnly="true" size="12"/>

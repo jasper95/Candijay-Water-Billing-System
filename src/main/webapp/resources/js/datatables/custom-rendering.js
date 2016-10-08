@@ -14,7 +14,7 @@ function checkboxAccount(data, type, full){
     return full.statusUpdated ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
 };
 function checkboxPayment(data, type, full){
-    return full.invoice.status !== 'DEBT' ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
+    return full.amountPaid > 0 ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
 }
 function selectAcountBtn(data, type, full){
     var accNum = "\'"+full.number+"\'";
@@ -78,4 +78,7 @@ function createPaymentAction(data, type, full){
 function expenseType(data, type, full){
     var type = ["", "Wage(1-15)", "Wage(16-30)", "Power Usage"];
     return type[data];
-}
+};
+function editDiscount(data, type, full){
+    return '<a type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+};
