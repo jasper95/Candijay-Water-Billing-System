@@ -25,7 +25,7 @@ $(document).ready(function(){
                 $('#up-user-audit').text(payment.modifiedByUser);
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
                 var address = account.address.brgy+",  Zone "+account.address.locationCode;
-                var lastDue= "Last Due: &#8369; "+payment.invoice.netCharge;
+                var lastDue= "Standing Balance: &#8369; "+ (payment.account.accountStandingBalance+payment.amountPaid);
                 var status = $('#md-status');
                 if(account.status === "ACTIVE"){
                     status.removeClass().addClass("label label-success");
@@ -44,7 +44,7 @@ $(document).ready(function(){
                 draggable: true, // <-- Default value is false
             });
         });
-    }
+    };
     $("#payment").on("click", "tr", function() {
         $('#row-num').val($(this).index()+1)
     });
@@ -63,6 +63,7 @@ $(document).ready(function(){
                 row.find('.payment-date').text(payment.date);
                 row.find('.or-number').text(payment.receiptNumber);
                 $('#pm-version').val(payment.version);
+                $('#last-reading').html("Standing Balance: &#8369; "+payment.account.accountStandingBalance)
             }
         })
     });

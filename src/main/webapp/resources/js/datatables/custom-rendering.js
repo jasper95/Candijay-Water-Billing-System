@@ -34,10 +34,6 @@ function audit(data, type, full){
     if(full.version == 0) return '---';
     else return '<a type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-info-circle fa-fw"></i></a>';
 };
-function auditPayment2(data, type, full){
-    if(full.payment == null) return "---";
-    else return (full.payment.version == 0)? '' : '<a type="button" onclick="viewChanges('+ full.payment.id +')" class="btn btn-xs btn-primary"><i class="fa fa-info-circle fa-fw"></i></a>';
-};
 function readingActions(data, type, full){
     return '<a type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 };
@@ -70,10 +66,6 @@ function monthAndYear(data, type, full){
 };
 function monthAndYearPayment(data, type, full){
     return monthNames[full.invoice.schedule.month -1]+ ' '+ full.invoice.schedule.year;
-};
-function createPaymentAction(data, type, full){
-    if (full.payment == null) return '---';
-    else return '<a type="button" onclick="checkCanEdit('+ full.payment.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 };
 function expenseType(data, type, full){
     var type = ["", "Wage(1-15)", "Wage(16-30)", "Power Usage"];

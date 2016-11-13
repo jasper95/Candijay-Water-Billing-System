@@ -12,11 +12,12 @@ $(document).ready(function(){
                 if(account.status === "ACTIVE")
                     status.removeClass().addClass("label label-success");
                 else status.removeClass().addClass("label label-danger");
-                 status.text(account.status);
+                status.text(account.status);
+                $('#last-reading').html("Standing Balance: &#8369; "+ account.accountStandingBalance);
                 $('#acc-no').find('input:first').val(account.id);
                 $('#filterButton').trigger('click');
             }
         })
-    })
+    });
     $("#date").datepicker({ changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});;
 });

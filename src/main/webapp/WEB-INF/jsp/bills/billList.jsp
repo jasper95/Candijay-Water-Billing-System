@@ -82,7 +82,6 @@
                                 <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
                                 <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
                                 <datatables:column title="Status" name="status" property="status" sortable="false"/>
-                                <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Discount" name="discount" property="discount"  sortable="false" cssCellClass="discount" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" cssCellClass="total-due" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Edit Discount" sortable="false" renderFunction="custom-rendering#editDiscount"/>

@@ -83,37 +83,37 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
 		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="160" y="0" width="280" height="15" uuid="fb00c921-a781-465d-8e15-4ca765c2c146"/>
+				<reportElement x="151" y="0" width="280" height="15" uuid="fb00c921-a781-465d-8e15-4ca765c2c146"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Candijay Water Billing System]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="160" y="30" width="280" height="14" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
+				<reportElement x="151" y="30" width="280" height="14" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{IS_HISTORY} ? "PAYMENT HISTORY ": "COLLECTION REPORT "+$P{month}+" "+$P{year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="160" y="43" width="280" height="15" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
+				<reportElement x="151" y="44" width="280" height="16" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{barangay}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="160" y="15" width="280" height="15" uuid="fa3b5f9a-8c5e-4086-9e42-30658963348c"/>
+				<reportElement x="151" y="15" width="280" height="15" uuid="fa3b5f9a-8c5e-4086-9e42-30658963348c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Candijay Bohol]]></text>
 			</staticText>
 		</band>
-	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>

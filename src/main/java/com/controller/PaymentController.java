@@ -7,7 +7,6 @@ package com.controller;
 
 import com.dao.springdatajpa.*;
 import com.domain.*;
-import com.domain.enums.AccountStatus;
 import com.forms.Checkboxes;
 import com.forms.PaymentForm;
 import com.forms.SearchForm;
@@ -20,7 +19,6 @@ import com.service.FormOptionsService;
 import com.service.MeterReadingService;
 import com.service.PaymentService;
 
-import java.math.BigDecimal;
 import java.util.*;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +43,12 @@ public class PaymentController {
     private FormOptionsService formOptionsService;
     private AddressRepository addressRepo;
     private MeterReadingService mrService;
+    private PaymentRepository paymentRepo;
     
     @Autowired
     public PaymentController(DataTableService dataTableService, PaymentService paymentService, 
                              AccountRepository accountRepo, InvoiceRepository invoiceRepo, FormOptionsService formOptionsService,
-                             AddressRepository addressRepo, MeterReadingService mrService) {
+                             AddressRepository addressRepo, MeterReadingService mrService, PaymentRepository paymentRepo) {
         this.dataTableService = dataTableService;
         this.paymentService = paymentService;
         this.accountRepo = accountRepo;
@@ -57,6 +56,7 @@ public class PaymentController {
         this.formOptionsService = formOptionsService;
         this.addressRepo = addressRepo;
         this.mrService = mrService;
+        this.paymentRepo = paymentRepo;
     }
 
     @RequestMapping(method=RequestMethod.GET)
@@ -154,11 +154,9 @@ public class PaymentController {
             response.put("result", result.getAllErrors());
         }
         else{
-            Invoice lastBill = invoiceRepo.findTopByAccountOrderByIdDesc(account);
+            Invoice lastBill = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
             response.put("status", "SUCCESS");
             response.put("account", account);
-            BigDecimal lastDue = (lastBill != null) ? lastBill.getNetCharge() : BigDecimal.ZERO;
-            response.put("lastDue", lastDue);
         }
         return response;
     }
@@ -167,11 +165,10 @@ public class PaymentController {
     public @ResponseBody HashMap checkCanEdit(@PathVariable("paymentId") Long id){
         HashMap response = new HashMap();
         try{
-            Payment payment  = paymentService.findPaymentById(id);
-            Invoice lastestInvoice = invoiceRepo.findTopByAccountOrderByIdDesc(payment.getAccount());
+            Payment payment  = paymentRepo.findById(id);
+            Invoice lastestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(payment.getAccount());
             if(payment.getInvoice().getId().equals(lastestInvoice.getId())){
                 response.put("status", "SUCCESS");
-                response.put("lastDue", lastestInvoice.getNetCharge());
                 response.put("payment", payment);
                 return response;
             }

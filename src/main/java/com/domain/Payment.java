@@ -37,7 +37,7 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="account_id", nullable=false)
     private Account account;
-    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="invoice_id", nullable=false)
     private Invoice invoice;
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
@@ -52,7 +52,7 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=0, message = "Invalid amount")
     private BigDecimal amountPaid;
-    @Pattern(regexp = "(^$)|([\\s]*[0-9]*[1-9]+)",message="Invalid OR number format")
+    @Pattern(regexp = "(^$)|([\\s]*[0-9]*[0-9]+)",message="Invalid OR number format")
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
     public Payment() {
@@ -83,7 +83,7 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     public void setAccount(Account account) {
         this.account = account;
     }
-    //@JsonManagedReference
+    @JsonManagedReference
     public Invoice getInvoice() {
         return this.invoice;
     }

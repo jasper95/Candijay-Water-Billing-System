@@ -80,10 +80,10 @@ public class DataTableDaoUtil{
 						String[] q = columnDef.getName().split("\\.");
 						if(q[q.length-1].equalsIgnoreCase("date")){
 							String[] ins = columnDef.getSearch().split("-yadcf_delim-");
-							if(ins.length > 0){
+							if(ins.length > 0 && !ins[0].isEmpty()){
 								paramList.add("p." + columnDef.getName() + " >= '" + ins[0] + "'");
 							}
-							if(ins.length > 1){
+							if(ins.length > 1 && !ins[1].isEmpty()){
 								paramList.add("p." + columnDef.getName() + " < '" + ins[1] + "'");
 							}
 						}

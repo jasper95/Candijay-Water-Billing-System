@@ -5,9 +5,7 @@
  */
 package com.dao.springdatajpa;
 
-import com.domain.Address;
 import com.domain.Payment;
-import com.domain.Schedule;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -38,7 +38,7 @@
                         <label>Barangay</label>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
                         <label>Zone</label>
                     </div>

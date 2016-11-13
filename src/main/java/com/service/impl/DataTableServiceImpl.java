@@ -50,7 +50,6 @@ public class DataTableServiceImpl implements DataTableService{
                 for(T a: results){
                     Invoice invoice = (Invoice) a;
                     Hibernate.initialize(invoice.getAccount());
-                    Hibernate.initialize(invoice.getPayment());
                 }
             } else if(!results.isEmpty() && results.get(0) instanceof Payment){
                 for(T a: results){
@@ -61,6 +60,11 @@ public class DataTableServiceImpl implements DataTableService{
                 for (T a: results){
                     ModifiedReading modifiedReading = (ModifiedReading) a;
                     Hibernate.initialize(modifiedReading.getReading());
+                }
+            } else if(!results.isEmpty() && results.get(0) instanceof ModifiedPayment){
+                for (T a: results){
+                    ModifiedPayment modifiedPayment = (ModifiedPayment) a;
+                    Hibernate.initialize(modifiedPayment.getPayment());
                 }
             }
             return new DataSet<T>(results, count, countFiltered);

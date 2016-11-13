@@ -19,9 +19,7 @@ import java.util.List;
 public interface PaymentService {
     JRDataSource paymentHistoryDataSource(List<Long> paymentIds);
     Payment save(PaymentForm form);
-    Payment updateAccountFromPayment(Payment payment);
     Errors validate(PaymentForm form, Errors errors);
-    Payment findPaymentById(Long id);
     boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
     List<Account> updateAccountsWithNoPayments(Address address);
 

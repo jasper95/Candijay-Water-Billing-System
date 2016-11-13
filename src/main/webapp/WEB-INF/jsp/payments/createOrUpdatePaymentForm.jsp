@@ -22,7 +22,7 @@
             <h2>Create Payment</h2>
             <hr/>
             <div class="alert alert-success form-wrapper">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
                     </div>
@@ -36,7 +36,7 @@
                         <label>Barangay</label>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
                         <label>Zone</label>
                     </div>
@@ -114,22 +114,21 @@
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Recent Bills</h3>
+                                <h3 class="panel-title">Recent Payments</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <div id="acc-no" style="display: none;"></div>
                                     <a id="filterButton"></a>
-                                    <datatables:table cssClass="table table-striped" id="payment" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/bills/datatable-search" displayLength="3" dom="tp" >
+                                    <datatables:table cssClass="table table-striped" id="payment" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/payments/datatable-search" displayLength="3" dom="tp" >
                                         <datatables:column property="account.id" filterable="true" visible="false" selector="acc-no"/>
                                         <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                         <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false" cssCellClass="schedule"/>
-                                        <datatables:column title="Total Due" name="totalDue" property="netCharge" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="invoice-due"/>
-                                        <datatables:column title="OR number" property="payment.receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
-                                        <datatables:column title="Amount Paid" name="amount-paid" property="payment.amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
-                                        <datatables:column title="Payment Date" name="date" property="payment.date" cssCellClass="payment-date"/>
-                                        <datatables:column title="Edit" renderFunction="custom-rendering#createPaymentAction" searchable="false" sortable="false"/>
-                                        <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#auditPayment2"/>
+                                        <datatables:column title="OR number" property="receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
+                                        <datatables:column title="Amount Paid" name="amount-paid" property="amountPaid" sortable="false" renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
+                                        <datatables:column title="Payment Date" name="date" property="date" cssCellClass="payment-date"/>
+                                        <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
+                                        <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
                                         <datatables:extraJs bundles="months" placeholder="after_all"/>
                                         <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>

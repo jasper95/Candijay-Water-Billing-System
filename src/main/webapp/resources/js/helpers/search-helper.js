@@ -30,7 +30,7 @@ $(document).ready(function(){
         var account = response.account;
         var fullname =  account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
         var address = account.address.brgy+",  Zone "+account.address.locationCode;
-        var lastReading = (response.last_reading !== undefined) ? "Last Reading:  "+response.last_reading : "Last Due: &#8369; "+response.lastDue ;
+        var lastReading = (response.last_reading !== undefined) ? "Last Reading:  "+response.last_reading : "Standing Balance: &#8369; "+account.accountStandingBalance ;
         var status = $('#status');
         if(account.status === "ACTIVE"){
             status.removeClass().addClass("label label-success");

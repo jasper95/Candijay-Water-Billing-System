@@ -22,7 +22,7 @@
             <h2>Create Reading</h2>
             <hr/>
             <div class="alert alert-success form-wrapper">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
                     </div>
@@ -36,7 +36,7 @@
                         <label>Barangay</label>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
                         <label>Zone</label>
                     </div>

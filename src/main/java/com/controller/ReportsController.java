@@ -26,7 +26,6 @@ import com.service.SettingsService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -169,7 +168,7 @@ public class ReportsController {
             List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
             List<Invoice> invoices = new ArrayList();
             for (Account account : accounts)
-                invoices.add(invoiceRepo.findTopByAccount_IdOrderByIdDesc(account.getId()));
+                invoices.add(invoiceRepo.findTopByAccount_IdOrderBySchedule_YearDescSchedule_MonthDesc(account.getId()));
             dataSource = new JRBeanCollectionDataSource(invoices);
             viewName = "rpt_bill";
         } else {

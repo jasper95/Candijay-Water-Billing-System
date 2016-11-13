@@ -7,6 +7,7 @@ import com.domain.enums.InvoiceStatus;
 import com.fasterxml.jackson.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -66,8 +67,8 @@ public class Invoice  implements java.io.Serializable {
     @Column(name="status", nullable=false)
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
-    @OneToOne(fetch=FetchType.LAZY, mappedBy="invoice")
-    private Payment payment;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="invoice")
+    private Set<Payment> payments;
 
     public Invoice() {
     }
@@ -139,14 +140,16 @@ public class Invoice  implements java.io.Serializable {
     public void setStatus(InvoiceStatus status) {
         this.status = status;
     }
-    //@JsonBackReference
-    public Payment getPayment() {
-        return this.payment;
+
+    @JsonBackReference
+    public Set<Payment> getPayments() {
+        return payments;
     }
     @JsonProperty
-    public void setPayment(Payment payment) {
-        this.payment = payment;
+    public void setPayments(Set<Payment> payments) {
+        this.payments = payments;
     }
+
     @JsonManagedReference
     public Schedule getSchedule() {
         return this.schedule;

@@ -18,7 +18,6 @@ import com.service.DataTableService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
 
 import com.service.InvoicingService;
@@ -86,7 +85,7 @@ public class InvoiceController {
     @RequestMapping(value="/find//{id}")
     public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
         Invoice invoice = invoiceRepo.findById(id),
-                latestInvoice = invoiceRepo.findTopByAccountOrderByIdDesc(invoice.getAccount());
+                latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
         HashMap response = new HashMap();
         if(invoice != null && invoice.equals(latestInvoice) && invoice.getStatus().equals(InvoiceStatus.UNPAID)) {
             response.put("invoice", invoice);
