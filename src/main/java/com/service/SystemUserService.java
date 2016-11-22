@@ -10,7 +10,7 @@ import com.domain.User;
 import java.util.List;
 
 /**
- *
+ * interface created for system users module.
  * @author Bert
  */
 public interface SystemUserService {

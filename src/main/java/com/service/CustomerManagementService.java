@@ -17,8 +17,9 @@ import com.domain.enums.AccountStatus;
 
 
 /**
+ * interface created for services used in accounts and customer modules.
  *
- * @author Bert
+ * @author Jasper
  */
 public interface CustomerManagementService {
     Customer updateCustomer(CustomerForm customerForm);

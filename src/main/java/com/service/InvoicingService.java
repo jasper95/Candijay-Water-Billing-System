@@ -10,7 +10,7 @@ import com.domain.MeterReading;
 import com.forms.BillDiscountForm;
 
 /**
- *
+ * interface used in services on bills module.
  * @author Bert
  */
 public interface InvoicingService{

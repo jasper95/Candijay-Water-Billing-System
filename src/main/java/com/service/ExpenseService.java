@@ -5,6 +5,7 @@ import com.domain.ModifiedExpense;
 import org.springframework.validation.Errors;
 
 /**
+ * interface created for services used in expense modules.
  * Created by jasper on 7/28/16.
  */
 public interface ExpenseService {

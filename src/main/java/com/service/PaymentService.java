@@ -13,8 +13,8 @@ import org.springframework.validation.Errors;
 import java.util.List;
 
 /**
- *
- * @author 201244055
+ * interface created for services used in payment module.
+ * @author jasper
  */
 public interface PaymentService {
     JRDataSource paymentHistoryDataSource(List<Long> paymentIds);

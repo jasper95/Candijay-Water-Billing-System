@@ -15,7 +15,7 @@ import java.util.List;
 import org.springframework.validation.Errors;
 
 /**
- *
+ *  interface created for services used in meter reading module
  * @author Bert
  */
 public interface MeterReadingService {

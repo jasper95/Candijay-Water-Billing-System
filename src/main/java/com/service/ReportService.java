@@ -14,8 +14,8 @@ import java.util.List;
 import net.sf.jasperreports.engine.JRDataSource;
 
 /**
- *
- * @author maebernales
+ * interface created for services used in reports module.
+ * @author jasper
  */
 public interface ReportService {
     JRDataSource getCollectiblesDataSource(String barangay, Schedule sched);

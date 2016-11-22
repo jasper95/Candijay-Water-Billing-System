@@ -9,8 +9,9 @@ import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 
 /**
+ * interface created for datatables on every module.
  *
- * @author Bert
+ * @author Jasper
  */
 public interface DataTableService {
     <T> DataSet <T> findWithDataTableCriterias(DatatablesCriterias criterias, Class<T> clazz);

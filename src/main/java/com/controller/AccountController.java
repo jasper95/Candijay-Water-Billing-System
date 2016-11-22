@@ -35,8 +35,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 /**
- *
- * @author Bert
+ * controller handler for accounts module
+ * @author jasper
  */
 @Controller
 @RequestMapping("/admin/accounts")
@@ -48,42 +48,45 @@ public class AccountController {
     private DataTableService dataTableService;
     private PaymentService paymentService;
     private AccountRepository accountRepo;
-    private CustomerRepository customerRepo;
     private AddressRepository addressRepo;
-    private InvoicingService invoicingService;
     private FormOptionsService formOptionsService;
     private SettingsService settingsService;
 
     @Autowired
     public AccountController(CustomerManagementService custService, DataTableService dataTableService, 
             PaymentService paymentService, DeviceRepository deviceRepo, AccountRepository accountRepo, 
-            CustomerRepository customerRepo, AddressRepository addressRepo, InvoicingService invoicingService,
-             FormOptionsService formOptionsService, SettingsService settingsService) {
+            AddressRepository addressRepo, FormOptionsService formOptionsService, SettingsService settingsService) {
         this.custService = custService;
         this.dataTableService = dataTableService;
         this.paymentService = paymentService;
         this.deviceRepo = deviceRepo;
         this.accountRepo = accountRepo;
-        this.customerRepo = customerRepo;
         this.addressRepo = addressRepo;
-        this.invoicingService = invoicingService;
         this.formOptionsService = formOptionsService;
         this.settingsService = settingsService;
     }
 
+    /**
+     *  form data binder configuration in accounts module.
+     */
     @InitBinder({"accountForm", "deviceForm"})
     public void initBinder(WebDataBinder binder){
         binder.setAllowedFields("address.brgy", "account.purok", "meterCode", "brand",
                 "device.meterCode", "device.brand");
     }
 
-
+    /**
+     *  accounts module index web-service handler.
+     */
     @RequestMapping(method=RequestMethod.GET)
     public String showAll(ModelMap model){
         model.addAttribute("checkboxes", new Checkboxes());
         return "accounts/accountList";
     }
 
+    /**
+     *  creating new account web-service handler.
+    */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody HashMap processAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
                                      BindingResult result) {
@@ -91,6 +94,7 @@ public class AccountController {
         Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
         HashMap response = new HashMap();
         accountForm.setAddress(address);
+        // meter-code validation
         if(deviceRepo.findByMeterCode(accountForm.getDevice().getMeterCode().trim()) != null)
             result.rejectValue("device.meterCode", "meterCode", "Meter code already exists");
         if(!result.hasErrors()){
@@ -103,10 +107,14 @@ public class AccountController {
             return response;
         }
     }
-    
+
+    /**
+     *  viewing an account web-service handler
+     */
     @RequestMapping(value="/{accountNumber}")
     public String viewAccount(@PathVariable("accountNumber") String number, ModelMap model){
         Account account = accountRepo.findByNumber(number);
+        //account number does not exists
         if ( account == null){
             model.put("type", "Bad request URL");
             model.put("message", "Please avoid retrieving admin pages via URL");
@@ -124,6 +132,9 @@ public class AccountController {
         return "accounts/viewAccount";
     }
 
+    /**
+     *  updating an account web-service handler.
+     */
     @RequestMapping(value="{accountNumber}/update", method=RequestMethod.POST)
     public @ResponseBody HashMap processUpdateAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
                                      BindingResult result,@PathVariable("accountNumber") String number) {
@@ -148,14 +159,20 @@ public class AccountController {
         response.put("status", "SUCCESS");
         return response;
     }
-    
+
+    /**
+     *  account datatable web-service handler.
+     */
     @RequestMapping(value = "/datatable-search")
     public @ResponseBody
     DatatablesResponse<Account> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
         DataSet<Account> dataSet = dataTableService.findWithDataTableCriterias(criterias, Account.class);
         return DatatablesResponse.build(dataSet, criterias);
     }
-    
+
+    /**
+     *  checking for accounts passed to this, qualified to print notice of disconnection web-service handler
+     */
     @RequestMapping(value="/notice-of-disconnection-check", method=RequestMethod.POST)
     public @ResponseBody 
     HashMap deactivateCheck(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
@@ -179,7 +196,10 @@ public class AccountController {
         }
         return response;
     }
-    
+
+    /**
+     *  deactivating accounts web-service handler.
+     */
     @RequestMapping(value="/deactivate-accounts", method=RequestMethod.POST)
     public @ResponseBody HashMap deactivateAccounts(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         boolean success = false;
@@ -199,7 +219,10 @@ public class AccountController {
         else response.put("status", "FAILURE");
         return response;
     }
-    
+
+    /**
+     *  activating accounts web-service handler.
+     */
     @RequestMapping(value="/activate-accounts", method=RequestMethod.POST)
     public @ResponseBody HashMap activateAccounts(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         boolean success = false;
@@ -219,7 +242,10 @@ public class AccountController {
         else response.put("status", "FAILURE");
         return response;
     }
-    
+
+    /**
+     *  warning account web-service handler.
+     */
     @RequestMapping(value="/warning-accounts", method=RequestMethod.POST)
     public @ResponseBody HashMap warningAccounts(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
         boolean success = false;
@@ -240,12 +266,18 @@ public class AccountController {
         else response.put("status", "FAILURE");
         return response;
     }
-    
+
+    /**
+     *  retrieving account's devices web-service handler.
+     */
     @RequestMapping(value="/{accountNumber}/devices", method=RequestMethod.GET)
     public @ResponseBody List<Device> getAllDevice(@PathVariable("accountNumber") String number){
         return deviceRepo.findByOwner(accountRepo.findByNumber(number));
     }
-    
+
+    /**
+     *  creating a new device for account web-service handler.
+     */
     @RequestMapping(value="/{accountNumber}/create-device", method=RequestMethod.POST)
     public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("accountNumber") String number){
         HashMap response = new HashMap();
@@ -261,6 +293,10 @@ public class AccountController {
         }
         return response;
     }
+
+    /**
+     *  editing a device of an account web-service handler.
+     */
     @RequestMapping(value="/{device_id}/edit-device", method=RequestMethod.POST)
     public @ResponseBody HashMap updateDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("device_id") Long id) {
         HashMap response = new HashMap();
@@ -281,6 +317,10 @@ public class AccountController {
         }
         return response;
     }
+
+    /**
+     *  activating a device of an account web-service handler.
+     */
     @RequestMapping(value="/activate-device", method=RequestMethod.POST)
     public @ResponseBody HashMap activateDevice(@RequestParam("device_id") Long id){
         HashMap response = new HashMap();
@@ -291,7 +331,10 @@ public class AccountController {
         } else response.put("status", "FAILURE");
         return response;
     }
-    
+
+    /**
+    *   generating printable notice of disconnection to accounts web-service handler.
+    */
     @RequestMapping(value="/print-notice-of-disconnection", method=RequestMethod.POST)
     public String printNoticeOfDisconnection(ModelMap map, @ModelAttribute("checkboxes") Checkboxes checkboxes){
         List<Account> accounts = new ArrayList();
@@ -310,6 +353,10 @@ public class AccountController {
         map.put("DEBTS_ALLOWED", EnglishNumberToWords.covertIntNumberToBisaya(settingsService.getCurrentSettings().getDebtsAllowed()));
         return "rpt_disconnection_notice";
     }
+
+    /**
+     *  Retrieving a device by id web-service handler
+     */
     @RequestMapping(value="/find-device", method = RequestMethod.POST)
     public @ResponseBody Device find(@RequestParam("device_id") Long id){
         return deviceRepo.findOne(id);

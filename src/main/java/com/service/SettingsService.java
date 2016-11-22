@@ -8,7 +8,7 @@ package com.service;
 import com.domain.Settings;
 
 /**
- *
+ * interface created for settings module.
  * @author Bert
  */
 public interface SettingsService {
