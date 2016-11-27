@@ -46,6 +46,8 @@ public class SettingsController {
                 settingsService.updateSettings(settings);
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("", "This record was modified by another user. Try refreshing the page.");
+            }catch(Exception e){
+                result.reject("UnexpectedError");
             }
         }
         if(result.hasErrors()){

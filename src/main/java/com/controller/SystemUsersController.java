@@ -120,6 +120,8 @@ public class SystemUsersController {
                response.put("user", userService.saveUser(user));
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("global", "This record was modified by another user. Try closing the form and edit the user again.");
+            }catch(Exception e){
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
             }
         }
         if(result.hasErrors()){

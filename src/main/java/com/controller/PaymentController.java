@@ -106,7 +106,7 @@ public class PaymentController {
             } catch(JpaOptimisticLockingFailureException e){
                 result.reject("global","This record was modified by another user. Try refreshing the page.");
             } catch(Exception e){
-                result.reject("global", e.getMessage());
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
             }
         } if (result.hasErrors()) {
             response.put("status","FAILURE");
@@ -154,7 +154,6 @@ public class PaymentController {
             response.put("result", result.getAllErrors());
         }
         else{
-            Invoice lastBill = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
             response.put("status", "SUCCESS");
             response.put("account", account);
         }
@@ -191,7 +190,7 @@ public class PaymentController {
                     response.put("status", "SUCCESS");
                 } else result.reject("global", "Not finished reading for this barangay");
             }catch(Exception e){
-                result.reject("global", e.getMessage());
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
             }
         }
         if(result.hasErrors()){

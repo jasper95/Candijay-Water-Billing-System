@@ -89,6 +89,7 @@ public class CustomerController {
         model.addAttribute("genderOptions", options.get("gender"));
         model.addAttribute("brgyOptions", options.get("brgy"));
         model.addAttribute("purokOptions", options.get("purok"));
+        model.addAttribute("createOrUpdate", "Create");
         if(!model.containsAttribute(BINDING_RESULT_NAME))
             model.addAttribute("customerForm", new CustomerForm());
         return "customers/createOrUpdateCustomerForm";
@@ -100,11 +101,20 @@ public class CustomerController {
         Customer customer = null;
         Address address = addressRepo.findByBrgy(customerForm.getAddress().getBrgy());
         customerForm.setAddress(address);
-        String meterCode = customerForm.getDevice().getMeterCode().trim();
+        String meterCode = customerForm.getDevice().getMeterCode().trim(), meterBrand = customerForm.getDevice().getBrand().trim();
+        if(meterCode.isEmpty())
+            result.rejectValue("device.meterCode","","This field is required");
+        if(meterBrand.isEmpty())
+            result.rejectValue("device.brand","","This field is required");
         if(!meterCode.isEmpty() && deviceRepo.findByMeterCode(meterCode) != null)
             result.rejectValue("device.meterCode", "", "Metercode already exists");
-        if(!result.hasErrors())
-            customer = custService.createCustomer(customerForm);
+        if(!result.hasErrors()){
+            try{
+                customer = custService.createCustomer(customerForm);
+            }catch(Exception e) {
+                result.reject("UnexpectedError");
+            }
+        }
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute(BINDING_RESULT_NAME, result);
             return "redirect:/admin/customers/new/";
@@ -145,6 +155,7 @@ public class CustomerController {
         genderOptions.put('M', "Male");
         genderOptions.put('F', "Female");
         model.addAttribute("genderOptions", genderOptions);
+        model.addAttribute("createOrUpdate", "Update");
         if (!model.containsAttribute(BINDING_RESULT_NAME)){
             Customer customer = customerRepo.findOne(id);
             if (customer == null){
@@ -169,6 +180,8 @@ public class CustomerController {
                 custService.updateCustomer(customerForm);
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("global", "The data were modified by another user. Please reload the page.");
+            }catch(Exception e){
+                result.reject("UnexpectedError");
             }
         }
         if(result.hasErrors()){

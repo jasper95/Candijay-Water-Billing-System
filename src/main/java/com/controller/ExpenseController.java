@@ -68,6 +68,8 @@ public class ExpenseController {
                 response.put("expense",expense);
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("global", "This record was modified by another user. Try refreshing the page.");
+            }catch(Exception e){
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
             }
         }
         if(result.hasErrors()){

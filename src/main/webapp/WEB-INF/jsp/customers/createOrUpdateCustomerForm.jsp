@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
-        <title>${customerForm.customer.id == null ? 'Create' : 'Update' } Customer</title>
+        <title>${createOrUpdate} Customer</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
@@ -20,12 +20,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-md-10">
-                    <h2> ${customerForm.customer.id == null ? 'Create' : 'Update' } Customer
+                    <h2> ${createOrUpdate} Customer
                     </h2>
                 </div>
             </div>
             <form:form modelAttribute="customerForm" method="post" id="add-customer-form">
                 <div class="form-wrapper">
+                    <spring:hasBindErrors name="customerForm">
+                        <c:if test="${errors.hasGlobalErrors()}">
+                            <div class="col-sm-12 alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <c:forEach var="error" items="${errors.getGlobalErrors()}">
+                                    <p class="hanging-indent"><i class="fa fa-remove fa-fw"></i><spring:message message="${error}"/></p>
+                                </c:forEach>
+                            </div>
+                        </c:if>
+                    </spring:hasBindErrors>
                     <h3 >Personal Information</h3>
                     <div class="col-sm-12 form-group">
                         <cws:input id="cust-ln" name="customer.lastname" label="Lastname" icon="user" placeholder="Enter Lastname" required="true"/>
@@ -39,7 +49,7 @@
                         <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false" size="3"/>
                     </div>
                 </div>
-            <c:if test="${customerForm.customer.id == null}">
+            <c:if test="${createOrUpdate == 'Create'}">
                 <div class="form-wrapper">
                     <h3>Account Information</h3>
                     <div class="col-sm-12 form-group">

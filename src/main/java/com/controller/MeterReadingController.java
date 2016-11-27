@@ -116,8 +116,13 @@ public class MeterReadingController {
                 result.reject("global", "You can add reading to ACTIVE accounts only");
         }
         //form is valid with transaction constraints
-        if(!result.hasErrors())
-            response.put("result", mrService.saveMeterReading(meterReadingForm));
+        if(!result.hasErrors()) {
+            try{
+                response.put("result", mrService.saveMeterReading(meterReadingForm));
+            } catch(Exception e){
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
+            }
+        }
         if(result.hasErrors()){
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());

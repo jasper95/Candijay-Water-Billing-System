@@ -90,10 +90,15 @@ public class AdminProfileController {
         }
         if(!errors){
             user.setPassword(encoder.encode(newPassword));
-            userService.saveUser(user);
-            response.put("status", "SUCCESS");
+            try{
+                userService.saveUser(user);
+                response.put("status", "SUCCESS");
+            }catch(Exception e) {
+                fieldErrors.put("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
+                response.put("status","FAILURE");
+            }
         }
-        else{
+        if(errors){
             response.put("status", "FAILURE");
             response.put("errors", fieldErrors);
         }

@@ -36,10 +36,8 @@ public class Device  implements java.io.Serializable {
     @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="owner_id", nullable=false)
     private Account owner;
-    @NotEmpty(message="This field is required") @NotBlank(message="This field is required")
     @Column(name="meter_code", unique=true, length=50, nullable=false)
     private String meterCode;
-    @NotBlank(message="This field is required") @NotEmpty(message="This field is required")
     @Column(name="brand", length=45, nullable=false)
     private String brand;
     @Column(name="start_date",length=10)

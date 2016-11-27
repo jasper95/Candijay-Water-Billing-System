@@ -281,6 +281,10 @@ public class AccountController {
     @RequestMapping(value="/{accountNumber}/create-device", method=RequestMethod.POST)
     public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("accountNumber") String number){
         HashMap response = new HashMap();
+        if(device.getMeterCode().trim().isEmpty())
+            result.rejectValue("meterCode", "", "This field is required");
+        if(device.getBrand().trim().isEmpty())
+            result.rejectValue("brand", "", "This field is required");
         if(deviceRepo.findByMeterCode(device.getMeterCode().trim()) != null)
             result.rejectValue("meterCode", "", "Metercode already exists!");
         if(!result.hasErrors()){
@@ -307,6 +311,10 @@ public class AccountController {
         else if(deviceRepo.findByMeterCode(meterCode) != null && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
             result.rejectValue("meterCode", "", "Metercode already exists!");
         }
+        if(device.getMeterCode().trim().isEmpty())
+            result.rejectValue("meterCode", "", "This field is required");
+        if(device.getBrand().trim().isEmpty())
+            result.rejectValue("brand", "", "This field is required");
         if(!result.hasErrors()){
             custService.updateDevice(id, device);
             response.put("status", "SUCCESS");
