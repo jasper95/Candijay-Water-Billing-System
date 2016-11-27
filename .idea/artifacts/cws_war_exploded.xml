@@ -106,6 +106,8 @@
           <element id="library" level="project" name="Maven: org.jadira.usertype:usertype.core:3.2.0.GA" />
           <element id="library" level="project" name="Maven: org.jadira.usertype:usertype.spi:3.2.0.GA" />
           <element id="library" level="project" name="Maven: com.intersult:jpa-fix:1.1" />
+          <element id="library" level="project" name="Maven: org.smslib:smslib:3.5.3" />
+          <element id="library" level="project" name="Maven: org.slf4j:log4j-over-slf4j:1.7.21" />
         </element>
       </element>
       <element id="directory" name="META-INF">
