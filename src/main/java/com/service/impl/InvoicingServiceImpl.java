@@ -82,6 +82,7 @@ public class InvoicingServiceImpl implements InvoicingService {
             total = total.add(reading.getAccount().getAccountStandingBalance().add(reading.getAccount().getPenalty()));
         } else total = total.add(newInvoice.getArrears().add(newInvoice.getPenalty()));
         newInvoice.setNetCharge(total);
+        newInvoice.setRemainingTotal(total);
         invoiceRepo.save(newInvoice);
         reading.getAccount().setAccountStandingBalance(total);
         reading.getAccount().setStatusUpdated(false);

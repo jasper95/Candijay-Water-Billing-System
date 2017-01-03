@@ -65,7 +65,7 @@ yadcf.init(oTable_payment, [
     },
     {
         "externally_triggered": true,
-        "column_number" : 10,
+        "column_number" : 12,
         "filter_container_id": "payment-date",
         "filter_type": 'range_date',
         "date_format": "yyyy/mm/dd",

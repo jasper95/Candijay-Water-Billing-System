@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService{
     @Override
     @Transactional(readOnly = true)
     public JRDataSource paymentHistoryDataSource(List<Long> paymentIds) {
-        List<Payment> report = new ArrayList();
+        List<Payment> report = new ArrayList<>();
         report.add(new Payment());
         for(Long id : paymentIds)
             report.add(paymentRepo.findById(id));
@@ -95,6 +95,7 @@ public class PaymentServiceImpl implements PaymentService{
         payment.setSchedule(sched);
         payment.setInvoice(invoice);
         payment.setAccount(account);
+        payment.setInvoiceTotal(oldBalance);
         invoice.getPayments().add(payment);
         payment = paymentRepo.save(payment);
         if(updateFlag && payment.getVersion().compareTo(version) > 0){
@@ -111,6 +112,7 @@ public class PaymentServiceImpl implements PaymentService{
             else
                 payment.getInvoice().setStatus(InvoiceStatus.FULLYPAID);
             account.setAccountStandingBalance(remainingBalance);
+            payment.getInvoice().setRemainingTotal(remainingBalance);
             payment = paymentRepo.save(payment);
             if(isAllowedToSetWarningToAccount(account, settings.getDebtsAllowed()))
                 account.setStatus(AccountStatus.WARNING);
@@ -213,5 +215,14 @@ public class PaymentServiceImpl implements PaymentService{
             updated.add(accountRepo.save(account));
         }
         return updated;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public JRDataSource getPreviousPaymentsDataSource(Account account) {
+        List<Payment> report = new ArrayList<>();
+        report.add(new Payment());
+        report.addAll(paymentRepo.findByAccountIdWithReading(account.getId()));
+        return new JRBeanCollectionDataSource(report);
     }
 }

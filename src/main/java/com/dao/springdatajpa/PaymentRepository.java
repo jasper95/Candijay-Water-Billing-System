@@ -24,6 +24,13 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @EntityGraph(attributePaths = {"account", "invoice"}, type= EntityGraph.EntityGraphType.LOAD)
     Payment findById(Long id);
     @Query("SELECT p FROM Payment p " +
+            "JOIN p.account a " +
+            "JOIN FETCH p.invoice i " +
+            "JOIN FETCH i.reading r " +
+            "WHERE a.id = :account " +
+            "ORDER BY p.date DESC")
+    List<Payment> findByAccountIdWithReading(@Param("account") Long id);
+    @Query("SELECT p FROM Payment p " +
             "JOIN p.schedule s " +
             "JOIN FETCH p.account a " +
             "JOIN FETCH a.address ad " +

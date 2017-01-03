@@ -23,7 +23,7 @@
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
             <h2>Accounts</h2>
-            <div class="alert alert-info form-wrapper">
+            <div id="search-filters" class="alert alert-info form-wrapper">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
@@ -89,6 +89,7 @@
                                 <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
                                 <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
                                 <datatables:column name="status" title="Status" property="status" sortable="false"/>
+                                <datatables:column title="Payments" sortable="false" renderFunction="custom-rendering#accRecentPayments"/>
                                 <datatables:column visible="false" property="id" />
                                 <dandelion:bundle excludes="jquery"/>
                                 <datatables:extraJs bundles="account" placeholder="before_end_document_ready" />

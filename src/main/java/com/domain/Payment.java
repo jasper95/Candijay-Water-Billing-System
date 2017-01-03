@@ -9,17 +9,12 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -52,19 +47,22 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=0, message = "Invalid amount")
     private BigDecimal amountPaid;
-    @Pattern(regexp = "(^$)|([\\s]*[0-9]*[0-9]+)",message="Invalid OR number format")
+    @Column(name="invoice_total", nullable=false, precision=10, scale=0)
+    private BigDecimal invoiceTotal;
+    @Pattern(regexp = "(^$)|([\\s]*[0-9]*[0-9]+)",message="Invalid OR number format") @Size(max = 7, min = 7, message = "Invalid OR number format")
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
     public Payment() {
     }
 
-    public Payment(Account account, Invoice invoice, Schedule schedule, DateTime date, BigDecimal amountPaid, String receiptNumber) {
+    public Payment(Account account, Invoice invoice, Schedule schedule, DateTime date, BigDecimal amountPaid, String receiptNumber, BigDecimal invoiceTotal) {
         this.account = account;
         this.invoice = invoice;
         this.schedule = schedule;
         this.date = date;
         this.amountPaid = amountPaid;
         this.receiptNumber = receiptNumber;
+        this.invoiceTotal = invoiceTotal;
     }
 
     public Long getId() {
@@ -106,6 +104,14 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     
     public void setAmountPaid(BigDecimal amountPaid) {
         this.amountPaid = amountPaid;
+    }
+
+    public BigDecimal getInvoiceTotal() {
+        return invoiceTotal;
+    }
+
+    public void setInvoiceTotal(BigDecimal invoiceTotal) {
+        this.invoiceTotal = invoiceTotal;
     }
 
     public String getReceiptNumber() { return receiptNumber; }

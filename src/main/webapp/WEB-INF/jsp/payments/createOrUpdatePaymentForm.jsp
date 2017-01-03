@@ -21,7 +21,7 @@
         <div id="main-content" style="display: none;" class="container">
             <h2>Create Payment</h2>
             <hr/>
-            <div class="alert alert-success form-wrapper">
+            <div id="search-filters2" class="alert alert-success form-wrapper">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>

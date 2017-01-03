@@ -12,6 +12,7 @@ import com.dao.springdatajpa.MeterReadingRepository;
 import com.dao.springdatajpa.ScheduleRepository;
 import com.domain.*;
 import com.domain.enums.AccountStatus;
+import com.forms.AccountabilityReportForm;
 import com.forms.MeterReadingForm;
 import com.forms.SearchForm;
 import com.github.dandelion.datatables.core.ajax.DataSet;
@@ -73,6 +74,9 @@ public class MeterReadingController {
         model.addAttribute("yearOptions", options.get("year"));
         model.addAttribute("monthOptions", options.get("month"));
         model.addAttribute("meterReadingForm", new MeterReadingForm());
+        model.addAttribute("addressForm", new AccountabilityReportForm());
+        model.addAttribute("zoneOptions", options.get("zone"));
+        model.addAttribute("brgyOptions", options.get("brgy"));
         return "meterReading/meterReadingList";
     }
 
@@ -85,6 +89,9 @@ public class MeterReadingController {
         model.addAttribute("createOrUpdate", "Create");
         model.addAttribute("searchForm", new SearchForm());
         model.addAttribute("meterReadingForm", new MeterReadingForm());
+        model.addAttribute("addressForm", new AccountabilityReportForm());
+        model.addAttribute("zoneOptions", options.get("zone"));
+        model.addAttribute("brgyOptions", options.get("brgy"));
         return "meterReading/createOrUpdateMeterReading";
     }
     
@@ -131,9 +138,10 @@ public class MeterReadingController {
         response.put("status","SUCCESS");
         return response;
     }
+
     @RequestMapping(value="/{readingId}/check-can-edit")
     public @ResponseBody HashMap updateMeterReading(@PathVariable("readingId") Long id){
-        MeterReading reading = mrRepo.findByIdWithAccount(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount(), 1);
+        MeterReading reading = mrRepo.findByIdWithAccount(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount());
         HashMap response = new HashMap();
         if(!reading.equals(lastMeterReading) || reading.getAccount().isStatusUpdated()){
             response.put("status", "FAILED");
@@ -143,6 +151,15 @@ public class MeterReadingController {
         response.put("reading", reading);
         int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption(): 0;
         response.put("last_reading",  lastReading);
+        return response;
+    }
+
+    @RequestMapping(value="/delete/{id}")
+    public @ResponseBody HashMap deleteReading(@PathVariable("id") Long id){
+        HashMap response = new HashMap();
+        if(id != null && mrService.deleteReading(id))
+            response.put("status", "SUCCESS");
+        else response.put("status", "FAILURE");
         return response;
     }
 
@@ -158,7 +175,7 @@ public class MeterReadingController {
             formReading = mForm.getMeterReading();
             newSchedule = schedRepo.findByMonthAndYear(mForm.getMeterReading().getSchedule().getMonth(), mForm.getMeterReading().getSchedule().getYear());
             Account account = accountRepo.findOne(mForm.getAccountId());
-            MeterReading lastMeterReading = mrService.findAccountLastMeterReading(account, 1);
+            MeterReading lastMeterReading = mrService.findAccountLastMeterReading(account);
             Integer lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption() : 0;
             mForm.getMeterReading().setConsumption(mForm.getMeterReading().getReadingValue() - lastReading);
             //check if reading is paid
@@ -241,6 +258,12 @@ public class MeterReadingController {
     public @ResponseBody
     DatatablesResponse<ModifiedReading> findAllModifiedReading(@DatatablesParams DatatablesCriterias criterias) {
         DataSet<ModifiedReading> dataSet = dataTableService.findWithDataTableCriterias(criterias, ModifiedReading.class);
+        return DatatablesResponse.build(dataSet, criterias);
+    }
+
+    @RequestMapping(value="/find-accounts-no-reading")
+    public @ResponseBody DatatablesResponse<Account> findAccountsWithNoReading(@DatatablesParams DatatablesCriterias criterias){
+        DataSet<Account> dataSet = mrService.findAccountsWithCustomParams(criterias);
         return DatatablesResponse.build(dataSet, criterias);
     }
 }

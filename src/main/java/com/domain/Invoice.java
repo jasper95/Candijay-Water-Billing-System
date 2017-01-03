@@ -38,13 +38,15 @@ public class Invoice  implements java.io.Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="account_id", nullable=false)
     private Account account;
-    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="schedule_id", nullable=false)
     private Schedule schedule;
-    @Column(name="gross_charge", nullable=true, precision=9)
+    @Column(name="gross_charge", precision=9)
     private BigDecimal grossCharge;
     @Column(name="net_charge", nullable=false, precision=9)
     private BigDecimal netCharge;
+    @Column(name="remaining_total", nullable=false, precision=9)
+    private BigDecimal remainingTotal;
     @Column(name="penalty", nullable=false, precision=9)
     private BigDecimal penalty;
     @Column(name="others", nullable=false, precision=9)
@@ -73,7 +75,7 @@ public class Invoice  implements java.io.Serializable {
     public Invoice() {
     }
 
-    public Invoice(InvoiceStatus status, DateTime dueDate, BigDecimal depreciationFund, BigDecimal systemLoss, BigDecimal discount, BigDecimal basic, BigDecimal arrears, BigDecimal others, BigDecimal penalty, BigDecimal netCharge, BigDecimal grossCharge, Schedule schedule, Account account, MeterReading reading) {
+    public Invoice(InvoiceStatus status, DateTime dueDate, BigDecimal depreciationFund, BigDecimal systemLoss, BigDecimal discount, BigDecimal basic, BigDecimal arrears, BigDecimal others, BigDecimal penalty, BigDecimal netCharge, BigDecimal remainingTotal, BigDecimal grossCharge, Schedule schedule, Account account, MeterReading reading) {
         this.status = status;
         this.dueDate = dueDate;
         this.depreciationFund = depreciationFund;
@@ -84,6 +86,7 @@ public class Invoice  implements java.io.Serializable {
         this.others = others;
         this.penalty = penalty;
         this.netCharge = netCharge;
+        this.remainingTotal = remainingTotal;
         this.grossCharge = grossCharge;
         this.schedule = schedule;
         this.account = account;
@@ -131,6 +134,14 @@ public class Invoice  implements java.io.Serializable {
     
     public void setNetCharge(BigDecimal netCharge) {
         this.netCharge = netCharge;
+    }
+
+    public BigDecimal getRemainingTotal() {
+        return remainingTotal;
+    }
+
+    public void setRemainingTotal(BigDecimal remainingTotal) {
+        this.remainingTotal = remainingTotal;
     }
 
     public InvoiceStatus getStatus() {

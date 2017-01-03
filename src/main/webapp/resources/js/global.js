@@ -69,5 +69,16 @@ $(document).ready(function(){
                console.log("global")
            }
        }
-    })
+    });
+
+    $('#search-filters').on("keypress", ".yadcf-filter", function(e){
+        var code = e.keyCode || e.which;
+        if(code==13)
+            $('#filterButton').trigger('click');
+    });
+    $('#search-filters2').on("keypress", ".yadcf-filter", function(e){
+        var code = e.keyCode || e.which;
+        if(code==13)
+            $('#filterButton2').trigger('click');
+    });
 });

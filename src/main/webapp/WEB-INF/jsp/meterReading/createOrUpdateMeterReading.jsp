@@ -10,6 +10,7 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${createOrUpdate} Reading</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-toggle.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
@@ -19,9 +20,15 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display: none;" class="container">
-            <h2>Create Reading</h2>
-            <hr/>
-            <div class="alert alert-success form-wrapper">
+            <div class="row" style="margin-bottom: 10px">
+                <div class="col-sm-9">
+                    <h2>Create Reading</h2>
+                </div>
+                <div class="col-sm-3 vertical-center text-right">
+                    <button type="button" id="acc-tbr" class="btn btn-default">Accounts To Be Read</button>
+                </div>
+            </div>
+            <div id="search-filters2" class="alert alert-success form-wrapper">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
@@ -120,7 +127,8 @@
                                 <div class="table-responsive">
                                     <div id="acc-no" style="display: none;"></div>
                                     <a id="filterButton"></a>
-                                    <datatables:table cssClass="table table-striped" id="reading" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/reading/datatable-search" displayLength="3" dom="tp" >
+                                    <a id="mrListReload"></a>
+                                    <datatables:table cssClass="table table-striped" reloadSelector="#mrListReload" id="reading" filterPlaceholder="none" filterSelector="#filterButton" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/reading/datatable-search" displayLength="3" dom="tp" >
                                         <datatables:column property="account.id" filterable="true" visible="false" selector="acc-no"/>
                                         <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                         <datatables:column title="Schedule" renderFunction="custom-rendering#monthAndYear" sortable="false" cssCellClass="schedule"/>
@@ -129,6 +137,7 @@
                                         <datatables:column title="Status" name="invoice.status" property="invoice.status" sortable="false"/>
                                         <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                         <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
+                                        <datatables:column title="Delete" sortable="false" renderFunction="custom-rendering#deleteItem"/>
                                         <datatables:extraJs bundles="months" placeholder="after_all"/>
                                         <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>
@@ -173,8 +182,10 @@
         </div>
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
         <jsp:include page="../fragments/modals/reading-info.jsp"/>
+        <jsp:include page="../fragments/modals/no-reading-info.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>

@@ -22,9 +22,10 @@ import org.springframework.data.repository.query.Param;
  * @author Bert
  */
 public interface MeterReadingRepository extends JpaRepository<MeterReading, Long> {
-    List<MeterReading> findTop3ByAccountOrderByIdDesc(Account account);
+    MeterReading findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(Account account);
     MeterReading findByAccountAndSchedule(Account account, Schedule schedule);
     Long countByScheduleAndAccount_AddressIn(Schedule sched, Collection<Address> addresses);
+    List<MeterReading> findByScheduleAndAccount_AddressIn(Schedule sched, Collection<Address> addresses);
     @Query("SELECT m FROM MeterReading m JOIN FETCH m.account WHERE m.id = (:id)")
     MeterReading findByIdWithAccount(@Param("id") Long id);
     @Query(value="SELECT SUM(m.consumption) FROM METER_READING m WHERE m.schedule_id = ?1", nativeQuery = true)

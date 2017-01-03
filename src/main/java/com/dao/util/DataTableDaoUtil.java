@@ -48,7 +48,7 @@ public class DataTableDaoUtil{
 		 * Step 1.2: individual column filtering
 		 */
 		if (hasFilteredColumn(criterias)) {
-			paramList = new ArrayList<String>();
+			paramList = new ArrayList<>();
 			if(!queryBuilder.toString().contains("WHERE")){
 				queryBuilder.append(" WHERE ");
 			}
@@ -87,9 +87,20 @@ public class DataTableDaoUtil{
 								paramList.add("p." + columnDef.getName() + " < '" + ins[1] + "'");
 							}
 						}
-						else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year") || q[q.length-1].equalsIgnoreCase("id")){
+						else if (q[q.length-1].equalsIgnoreCase("month") || q[q.length-1].equalsIgnoreCase("year") || q[q.length-1].equalsIgnoreCase("id") || q[q.length-1].equalsIgnoreCase("status")){
 							paramList.add(" LOWER(p." + columnDef.getName()
 											+ ") = '?'".replace("?", columnDef.getSearch().toLowerCase()));
+						}
+						else if(q[q.length-1].equalsIgnoreCase("number")){
+							String[] query = columnDef.getSearch().toLowerCase().split("-");
+							String newQuery;
+							try {
+								newQuery = (query.length > 1) ? query[0] + "-"+ String.format("%05d", Integer.valueOf(query[1])) : query[0];
+							}catch(NumberFormatException e){
+								newQuery = query[0];
+							}
+							paramList.add(" LOWER(p." + columnDef.getName()
+									+ ") LIKE '%?%'".replace("?", newQuery));
 						}
 						else {
 							paramList.add(" LOWER(p." + columnDef.getName()

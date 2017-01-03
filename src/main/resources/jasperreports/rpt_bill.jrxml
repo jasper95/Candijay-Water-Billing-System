@@ -17,6 +17,7 @@
 	<field name="schedule" class="com.domain.Schedule"/>
 	<field name="discount" class="java.math.BigDecimal"/>
 	<field name="status" class="com.domain.enums.InvoiceStatus"/>
+	<field name="remainingTotal" class="java.math.BigDecimal"/>
 	<group name="id" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 		<groupHeader>
@@ -424,7 +425,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["P"+$F{account}.getAccountStandingBalance()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["P"+$F{remainingTotal}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="474" y="160" width="90" height="1" uuid="23ecdeb6-208c-437f-be52-cefd1feebf21"/>

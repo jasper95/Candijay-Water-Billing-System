@@ -2,7 +2,6 @@ package com.domain;
 // Generated Apr 16, 2015 12:48:29 PM by Hibernate Tools 4.3.1
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -37,7 +36,7 @@ public class MeterReading extends AuditableEntity implements java.io.Serializabl
     private Integer readingValue;
     @Column(name="consumption", nullable=false)
     private Integer consumption;
-    @OneToOne(fetch=FetchType.LAZY, mappedBy="reading")
+    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy="reading")
     private Invoice invoice;
 
     public MeterReading() {

@@ -74,3 +74,9 @@ function expenseType(data, type, full){
 function editDiscount(data, type, full){
     return '<a type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
 };
+function deleteItem(data, type, full){
+    return (full.invoice.status === "UNPAID") ? '<a type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger"><i class="fa fa-remove fa-fw"></i></a>' : '---';
+};
+function accRecentPayments(data, type, full){
+    return '<a type="button" onClick="viewRecentPayments('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-money fa-fw"></i></a>';
+}

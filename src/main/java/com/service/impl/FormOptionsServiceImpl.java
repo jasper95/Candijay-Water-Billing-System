@@ -44,19 +44,29 @@ public class FormOptionsServiceImpl implements FormOptionsService{
         return allOptions;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public HashMap<String, Collections> getMeterReadingFormOptions() {
         Map monthOptions = new HashMap(), yearOptions = new LinkedHashMap();
         int year = Calendar.getInstance().get(Calendar.YEAR);
+        Set<String> zoneList = new HashSet();
+        SortedSet<String> brgyList = new TreeSet();
+        for( Address address : addressRepo.findAllByOrderByBrgyAsc()){
+            brgyList.add(address.getBrgy());
+            zoneList.add(address.getLocationCode().toString());
+        }
         for(int i=1; i<=12; i++){
             LocalDate date = new LocalDate(2010, i, 1);
             monthOptions.put(i, date.toString("MMM"));
         }
         for(int i = year; i > year-7; i--)
             yearOptions.put(i, i);
+
         HashMap allOptions = new HashMap();
         allOptions.put("month", monthOptions);
         allOptions.put("year", yearOptions);
+        allOptions.put("brgy", brgyList);
+        allOptions.put("zone", zoneList);
         return allOptions;
     }
 

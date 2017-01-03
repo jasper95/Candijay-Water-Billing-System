@@ -15,6 +15,7 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>Readings</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-toggle.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
@@ -25,14 +26,15 @@
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display: none;" class="container">
             <div class="row" style="margin-bottom: 10px">
-                <div class="col-sm-9">
+                <div class="col-sm-8">
                     <h2>Meter Reading</h2>
                 </div>
-                <div class="col-sm-3 vertical-center text-right">
+                <div class="col-sm-4 vertical-center text-right">
+                    <button type="button" id="acc-tbr" class="btn btn-default">Accounts To Be Read</button>
                     <a type="button" class="btn btn-ctm btn-default"  href="${pageContext.servletContext.contextPath}/admin/reading/new/">Create Reading</a>
                 </div>
             </div>
-            <div class="alert alert-info form-wrapper">
+            <div id="search-filters" class="alert alert-info form-wrapper">
                 <div id="reading-id" style="display:none"></div>
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
@@ -67,7 +69,8 @@
             <div class="row">
                 <div class="col-md-12 main">
                     <div class="table-responsive">
-                        <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" dom="ltipr" id="reading" url="/admin/reading/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                        <a id="mrListReload"></a>
+                        <datatables:table deferLoading="0" deferRender="true" reloadSelector="#mrListReload" cssClass="table table-striped" dom="ltipr" id="reading" url="/admin/reading/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
                             <datatables:column title="Acct No." name="account-number" property="account.number" filterable="true" sortable="false"/>
                             <datatables:column title="Last Name" name="lastname" property="account.customer.lastname" sortable="false"/>
@@ -81,6 +84,7 @@
                             <datatables:column title="Status" name="invoice.status" property="invoice.status" sortable="false"/>
                             <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                             <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
+                            <datatables:column title="Delete" sortable="false" renderFunction="custom-rendering#deleteItem"/>
                             <datatables:extraJs bundles="mreading" placeholder="before_end_document_ready"/>
                             <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             <datatables:extraJs bundles="months" placeholder="after_all"/>
@@ -93,8 +97,10 @@
         </div>
         <jsp:include page="../fragments/modals/reading-form.jsp"/>
         <jsp:include page="../fragments/modals/reading-info.jsp"/>
+        <jsp:include page="../fragments/modals/no-reading-info.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>

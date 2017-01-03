@@ -47,8 +47,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public JRDataSource getCollectiblesDataSource(String barangay, Schedule sched) {
         List<Invoice> monthlyInvoiceByBarangay = (!barangay.equalsIgnoreCase("summary")) ?
-                invoiceRepo.findByScheduleAndAccount_AddressOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched, addressRepo.findByBrgy(barangay)) :
-                invoiceRepo.findByScheduleOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched);
+                invoiceRepo.findByScheduleAndAccount_AddressAndStatusNotOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched, addressRepo.findByBrgy(barangay), InvoiceStatus.FULLYPAID) :
+                invoiceRepo.findByScheduleAndStatusNotOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(sched, InvoiceStatus.FULLYPAID);
         monthlyInvoiceByBarangay.add(0, new Invoice());
         return new JRBeanCollectionDataSource(monthlyInvoiceByBarangay);
     }

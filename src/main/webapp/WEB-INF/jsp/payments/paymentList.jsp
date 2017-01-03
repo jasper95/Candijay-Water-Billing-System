@@ -29,7 +29,7 @@
                     <a type="button" class="btn btn-ctm btn-default" href="${pageContext.servletContext.contextPath}/admin/payments/new">Create Payments</a>
                 </div>
             </div>
-            <div class="alert alert-info form-wrapper" style="padding-bottom: 0px">
+            <div id="search-filters" class="alert alert-info form-wrapper" style="padding-bottom: 0px">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
@@ -91,6 +91,8 @@
                                 <datatables:column name="brgy" visible="false" property="account.address.brgy" sortable="false"/>
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
                                 <datatables:column title="Paid" name="amount-paid" property="amountPaid" sortable="false"  renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
+                                <datatables:column title="Penalty" name="penalty" property="invoice.penalty" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Discount" name="discount" property="invoice.discount"  sortable="false" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
                                 <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>

@@ -12,6 +12,9 @@ import com.forms.MeterReadingForm;
 
 import java.util.Collection;
 import java.util.List;
+
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import org.springframework.validation.Errors;
 
 /**
@@ -19,8 +22,11 @@ import org.springframework.validation.Errors;
  * @author Bert
  */
 public interface MeterReadingService {
-    MeterReading findAccountLastMeterReading(Account account, int monthLag);
+    MeterReading findAccountLastMeterReading(Account account);
     MeterReading saveMeterReading(MeterReadingForm form);
     boolean isReadingPaid(MeterReading reading);
     boolean isDoneReadingAddressIn(Collection<Address> addresses) throws Exception;
+    boolean deleteReading(Long id);
+    List<Account> findAccountsWithNoLatestReading(List<Address> addresses) throws Exception;
+    DataSet<Account> findAccountsWithCustomParams(DatatablesCriterias criterias);
 }

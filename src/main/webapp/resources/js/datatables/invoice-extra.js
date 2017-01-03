@@ -4,6 +4,7 @@ var monthFilters = [{"value":1, "label":"Jan"},{"value":2, "label":"Feb"},{"valu
     {"value":10, "label":"Oct"},{"value":11, "label":"Nov"},{"value":12, "label":"Dec"}];
 var yearFilters = [];
 var zoneFilters=[1,2,3,4,5];
+var invStatFilters = ["UNPAID", "PARTIALLYPAID", "FULLYPAID"];
 for (var i = new Date().getFullYear(); i >= 2007; i--) {
     yearFilters.push(i);
 };
@@ -63,6 +64,13 @@ yadcf.init(oTable_invoice, [
         "filter_container_id": "acct-zone",
         "column_number": 8,
         "sort_as": "numerical",
+        "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
+    },{
+        "externally_triggered": true,
+        "data": invStatFilters,
+        "filter_type": "select",
+        "filter_container_id": "inv-st",
+        "column_number": 9,
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     },], 'none');
 /*

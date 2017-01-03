@@ -110,7 +110,6 @@ public class ReportsController {
 
     @RequestMapping(value="/validate-accountability-form", method=RequestMethod.POST)
     public @ResponseBody HashMap validateAccountabilityForm(@ModelAttribute("addressForm") @Valid  AccountabilityReportForm form, BindingResult result){
-        List<Account> accounts = null;
         List<Address> addresses = new ArrayList();
         boolean isPrintBrgy = form.getPrintBrgy().equals(1);
         if(!result.hasErrors()){
@@ -130,15 +129,8 @@ public class ReportsController {
         if(!result.hasErrors()){
             Integer type = Integer.valueOf(form.getType());
             boolean billsFlag = type.equals(1);
-            try{
-                if(billsFlag && !mrService.isDoneReadingAddressIn(addresses)){
-                    result.reject("global", "Not finished reading for this address.");
-                } else if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != accountRepo.countByAddressIn(addresses)) {
-                    result.reject("global", "Payments not finalized for this address");
-                }
-            } catch(Exception e){
-                result.reject("global", e.getMessage());
-            }
+            if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != accountRepo.countByAddressIn(addresses))
+                result.reject("global", "Payments not finalized for this address");
             if(result.hasErrors())
                 if(isPrintBrgy)
                     result.rejectValue("barangay", "", "");
@@ -147,7 +139,6 @@ public class ReportsController {
         }
         return validationResponse(result, form);
     }
-
 
     @RequestMapping(value="/validate-chart-form", method=RequestMethod.POST)
     public @ResponseBody HashMap validateChartForm(@ModelAttribute("chartForm") @Valid  ChartForm chartForm, BindingResult result){

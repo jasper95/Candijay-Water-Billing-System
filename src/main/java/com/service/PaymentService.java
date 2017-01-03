@@ -22,5 +22,5 @@ public interface PaymentService {
     Errors validate(PaymentForm form, Errors errors);
     boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
     List<Account> updateAccountsWithNoPayments(Address address);
-
+    JRDataSource getPreviousPaymentsDataSource(Account account);
 }

@@ -27,7 +27,7 @@
                     <button id="create-expense" type="button" class="btn btn-ctm btn-default">Create Expenses</button>
                 </div>
             </div>
-            <div class="alert alert-info form-wrapper">
+            <div id="search-filters" class="alert alert-info form-wrapper">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="expense-type">
                         <label>Type</label>

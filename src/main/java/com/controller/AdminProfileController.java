@@ -63,7 +63,10 @@ public class AdminProfileController {
         Long activeAccounts = accountRepo.countByStatus(AccountStatus.ACTIVE), warningAccounts = accountRepo.countByStatus(AccountStatus.WARNING),
                             inactiveAccounts = accountRepo.countByStatus(AccountStatus.INACTIVE);
         Integer activeUsers = userRepo.findByStatus(UserStatus.ACTIVE).size(), inactiveUsers = userRepo.findByStatus(UserStatus.INACTIVE).size();
-        model.put("currentYear", LocalDateTime.now().getYear());
+        int month =  LocalDateTime.now().getMonthOfYear(), year = LocalDateTime.now().getYear();
+        if(month == 1)
+            year --;
+        model.put("currentYear", year);
         model.put("activeUsers", activeUsers);
         model.put("inactiveUsers", inactiveUsers);
         model.put("activeAccounts", activeAccounts);
@@ -129,7 +132,9 @@ public class AdminProfileController {
     public @ResponseBody HashMap getChartData(@RequestParam("chart") Integer chartIndex){
         HashMap response = new HashMap();
         if(chartIndex != null){
-            int year = LocalDateTime.now().getYear();
+            int year = LocalDateTime.now().getYear(), month = LocalDateTime.now().getMonthOfYear();
+            if(month == 1)
+                year --;
             HashMap result;
             if(chartIndex == 1) {
                 result = reportService.getCollectionCollectiblesExpenseDataSource(year);

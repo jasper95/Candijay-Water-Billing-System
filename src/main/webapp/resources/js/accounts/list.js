@@ -45,4 +45,8 @@ $(document).ready(function(){
             draggable: true, // <-- Default value is false
         });
     }
+    window.viewRecentPayments = function(id){
+        var action = $('#form').attr('action');
+        openReport('POST',action+"/recent-payments", {id : id},'_blank');
+    }
 });

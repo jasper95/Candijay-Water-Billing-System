@@ -67,4 +67,9 @@ $(document).ready(function(){
             }
         })
     });
+    limitText($('#pm-or'), 7);
+    limitText($('#or-num'), 7);
+    function limitText(field, maxChar){
+        $(field).attr('maxlength',maxChar);
+    }
 });

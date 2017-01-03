@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `address` (
 --
 -- Dumping data for table `address`
 --
-
+--comment this data to use as template for migration
 INSERT INTO `address` (`id`, `brgy`, `location_code`, `account_prefix`, `accounts_count`, `due_day`) VALUES
 (1, 'Cogtong', 1, '01', 572, 20),
 (2, 'Tawid', 1, '02', 199, 20),
@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS `invoice` (
   `reading_id` bigint(20) NOT NULL,
   `gross_charge` decimal(9,2) DEFAULT NULL,
   `net_charge` decimal(9,2) NOT NULL,
+  `remaining_total` decimal(9,2) NOT NULL,
   `status` varchar(16) NOT NULL,
   `schedule_id` bigint(20) NOT NULL,
   `basic` decimal(9,2) NOT NULL,
@@ -252,6 +253,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `schedule_id` bigint(20) NOT NULL,
   `date` date NOT NULL,
   `amount_paid` decimal(9,2) NOT NULL,
+  `invoice_total` decimal(9,2) NOT NULL,
   `or_number` varchar(20) NOT NULL,
   `creation_time` datetime NOT NULL,
   `created_by_user` varchar(45) NOT NULL,
@@ -262,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
   KEY `account_payment` (`account_id`),
   KEY `invoice_payment` (`invoice_id`),
   KEY `payment_schedule` (`schedule_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 

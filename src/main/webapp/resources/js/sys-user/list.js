@@ -10,6 +10,7 @@ $(document).ready(function(){
         $.post($('#request-uri').val()+'/save', form.serialize(), function(response){
             if(validateForm('#user-form', response)){
                 showSuccess('#user-form', "User successfully created!");
+                cleanUpFormFields('#user-form');
                 $('#reload-table').trigger('click')
             }
         })

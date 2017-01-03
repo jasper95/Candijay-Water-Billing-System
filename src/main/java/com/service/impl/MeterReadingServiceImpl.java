@@ -10,6 +10,9 @@ import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.domain.enums.InvoiceStatus;
 import com.forms.MeterReadingForm;
+import com.github.dandelion.datatables.core.ajax.ColumnDef;
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.service.InvoicingService;
 import com.service.MeterReadingService;
 
@@ -18,8 +21,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.text.DateFormatSymbols;
-import org.springframework.validation.Errors;
+
 /**
  *
  * @author Bert
@@ -34,10 +36,12 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     private InvoiceRepository invoiceRepo;
     private DeviceRepository deviceRepo;
     private ModifiedReadingRepository modifiedReadingRepo;
+    private AddressRepository addressRepo;
 
     @Autowired
     public MeterReadingServiceImpl(InvoiceRepository invoiceRepo, InvoicingService invoicingService, AccountRepository accountRepo, ScheduleRepository schedRepo,
-                                   MeterReadingRepository mrRepo, DeviceRepository deviceRepo, ModifiedReadingRepository modifiedReadingRepo){
+                                   MeterReadingRepository mrRepo, DeviceRepository deviceRepo, ModifiedReadingRepository modifiedReadingRepo,
+                                   AddressRepository addressRepo){
         this.mrRepo = mrRepo;
         this.schedRepo = schedRepo;
         this.accountRepo = accountRepo;
@@ -45,16 +49,13 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         this.invoiceRepo = invoiceRepo;
         this.deviceRepo = deviceRepo;
         this.modifiedReadingRepo = modifiedReadingRepo;
+        this.addressRepo = addressRepo;
     }
-    
+
     @Override
     @Transactional(readOnly=true)
-    public MeterReading findAccountLastMeterReading(Account account, int monthLag) {
-        List<MeterReading> readings = mrRepo.findTop3ByAccountOrderByIdDesc(account);
-        if (!readings.isEmpty() && readings.size() >= monthLag){
-            return readings.get(monthLag-1);
-        }
-        return null;
+    public MeterReading findAccountLastMeterReading(Account account) {
+        return mrRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
     }
 
     @Override
@@ -93,10 +94,7 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     @Transactional(readOnly=true)
     public boolean isReadingPaid(MeterReading reading) {
         Invoice invoice = invoiceRepo.findByAccountAndSchedule(reading.getAccount(), reading.getSchedule());
-        if(invoice == null){
-            return false;
-        } else 
-            return !invoice.getStatus().equals(InvoiceStatus.UNPAID);
+        return invoice != null && !invoice.getStatus().equals(InvoiceStatus.UNPAID);
         
     }
 
@@ -118,5 +116,78 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         return meterReadingCount >= accountsCount;
     }
 
+    @Transactional
+    @Override
+    public boolean deleteReading(Long id) {
+        MeterReading reading = mrRepo.findOne(id), lastMeterReading = mrRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(reading.getAccount());
+        if(reading != null && reading.getInvoice().getStatus().equals(InvoiceStatus.UNPAID) && reading.equals(lastMeterReading)){
+            Device device = deviceRepo.findByOwnerAndActive(reading.getAccount(), true);
+            Account account = reading.getAccount();
+            account.setStatusUpdated(true);
+            device.setLastReading(device.getLastReading()-reading.getConsumption());
+            mrRepo.delete(reading);
+            deviceRepo.save(device);
+            accountRepo.save(account);
+            return true;
+        } else return false;
+    }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Account> findAccountsWithNoLatestReading(List<Address> addresses) throws Exception{
+        Calendar c = Calendar.getInstance();
+        Integer currentYear = c.get(Calendar.YEAR);
+        Integer currentMonth = c.get(Calendar.MONTH)+1;
+        if(currentMonth == 1){
+            currentMonth = 12;
+            currentYear--;
+        } else currentMonth --;
+        Schedule schedule = schedRepo.findByMonthAndYear(currentMonth, currentYear);
+        if(schedule == null)
+            throw new Exception("No meter reading data for previous month");
+        List<MeterReading> ms = mrRepo.findByScheduleAndAccount_AddressIn(schedule, addresses);
+        List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Collections.singletonList(AccountStatus.ACTIVE)), accountsNoReading = new ArrayList();
+        List<String> num = new ArrayList<>();
+        for(MeterReading reading : ms)
+            num.add(reading.getAccount().getNumber());
+        for(Account account : accounts){
+            if(!num.contains(account.getNumber())){
+                accountsNoReading.add(account);
+            }
+        }
+        return accountsNoReading;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public DataSet<Account> findAccountsWithCustomParams(DatatablesCriterias criterias) {
+        String isBrgy= "", brgy = "", zone = "";
+        for(ColumnDef columnDef: criterias.getColumnDefs()){
+            System.out.println(columnDef.getName());
+            if(columnDef.getName().equals("customer.firstName"))
+                isBrgy = columnDef.getSearch();
+            else if(columnDef.getName().equals("number"))
+                brgy = columnDef.getSearch();
+            else if(columnDef.getName().equals("customer.lastname"))
+                zone = columnDef.getSearch();
+        }
+        System.out.println(isBrgy+" "+brgy+" "+zone);
+        try{
+            List<Address> addresses = new ArrayList<>();
+            if(isBrgy.equals("1"))
+                addresses.add(addressRepo.findByBrgy(brgy));
+            else
+                addresses = addressRepo.findByLocationCode(Integer.valueOf(zone));
+            List<Account> results = findAccountsWithNoLatestReading(addresses);
+            Long filteredCount = (long) results.size();
+            int offset = (results.size() > criterias.getStart() +criterias.getLength()) ?
+                    criterias.getStart() +criterias.getLength() : results.size();
+            results = results.subList(criterias.getStart(), offset);
+            return new DataSet<>(results, accountRepo.count(), filteredCount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new DataSet<>(new ArrayList<>(), accountRepo.count(), (long) 0);
+        }
+
+    }
 }

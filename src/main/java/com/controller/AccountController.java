@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
@@ -368,5 +369,23 @@ public class AccountController {
     @RequestMapping(value="/find-device", method = RequestMethod.POST)
     public @ResponseBody Device find(@RequestParam("device_id") Long id){
         return deviceRepo.findOne(id);
+    }
+
+    @RequestMapping(value="/recent-payments", method = RequestMethod.POST)
+    public String printRecentPayments(@RequestParam("id") Long id, ModelMap model){
+        Account account = accountRepo.findOne(id);
+        if(account == null){
+            model.put("type", "Requested page not found");
+            model.put("message","The content does not exists or might have been deleted");
+            return "errors";
+        } else {
+            model.put("ACCOUNT_NUMBER", account.getNumber());
+            model.put("ACCOUNT_NAME", account.getCustomer().toString());
+            model.put("ACCOUNT_ADDRESS", "Purok "+account.getPurok()+", "+account.getAddress().toString());
+            model.put("format", "pdf");
+            model.put("datasource", paymentService.getPreviousPaymentsDataSource(account));
+            return "rpt_previous_payments";
+        }
+
     }
 }

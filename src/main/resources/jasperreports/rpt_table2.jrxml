@@ -31,10 +31,10 @@
 		<field name="depreciationFund" class="java.math.BigDecimal"/>
 		<field name="systemLoss" class="java.math.BigDecimal"/>
 		<field name="basic" class="java.math.BigDecimal"/>
-		<field name="netCharge" class="java.math.BigDecimal"/>
+		<field name="remainingTotal" class="java.math.BigDecimal"/>
 		<field name="account" class="com.domain.Account"/>
 		<variable name="amountSum" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{netCharge}]]></variableExpression>
+			<variableExpression><![CDATA[$F{remainingTotal}]]></variableExpression>
 		</variable>
 		<variable name="basicSum" class="java.math.BigDecimal" calculation="Sum">
 			<variableExpression><![CDATA[$F{basic}]]></variableExpression>
@@ -335,7 +335,7 @@
 								<textElement textAlignment="Center">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{netCharge}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{remainingTotal}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

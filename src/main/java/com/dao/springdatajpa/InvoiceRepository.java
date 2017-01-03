@@ -13,6 +13,7 @@ import com.domain.Schedule;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.domain.enums.InvoiceStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,10 +32,10 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
     Invoice findById(Long id);
     @EntityGraph(attributePaths = {"account"}, type= EntityGraph.EntityGraphType.LOAD)
-    List<Invoice> findByScheduleAndAccount_AddressOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched, Address address);
+    List<Invoice> findByScheduleAndAccount_AddressAndStatusNotOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched, Address address, InvoiceStatus status);
     @EntityGraph(attributePaths = {"account"}, type= EntityGraph.EntityGraphType.LOAD)
-    List<Invoice> findByScheduleOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched);
-    @Query(value = "SELECT SUM(i.net_charge) FROM Invoice i WHERE i.schedule_id = ?1", nativeQuery = true)
+    List<Invoice> findByScheduleAndStatusNotOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched, InvoiceStatus status);
+    @Query(value = "SELECT SUM(i.remaining_total) FROM Invoice i WHERE i.schedule_id = ?1", nativeQuery = true)
     BigDecimal findTotalCollectiblesBySchedule(@Param("id") Long id);
     List<Invoice> findByAccountOrderByIdDesc(Account account, Pageable pageable);
 }

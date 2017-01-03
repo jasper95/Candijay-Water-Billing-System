@@ -49,4 +49,52 @@ $(document).ready(function(){
     $("#reading").on("click", "tr", function() {
         $('#row-num').val($(this).index()+1)
     });
+    $('#acc-tbr').on('click', function(){
+        cleanUpFormFields('#md-no-reading-info');
+        $('#no-reading-info-modal').modal('show');
+    });
+    $('#isBrgy-toggle').on('change', function(){
+        $('#md-no-reading-info div.barangay').toggle();
+        $('#md-no-reading-info div.zone').toggle();
+        if($('#isBrgy-param').val() === '0')
+            $('#isBrgy-param').val('1');
+        else
+            $('#isBrgy-param').val('0');
+    });
+    $('#md-no-reading-info').on('submit', function(e){
+        e.preventDefault();
+        $('#brgy-prox').find('input:first').val($('#brgy-param').val());
+        $('#zone-prox').find('input:first').val($('#zone-param').val());
+        $('#isBrgy-prox').find('input:first').val($('#isBrgy-param').val());
+        $('#filter-nr').trigger('click');
+    });
+    window.deleteItem = function (id){
+        BootstrapDialog.confirm({
+            title: 'WARNING',
+            message: 'This action could not be undo in the future. Do you really want to delete this reading?',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true,
+            btnCancelLabel: 'Cancel',
+            btnOKLabel: 'Continue',
+            btnOKClass: 'btn-warning',
+            callback: function(result) {
+                if(result) {
+                    $.getJSON($('#reading-uri').val()+'delete/'+id, function(response){
+                        if(response.status === "SUCCESS"){
+                            $('#mrListReload').trigger('click');
+                        } else {
+                            BootstrapDialog.alert({
+                                title: 'ACTION DENIED',
+                                message: 'You can delete UNPAID latest readings only',
+                                type: BootstrapDialog.TYPE_DANGER,
+                                closable: true,
+                                draggable: true,
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
 });

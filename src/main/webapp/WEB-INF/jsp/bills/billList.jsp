@@ -25,7 +25,7 @@
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
             <h2>Bills</h2>
-            <div class="alert alert-info form-wrapper">
+            <div id="search-filters" class="alert alert-info form-wrapper">
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-no">
                         <label>Account Number</label>
@@ -50,6 +50,11 @@
                     <div class="col-md-3" id="reading-year">
                         <label>Year</label>
                     </div>
+                    <div class="col-md-3" id="inv-st">
+                        <label>Status</label>
+                    </div>
+                </div>
+                <div class="col-sm-12">
                     <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
                         <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
                         <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
@@ -83,7 +88,7 @@
                                 <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
                                 <datatables:column title="Status" name="status" property="status" sortable="false"/>
                                 <datatables:column title="Discount" name="discount" property="discount"  sortable="false" cssCellClass="discount" renderFunction="custom-rendering#toPeso"/>
-                                <datatables:column title="Total Due" name="amount" property="netCharge" sortable="false" cssCellClass="total-due" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Remaining Due" name="amount" property="remainingTotal" sortable="false" cssCellClass="total-due" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Edit Discount" sortable="false" renderFunction="custom-rendering#editDiscount"/>
                                 <dandelion:bundle excludes="jquery"/>
                                 <datatables:extraJs bundles="invoice" placeholder="before_end_document_ready" />
