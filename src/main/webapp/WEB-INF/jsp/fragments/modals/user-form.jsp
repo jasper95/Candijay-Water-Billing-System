@@ -33,12 +33,24 @@
                             </div>
                         </div>
                         <div class="col-sm-12 form-group">
+                            <div class="col-md-6 has-feedback">
+                                <label class="control-label" for="user-type-select">User Type <span style="color:red">&#42;</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                    <form:select id="user-type-select" path="type" class="form-control input-md type-select"  autocomplete="off">
+                                        <form:option value="" label="--Select type--"/>
+                                        <form:options items="${userTypes}" itemLabel="label" itemValue="value"/>
+                                    </form:select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 form-group">
                             <div class="col-sm-12">
                                 <label class="control-label block" style="display: block;">Privileges <span style="color:red">*</span></label>
                                 <c:forEach var="role" items="${roles}">
                                     <div class="checkbox-items">
                                         <label class="checkbox-inline">
-                                            <form:checkbox path="roles" value="${role.id}" data-toggle="toggle" data-width="120px" data-on="<i class='fa fa-check'></i> Allowed" data-off="<i class='fa fa-remove'></i> Not Allowed" /> <label>${role.description}</label>
+                                            <form:checkbox id="add-user-roles-item-${role.id}" path="roles" value="${role.id}" data-toggle="toggle" data-width="120px" data-on="<i class='fa fa-check'></i> Allowed" data-off="<i class='fa fa-remove'></i> Not Allowed" /> <label>${role.description}</label>
                                         </label>
                                     </div>
                                 </c:forEach>
@@ -55,6 +67,18 @@
                     <form:form id="user-update-form" cssStyle="display: hidden;" modelAttribute="user" role="form">
                         <div class="col-sm-12">
                             <jsp:include page="../postAuth/form-alerts.jsp"/>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <div class="col-md-6 has-feedback">
+                                <label class="control-label" for="update-type-select">User Type <span style="color:red">&#42;</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                    <form:select id="update-type-select" path="type" class="form-control input-md type-select" autocomplete="off">
+                                        <form:option value="" label="--Select type--"/>
+                                        <form:options items="${userTypes}" itemLabel="label" itemValue="value"/>
+                                    </form:select>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-12 form-group">
                             <div class="col-sm-12 checkbox-container">

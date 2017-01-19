@@ -7,17 +7,12 @@ package com.controller;
 
 import com.dao.springdatajpa.AccountRepository;
 import com.dao.springdatajpa.AddressRepository;
-import com.dao.springdatajpa.CustomerRepository;
 import com.dao.springdatajpa.DeviceRepository;
 import com.dao.util.EnglishNumberToWords;
 import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountForm;
 import com.forms.Checkboxes;
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import com.service.*;
 
 import java.util.ArrayList;
@@ -25,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.validation.Valid;
 
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
@@ -159,16 +153,6 @@ public class AccountController {
         }
         response.put("status", "SUCCESS");
         return response;
-    }
-
-    /**
-     *  account datatable web-service handler.
-     */
-    @RequestMapping(value = "/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<Account> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
-        DataSet<Account> dataSet = dataTableService.findWithDataTableCriterias(criterias, Account.class);
-        return DatatablesResponse.build(dataSet, criterias);
     }
 
     /**
@@ -371,21 +355,16 @@ public class AccountController {
         return deviceRepo.findOne(id);
     }
 
-    @RequestMapping(value="/recent-payments", method = RequestMethod.POST)
-    public String printRecentPayments(@RequestParam("id") Long id, ModelMap model){
+    @RequestMapping(value="/activate-account", method = RequestMethod.POST)
+    public @ResponseBody HashMap activateAccount(@RequestParam("id") Long id){
         Account account = accountRepo.findOne(id);
-        if(account == null){
-            model.put("type", "Requested page not found");
-            model.put("message","The content does not exists or might have been deleted");
-            return "errors";
-        } else {
-            model.put("ACCOUNT_NUMBER", account.getNumber());
-            model.put("ACCOUNT_NAME", account.getCustomer().toString());
-            model.put("ACCOUNT_ADDRESS", "Purok "+account.getPurok()+", "+account.getAddress().toString());
-            model.put("format", "pdf");
-            model.put("datasource", paymentService.getPreviousPaymentsDataSource(account));
-            return "rpt_previous_payments";
-        }
-
+        HashMap response = new HashMap();
+        if(account != null){
+            custService.changeAccountStatus(account, AccountStatus.ACTIVE);
+            response.put("status", "SUCCESS");
+        } else response.put("status", "FAILURE");
+        return response;
     }
+
+
 }

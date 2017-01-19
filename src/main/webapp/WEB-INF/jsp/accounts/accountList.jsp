@@ -74,7 +74,7 @@
                 <div class="col-md-12 main">
                     <div class="table-responsive">
                         <form:form id="form" modelAttribute="checkboxes" method="POST" action="${pageContext.servletContext.contextPath}/admin/accounts">
-                            <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="/admin/accounts/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                            <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="${spring:mvcUrl('datatables-api#accounts').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                 <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkboxAccount">
                                     <datatables:columnHead>
                                         <input type="checkbox" id="master-checkbox" />
@@ -84,18 +84,19 @@
                                 <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc"/>
                                 <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc"/>
                                 <datatables:column name="gender" title="Gender" property="customer.gender" sortable="false"/>
-                                <datatables:column name="balance" title="Balance" property="accountStandingBalance" renderFunction="custom-rendering#toPeso" sortable="false"/>
+                                <datatables:column name="balance" title="Balance" property="accountStandingBalance" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column name="contact" title="Contact" property="customer.contactNumber" sortable="false"/>
                                 <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
                                 <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
                                 <datatables:column name="status" title="Status" property="status" sortable="false"/>
-                                <datatables:column title="Payments" sortable="false" renderFunction="custom-rendering#accRecentPayments"/>
+                                <datatables:column title="Payments" sortable="false" renderFunction="custom-rendering#accountRecentPayments"/>
                                 <datatables:column visible="false" property="id" />
                                 <dandelion:bundle excludes="jquery"/>
                                 <datatables:extraJs bundles="account" placeholder="before_end_document_ready" />
                                 <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             </datatables:table>
                         </form:form>
+                        <input type="hidden" id="payments-uri" value="${pageContext.servletContext.contextPath}/admin/payments/">
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
-            <div class="row" style="margin-bottom: 10px">
+            <div class="row">
                 <div class="col-sm-8">
                     <h2>Payments</h2>
                 </div>
@@ -75,7 +75,7 @@
             <div class="row">
                 <div class="col-md-12 main">
                     <div class="table-responsive">
-                        <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${pageContext.servletContext.contextPath}/admin/payments">
+                        <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${spring:mvcUrl('datatables-api#payments').build()}">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="payment" cssClass="table table-striped" url="/admin/payments/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton" >
                                 <datatables:column name="payment-id" property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
                                 <datatables:column sortable="false" renderFunction="custom-rendering#checkboxPayment">
@@ -83,31 +83,32 @@
                                         <input type="checkbox" id="master-checkbox" />
                                     </datatables:columnHead>
                                 </datatables:column>
-                                <datatables:column title="Acct #" name="account-number" property="account.number" sortable="false"/>
-                                <datatables:column title="Lastname" name="lastname" property="account.customer.lastname" sortable="false"/>
-                                <datatables:column title="Firstname" name="firstName" property="account.customer.firstName" sortable="false"/>
-                                <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" />
-                                <datatables:column title="Year" name ="year" property="schedule.year"/>
+                                <datatables:column name="account-number" property="account.number" visible="false"/>
+                                <datatables:column name="lastname" property="account.customer.lastname" visible="false"/>
+                                <datatables:column name="firstName" property="account.customer.firstName" visible="false"/>
+                                <datatables:column name="month" property="schedule.month" visible="false"/>
+                                <datatables:column name ="year" property="schedule.year" visible="false"/>
                                 <datatables:column name="brgy" visible="false" property="account.address.brgy" sortable="false"/>
+                                <datatables:column title="Name" property="account.customer.name" sortable="false" renderFunction="custom-rendering#customerUrlReadingList"/>
+                                <datatables:column title="Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
                                 <datatables:column title="OR number" property="receiptNumber" sortable="false" default="---" cssCellClass="or-number"/>
                                 <datatables:column title="Paid" name="amount-paid" property="amountPaid" sortable="false"  renderFunction="custom-rendering#toPeso" cssCellClass="payment-amount"/>
-                                <datatables:column title="Penalty" name="penalty" property="invoice.penalty" sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                <datatables:column title="Discount" name="discount" property="invoice.discount"  sortable="false" renderFunction="custom-rendering#toPeso"/>
-                                <datatables:column title="Date" name="date" property="date" sortable="false" cssCellClass="payment-date"/>
-                                <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
-                                <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
+                                <datatables:column title="Type" property="type" sortable="false"/>
+                                <datatables:column title="Due" property="invoiceTotal" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Balance" property="balance" sortable="false" renderFunction="custom-rendering#toPeso"/>
+                                <datatables:column title="Actions" sortable="false" renderFunction="custom-rendering#paymentListActions"/>
                                 <datatables:extraJs bundles="payment" placeholder="before_end_document_ready"/>
                                 <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                                 <dandelion:bundle excludes="jquery"/>
                             </datatables:table>
                         </form:form>
                         <input type="hidden" id="row-num">
+                        <input type="hidden" id="acc-balance-val"/>
                     </div>
                 </div>
             </div>
         </div>
         <jsp:include page="../fragments/modals/payment-form.jsp"/>
-        <jsp:include page="../fragments/modals/payment-info.jsp"/>
         <jsp:include page="../fragments/modals/finalize-payments-form.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>

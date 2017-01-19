@@ -10,21 +10,28 @@ import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.domain.enums.InvoiceStatus;
 import com.forms.PaymentForm;
+import com.github.dandelion.datatables.core.ajax.ColumnDef;
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.service.PaymentService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.service.SettingsService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 @Service
@@ -34,18 +41,16 @@ public class PaymentServiceImpl implements PaymentService{
     private InvoiceRepository invoiceRepo;
     private AccountRepository accountRepo;
     private SettingsService settingsService;
-    private ModifiedPaymentRepository modifiedPaymentRepo;
     private ScheduleRepository schedRepo;
     
     @Autowired 
     public PaymentServiceImpl(PaymentRepository paymentRepo, InvoiceRepository invoiceRepo, 
                               AccountRepository accountRepo, SettingsService settingsService,
-                              ModifiedPaymentRepository modifiedPaymentRepo, ScheduleRepository schedRepo) {
+                              ScheduleRepository schedRepo) {
         this.paymentRepo = paymentRepo;
         this.invoiceRepo = invoiceRepo;
         this.accountRepo = accountRepo;
         this.settingsService = settingsService;
-        this.modifiedPaymentRepo = modifiedPaymentRepo;
         this.schedRepo = schedRepo;
     }
 
@@ -61,28 +66,17 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Override
     @Transactional
-    public Payment save(PaymentForm form) {
-        boolean updateFlag = false;
-        ModifiedPayment modifiedPayment = null;
-        Long version = form.getPayment().getVersion();
-        Account account = accountRepo.findOne(form.getAccountId());
-        BigDecimal oldBalance = BigDecimal.ZERO.add(account.getAccountStandingBalance()),
-                                oldPenalty = BigDecimal.ZERO.add(account.getPenalty());
-        Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
+    public Payment save(PaymentForm form){
+        if(form.getPayment().getId() == null)
+            return create(form);
+        else return update(form);
+    }
+
+    private Payment create(PaymentForm form){
         Settings settings = settingsService.getCurrentSettings();
-        if(form.getPayment().getId() != null){
-            updateFlag = true;
-            Payment oldPayment = paymentRepo.findOne(form.getPayment().getId());
-            modifiedPayment = new ModifiedPayment(oldPayment);
-            oldBalance = oldBalance.add(oldPayment.getAmountPaid());
-            oldPenalty = oldPenalty.subtract(calculatePenalty(invoice.getDueDate(),
-                    oldPayment.getDate(), oldBalance, new BigDecimal(settings.getPenalty())));
-            oldPayment.setAmountPaid(form.getPayment().getAmountPaid());
-            oldPayment.setDate(form.getPayment().getDate());
-            oldPayment.setVersion(form.getPayment().getVersion());
-            oldPayment.setReceiptNumber(form.getPayment().getReceiptNumber());
-            form.setPayment(oldPayment);
-        }
+        Account account = accountRepo.findOne(form.getAccountId());
+        Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
+        BigDecimal oldBalance = BigDecimal.ZERO.add(account.getAccountStandingBalance());
         Payment payment = form.getPayment();
         int paymentYear = payment.getDate().getYear(),
                 paymentMonth = payment.getDate().getMonthOfYear();
@@ -90,53 +84,96 @@ public class PaymentServiceImpl implements PaymentService{
             paymentMonth = 12;
             paymentYear --;
         } else paymentMonth --;
+        //setting payment information
         Schedule sched = schedRepo.findByMonthAndYear(paymentMonth, paymentYear);
         account.getPayments().add(payment);
         payment.setSchedule(sched);
         payment.setInvoice(invoice);
         payment.setAccount(account);
         payment.setInvoiceTotal(oldBalance);
-        invoice.getPayments().add(payment);
-        payment = paymentRepo.save(payment);
-        if(updateFlag && payment.getVersion().compareTo(version) > 0){
-            modifiedPayment.setPayment(payment);
-            modifiedPaymentRepo.save(modifiedPayment);
-        }
-        if(version == null || payment.getVersion().compareTo(version) > 0 ) {
-            account.setPenalty(oldPenalty.add(calculatePenalty(invoice.getDueDate(), payment.getDate(), oldBalance, new BigDecimal(settings.getPenalty()))));
-            BigDecimal remainingBalance = oldBalance.subtract(payment.getAmountPaid());
-            if(remainingBalance.compareTo(payment.getInvoice().getNetCharge()) == 0)
-                payment.getInvoice().setStatus(InvoiceStatus.DEBT);
-            else if(remainingBalance.compareTo(BigDecimal.ZERO) > 0)
-                payment.getInvoice().setStatus(InvoiceStatus.PARTIALLYPAID);
-            else
-                payment.getInvoice().setStatus(InvoiceStatus.FULLYPAID);
-            account.setAccountStandingBalance(remainingBalance);
-            payment.getInvoice().setRemainingTotal(remainingBalance);
-            payment = paymentRepo.save(payment);
-            if(isAllowedToSetWarningToAccount(account, settings.getDebtsAllowed()))
-                account.setStatus(AccountStatus.WARNING);
-            else account.setStatus(AccountStatus.ACTIVE);
-            account.setStatusUpdated(true);
-            accountRepo.save(account);
-        }
+        invoice.getPayments().add(payment); //adding payment to invoice
+        payment = paymentRepo.save(payment); //save
+        // -- Updating invoice based on payment
+        BigDecimal remainingBalance = oldBalance.subtract(payment.getAmountPaid());
+        invoice = payment.getInvoice();
+        if(remainingBalance.compareTo(invoice.getNetCharge()) == 0)
+            invoice.setStatus(InvoiceStatus.DEBT);
+        else if(remainingBalance.compareTo(BigDecimal.ZERO) > 0)
+            invoice.setStatus(InvoiceStatus.PARTIALLYPAID);
+        else
+            invoice.setStatus(InvoiceStatus.FULLYPAID);
+        invoice.setRemainingTotal(remainingBalance);
+        invoiceRepo.save(invoice);
+        //updating account based on payment
+        if(isAllowedToSetWarningToAccount(account, settings.getDebtsAllowed()))
+            account.setStatus(AccountStatus.WARNING);
+        else account.setStatus(AccountStatus.ACTIVE);
+        if(!isAlreadyPenalizedExcludingThisPayment(payment)) //is invoice already penalized
+            account.setPenalty(calculatePenalty(payment, new BigDecimal(settings.getPenalty())));
+        account.setAccountStandingBalance(remainingBalance);
+        account.setStatusUpdated(true);
+        accountRepo.save(account);
         return payment;
     }
 
-    private BigDecimal calculatePenalty(DateTime dueDate, DateTime payDate, BigDecimal totalDue, BigDecimal penaltyRate){
-        int dayDiff = new Period(dueDate, payDate).getDays();
+    private Payment update(PaymentForm form){
+        Payment originalPayment = paymentRepo.findOne(form.getPayment().getId());
+        originalPayment.setVersion(form.getPayment().getVersion());
+        originalPayment.setReceiptNumber(form.getPayment().getReceiptNumber());
+        originalPayment = paymentRepo.save(originalPayment);
+        return originalPayment;
+    }
+
+    private static boolean isLatePayment(Payment payment){
+        return new Period(payment.getInvoice().getDueDate(), payment.getDate()).getDays() > 0;
+    }
+
+    private boolean isAlreadyPenalizedExcludingThisPayment(Payment payment){
+        Invoice invoice = payment.getInvoice();
+        return invoice.getPayments().stream()
+                            .filter(PaymentServiceImpl::isLatePayment)
+                            .filter(e -> !e.equals(payment))
+                            .findFirst()
+                            .isPresent();
+    }
+
+    private BigDecimal calculatePenalty(Payment payment, BigDecimal penaltyRate){
+        int dayDiff = new Period(payment.getInvoice().getDueDate(), payment.getDate()).getDays();
         if(dayDiff > 0){
-            System.out.println(dayDiff);
-            BigDecimal penaltyPerDay = totalDue.multiply(penaltyRate);
-            BigDecimal totalPenalty = new BigDecimal(dayDiff).multiply(penaltyPerDay), hundred = new BigDecimal(100);
-            return totalPenalty.compareTo(hundred) > 0 ? hundred : totalPenalty;
+            BigDecimal totalDue = payment.getInvoice().getNetCharge(), penalty = totalDue.multiply(penaltyRate),
+                    hundred = new BigDecimal(100);
+            return penalty.compareTo(hundred) > 0 ? hundred : penalty;
         } else return BigDecimal.ZERO;
     }
-    
-    @Transactional(readOnly=true)
+
+    @Transactional
+    @Override
+    public BindingResult validate(PaymentForm form, BindingResult errors){
+        BindException result = new BindException(errors);
+        boolean paymentIsNew = form.getPayment().getId() == null;
+        if(!result.hasErrors()){
+            Account account = accountRepo.findOne(form.getAccountId());
+            Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
+            if(account == null)
+                result.reject("global","Account does not exists");
+            if(invoice == null)
+                result.reject("global","No existing bill for this account");
+            else if(paymentIsNew && account.getAccountStandingBalance().doubleValue() == 0)
+                    result.reject("global", "This account has zero standing balance");
+            Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(form.getPayment().getReceiptNumber());
+            if(paymentUniqueOr != null){
+                if(paymentIsNew)
+                    errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+                else if(!paymentUniqueOr.getId().equals(form.getPayment().getId()))
+                        errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
+            }
+        }
+        return result;
+    }
+
+    /*@Transactional(readOnly=true)
     @Override
     public Errors validate(PaymentForm paymentForm, Errors errors) {
-        System.out.println("start validate");
         Account account = accountRepo.findOne(paymentForm.getAccountId());
         boolean create = paymentForm.getPayment().getId() == null;
         Payment payment = paymentForm.getPayment();
@@ -186,7 +223,7 @@ public class PaymentServiceImpl implements PaymentService{
             }
         }
         return errors;
-    }
+    }*/
 
     @Transactional(readOnly=true)
     @Override
@@ -203,16 +240,19 @@ public class PaymentServiceImpl implements PaymentService{
     @Transactional
     @Override
     public List<Account> updateAccountsWithNoPayments(Address address) {
-        List<Account> updated = new ArrayList<Account>();
+        List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(Arrays.asList(address), false, Arrays.asList(AccountStatus.ACTIVE));
         Settings currentSettings = settingsService.getCurrentSettings();
-        List<Address> list = new ArrayList();
-        list.add(address);
-        for(Account account: accountRepo.findByAddressInAndStatusIn(list, Arrays.asList(AccountStatus.ACTIVE)) ){
-            account.setStatusUpdated(true);
-            account.setPenalty(BigDecimal.ZERO);
-            if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed()))
-                account.setStatus(AccountStatus.WARNING);
-            updated.add(accountRepo.save(account));
+        List<Account> updated = new ArrayList<>();
+        for(Account account: accounts){
+            Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
+            if(invoice != null){
+                invoice.setStatus(InvoiceStatus.DEBT);
+                account = invoice.getAccount();
+                if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed()))
+                    account.setStatus(AccountStatus.WARNING);
+                account.setStatusUpdated(true);
+                updated.add(accountRepo.save(account));
+            }
         }
         return updated;
     }

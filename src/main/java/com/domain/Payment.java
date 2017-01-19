@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,6 +40,7 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="schedule_id", nullable=false)
     private Schedule schedule;
+    @Past(message = "Invalid date")
     @NotNull(message="Invalid date")
     @JsonSerialize(using= StandardDateTimeSerializer.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -45,11 +48,12 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
     @Column(name="date", nullable=false, length=10)
     private DateTime date;
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
-    @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=0, message = "Invalid amount")
+    @Column(name="amount_paid", nullable=false, precision=10, scale=0) @Min(value=1, message = "Invalid amount")
     private BigDecimal amountPaid;
     @Column(name="invoice_total", nullable=false, precision=10, scale=0)
     private BigDecimal invoiceTotal;
-    @Pattern(regexp = "(^$)|([\\s]*[0-9]*[0-9]+)",message="Invalid OR number format") @Size(max = 7, min = 7, message = "Invalid OR number format")
+    @NotEmpty(message="This field is required") @NotBlank(message="This field is required")
+    @Digits(integer = 7, fraction = 0, message = "Invalid format")@Size(max = 7, min = 7, message = "Invalid format")
     @Column(name="or_number", nullable = false)
     private String receiptNumber;
     public Payment() {
@@ -126,6 +130,15 @@ public class Payment extends AuditableEntity implements java.io.Serializable {
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public String getType(){
+        return (this.amountPaid.compareTo(invoiceTotal) >= 0) ? "FULL" : "PARTIAL";
+    }
+
+    public BigDecimal getBalance(){
+        BigDecimal balance = invoiceTotal.subtract(amountPaid);
+        return (balance.compareTo(BigDecimal.ZERO) < 0) ? BigDecimal.ZERO : balance;
     }
 
     @Override

@@ -10,10 +10,6 @@ import com.domain.Invoice;
 import com.domain.enums.InvoiceStatus;
 import com.forms.BillDiscountForm;
 import com.forms.Checkboxes;
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import com.service.DataTableService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,14 +45,24 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
     
-    
+
     @RequestMapping(method=RequestMethod.GET)
     public String allBills(ModelMap model){
         model.addAttribute("checkboxes", new Checkboxes());
         model.addAttribute("billDiscountForm", new BillDiscountForm());
         return "bills/billList";
     }
-    
+
+    @RequestMapping(value="/{id}",method=RequestMethod.GET)
+    public @ResponseBody HashMap getInvoice(@PathVariable("id") Long id){
+        Invoice result = invoiceRepo.findById(id);
+        HashMap response = new HashMap();
+        String status = (result != null) ? "SUCCESS" : "FAILURE";
+        response.put("status", status);
+        response.put("result", result.getReading());
+        return response;
+    }
+
 
     @RequestMapping(value="/print-check", method=RequestMethod.POST)
     public @ResponseBody
@@ -82,12 +88,21 @@ public class InvoiceController {
         return "rpt_bill";
     }
 
-    @RequestMapping(value="/find//{id}")
+    @RequestMapping(value="/preview", method=RequestMethod.POST)
+    public String previewBill(ModelMap model, @RequestParam("id") Long id){
+        List<Invoice> invoices = new ArrayList<>();
+        invoices.add(invoiceRepo.findById(id));
+        model.put("datasource", new JRBeanCollectionDataSource(invoices));
+        model.put("format", "pdf");
+        return "rpt_bill";
+    }
+
+    @RequestMapping(value="/edit-discount/{id}")
     public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
         Invoice invoice = invoiceRepo.findById(id),
                 latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
         HashMap response = new HashMap();
-        if(invoice != null && invoice.equals(latestInvoice) && invoice.getStatus().equals(InvoiceStatus.UNPAID)) {
+        if(invoice != null && invoice.equals(latestInvoice) && invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)) {
             response.put("invoice", invoice);
             response.put("status", "SUCCESS");
         } else response.put("status", "FAILURE");
@@ -105,12 +120,5 @@ public class InvoiceController {
             response.put("result", result.getAllErrors());
         }
         return response;
-    }
-
-    @RequestMapping(value = "/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<Invoice> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
-       DataSet<Invoice> dataSet = dataTableService.findWithDataTableCriterias(criterias, Invoice.class);
-       return DatatablesResponse.build(dataSet, criterias);
     }
 }

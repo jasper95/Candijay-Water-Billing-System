@@ -12,7 +12,7 @@
                         <div class="table-responsive">
                             <div id="auditExpense-id" style="display: none;"></div>
                             <a id="filterButtonAuditTable"></a>
-                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="auditExpense" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/expenses/modified/datatable-search" displayLength="3" dom="tp" >
+                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="auditExpense" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${spring:mvcUrl('datatables-api#modified-expenses').build()}" displayLength="3" dom="tp" >
                                 <datatables:column property="expense.id" filterable="true" visible="false" selector="auditExpense-id"/>
                                 <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                 <datatables:column title="Month" name="month" property="schedule.month" cssCellClass="month" renderFunction="custom-rendering#month" sortable="false"/>

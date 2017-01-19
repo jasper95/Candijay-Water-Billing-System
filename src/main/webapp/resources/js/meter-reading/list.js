@@ -16,4 +16,7 @@ $(document).ready(function(){
             }
         })
     });
+    window.billPrintablePreview = function(id){
+        openReport('POST', $('#bills-uri').val()+'preview', {id:id}, '_blank')
+    };
 });

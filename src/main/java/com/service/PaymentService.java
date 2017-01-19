@@ -7,7 +7,10 @@ package com.service;
 
 import com.domain.*;
 import com.forms.PaymentForm;
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import net.sf.jasperreports.engine.JRDataSource;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 import java.util.List;
@@ -19,7 +22,7 @@ import java.util.List;
 public interface PaymentService {
     JRDataSource paymentHistoryDataSource(List<Long> paymentIds);
     Payment save(PaymentForm form);
-    Errors validate(PaymentForm form, Errors errors);
+    BindingResult validate(PaymentForm form, BindingResult errors);
     boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
     List<Account> updateAccountsWithNoPayments(Address address);
     JRDataSource getPreviousPaymentsDataSource(Account account);

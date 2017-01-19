@@ -99,17 +99,4 @@ public class ExpenseController {
         }
         return response;
     }
-
-    @RequestMapping(value = "/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<Expense> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias){
-        DataSet<Expense> dataSet = dataTableService.findWithDataTableCriterias(criterias, Expense.class);
-        return DatatablesResponse.build(dataSet, criterias);
-    }
-    @RequestMapping(value = "/modified/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<ModifiedExpense> findAllModifiedExpense(@DatatablesParams DatatablesCriterias criterias) {
-        DataSet<ModifiedExpense> dataSet = dataTableService.findWithDataTableCriterias(criterias, ModifiedExpense.class);
-        return DatatablesResponse.build(dataSet, criterias);
-    }
 }

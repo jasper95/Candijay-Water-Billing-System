@@ -9,13 +9,14 @@
 <%@ attribute name="required" required="true" rtexprvalue="true" %>
 <%@ attribute name="readOnly" required="false" rtexprvalue="true" %>
 <%@ attribute name="size" required="false" rtexprvalue="true" %>
+<%@ attribute name="moreClasses" required="false" rtexprvalue="true" %>
 
 <spring:bind path="${name}">
-    <div class="col-sm-${not empty size ? size : '4'} has-feedback ${status.error ? 'has-error' : '' }">
+    <div class="col-md-${not empty size ? size : '4'} has-feedback ${status.error ? 'has-error' : '' }">
         <label class="control-label" for="${id}">${label} <span style="color:red">${required eq 'true' ? '&#42;' :''}</span></label>
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-${icon} fa-fw"></i></span>
-            <form:input id="${id}" path="${name}" class="form-control input-sm" placeholder="${placeholder}" autocomplete="off" readonly="${readOnly}"/>
+            <form:input id="${id}" path="${name}" class="form-control input-md ${moreClasses}" placeholder="${placeholder}" autocomplete="off" readonly="${readOnly}"/>
             <c:if test="${status.error}">
                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
             </c:if>

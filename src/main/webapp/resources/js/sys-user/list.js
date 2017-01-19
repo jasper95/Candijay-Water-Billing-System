@@ -10,10 +10,11 @@ $(document).ready(function(){
         $.post($('#request-uri').val()+'/save', form.serialize(), function(response){
             if(validateForm('#user-form', response)){
                 showSuccess('#user-form', "User successfully created!");
+                clearCheckedRoles(form);
                 cleanUpFormFields('#user-form');
                 $('#reload-table').trigger('click')
             }
-        })
+        });
     });
     $('#user-update-form').on('submit', function(e){
         e.preventDefault();
@@ -25,7 +26,7 @@ $(document).ready(function(){
                var user = response.user;
                var row = $('#users tbody tr:nth-child('+$('#row-num').val()+')');
                row.find('.status').text(user.status);
-               row.find('.type').text(user.type);
+               row.find('.type').text(user.typeToString);
                $('#upd-vs').val(user.version);
            }
         });
@@ -50,29 +51,35 @@ $(document).ready(function(){
     window.updateUser = function(id){
         $.getJSON($('#request-uri').val()+'/find/'+ id, function(response){
             if(response.status === "SUCCESS"){
+                clearCheckedRoles($('#user-update-form'));
                 cleanUpFormFields('#user-update-form');
                 cleanUpFormMsgs('#user-update-form');
                 var user = response.user;
                 var roles = user.roles;
-                //var checkboxes = $('div.checkbox-container').find('input[name=roles]')
-                for (var i=0; i<roles.length; i++)
-                    $('#roles-item-'+roles[i].id).bootstrapToggle('on');
+                for (var i=0; i<roles.length; i++) {
+                    var checkboxRole = $('#roles-item-' + roles[i].id);
+                    checkboxRole.bootstrapToggle('enable');
+                    checkboxRole.bootstrapToggle('on');
+                    checkboxRole.bootstrapToggle('disable');
+                }
                 if(user.status === 'ACTIVE')
                     $('#status-toggle').bootstrapToggle('on');
                 else $('#status-toggle').bootstrapToggle('off');
                 $('#upd-id').val(user.id);
                 $('#upd-vs').val(user.version);
+                $('#update-type-select').val(user.type);
                 $('#user-form').hide();
                 $('#user-update-form').show();
                 $('#user-action').text('Update');
                 $('#user-form-modal').modal('show');
             }
         });
-    }
+    };
     $('#add-user').on('click', function(){
         $('#user-action').text('Create');
         $('#user-form-modal').modal('show');
         $('#user-form').show();
+        clearCheckedRoles($('#user-form'));
         cleanUpFormFields('#user-form');
         cleanUpFormMsgs('#user-form');
         $('#user-update-form').hide();
@@ -81,10 +88,40 @@ $(document).ready(function(){
     $('#status-toggle').change(function(){
         var status = $('#upd-status')
         if($(this).prop('checked'))
-            status.val('1')
-        else status.val('0')
+            status.val('1');
+        else status.val('0');
     });
+    $('form select.type-select').change(function(){
+        var type = $(this).val(), form = $(this).closest('form');
+        clearCheckedRoles(form);
+        if(type.length > 0){
+            $.getJSON($('#request-uri').val()+'/get-allowed-roles/'+ type, function(response){
+                if(response.status === "SUCCESS"){
+                    var role_id_prefix = (form.attr('id') === 'user-form') ? "#add-user-roles-item-" : '#roles-item-';
+                    for(var i=0; i < response.result.length; i++){
+                        var optionToggle = $(role_id_prefix + response.result[i]);
+                        optionToggle.bootstrapToggle('enable');
+                        optionToggle.bootstrapToggle('on');
+                        optionToggle.bootstrapToggle('disable');
+                    }
+
+                }
+            });
+        }
+    });
+    function clearCheckedRoles(form){
+        $('input[name=roles]', form).each(function(){
+            $(this).bootstrapToggle('enable');
+            $(this).bootstrapToggle('off');
+            $(this).bootstrapToggle('disable');
+        });
+    };
+    function setStateRolesCheckbox(form, state){
+        $('input[name=roles]', form).each(function(){
+            $(this).bootstrapToggle(state);
+        });
+    };
     $("#users").on("click", "tr", function() {
         $('#row-num').val($(this).index()+1)
     });
-})
+});

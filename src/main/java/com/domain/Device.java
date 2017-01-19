@@ -40,6 +40,7 @@ public class Device  implements java.io.Serializable {
     private String meterCode;
     @Column(name="brand", length=45, nullable=false)
     private String brand;
+    @Temporal(TemporalType.DATE)
     @Column(name="start_date",length=10)
     private Date startDate;
     @Temporal(TemporalType.DATE)

@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `address` (
 --
 -- Dumping data for table `address`
 --
---comment this data to use as template for migration
+
 INSERT INTO `address` (`id`, `brgy`, `location_code`, `account_prefix`, `accounts_count`, `due_day`) VALUES
 (1, 'Cogtong', 1, '01', 572, 20),
 (2, 'Tawid', 1, '02', 199, 20),
@@ -206,24 +206,6 @@ CREATE TABLE IF NOT EXISTS `modified_expense` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `modified_payment`
---
-
-CREATE TABLE IF NOT EXISTS `modified_payment` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `payment_id` bigint(20) NOT NULL,
-  `or_number` varchar(20) NOT NULL,
-  `amount_paid` decimal(9,2) NOT NULL,
-  `date` date NOT NULL,
-  `creation_time` datetime NOT NULL,
-  `created_by_user` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `payment_id` (`payment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `modified_reading`
 --
 
@@ -285,9 +267,9 @@ CREATE TABLE IF NOT EXISTS `role` (
 
 INSERT INTO `role` (`id`, `role_name`, `description`) VALUES
 (1, 'ACCOUNTS', 'Customers and Accounts'),
-(2, 'READINGS', 'Meter Readings'),
+(2, 'READINGS', 'Meter Readings, Expenses, Discount'),
 (3, 'REPORTS', 'Bills and Reports'),
-(4, 'TRANSACTIONS', 'Payments'),
+(4, 'PAYMENTS', 'Payments'),
 (5, 'SYSTEM', 'System Users');
 
 -- --------------------------------------------------------
@@ -447,12 +429,6 @@ ALTER TABLE `meter_reading`
 ALTER TABLE `modified_expense`
   ADD CONSTRAINT `modifiedExpenseSched` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `originalExpense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `modified_payment`
---
-ALTER TABLE `modified_payment`
-  ADD CONSTRAINT `modified_payment_copy` FOREIGN KEY (`payment_id`) REFERENCES `payment` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `modified_reading`

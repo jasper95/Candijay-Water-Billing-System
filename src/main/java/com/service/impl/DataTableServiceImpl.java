@@ -56,16 +56,12 @@ public class DataTableServiceImpl implements DataTableService{
                     Payment payment = (Payment) a;
                     Hibernate.initialize(payment.getAccount());
                     Hibernate.initialize(payment.getInvoice());
+                    Hibernate.initialize(payment.getInvoice().getReading());
                 }
             } else if(!results.isEmpty() && results.get(0) instanceof ModifiedReading){
                 for (T a: results){
                     ModifiedReading modifiedReading = (ModifiedReading) a;
                     Hibernate.initialize(modifiedReading.getReading());
-                }
-            } else if(!results.isEmpty() && results.get(0) instanceof ModifiedPayment){
-                for (T a: results){
-                    ModifiedPayment modifiedPayment = (ModifiedPayment) a;
-                    Hibernate.initialize(modifiedPayment.getPayment());
                 }
             }
             return new DataSet<T>(results, count, countFiltered);

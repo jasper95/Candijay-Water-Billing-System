@@ -100,12 +100,12 @@ public class Invoice  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    @JsonBackReference
+
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_EMPTY)
     public MeterReading getReading() {
         return reading;
     }
-    
+
     @JsonProperty
     public void setReading(MeterReading reading) {
         this.reading = reading;
@@ -232,6 +232,10 @@ public class Invoice  implements java.io.Serializable {
 
     public void setDepreciationFund(BigDecimal depreciationFund) {
         this.depreciationFund = depreciationFund;
+    }
+
+    public BigDecimal getTotalCurrent(){
+        return this.depreciationFund.add(this.penalty.add(this.basic.add(this.systemLoss.add(this.others))));
     }
 
     @Override

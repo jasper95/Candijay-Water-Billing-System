@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <cws:select id="exp-type" name="type" items="${typeOptions}" label="Type" icon="credit-card" required="true" placeholder="Select type" size="6"/>
-                            <cws:input id="exp-amount" name="amount" label="Amount" icon="money" placeholder="Enter amount" required="true" size="6"/>
+                            <cws:input id="exp-amount" name="amount" label="Amount" icon="money" placeholder="Enter amount" required="true" size="6" moreClasses="is-number"/>
                         </div>
                         <input type="hidden" name="update" id="expId"/>
                         <form:hidden path="version" id="exp-version"/>

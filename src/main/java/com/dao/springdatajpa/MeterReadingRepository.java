@@ -13,6 +13,8 @@ import com.domain.Schedule;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +24,8 @@ import org.springframework.data.repository.query.Param;
  * @author Bert
  */
 public interface MeterReadingRepository extends JpaRepository<MeterReading, Long> {
+    @EntityGraph(attributePaths = {"account", "invoice"}, type= EntityGraph.EntityGraphType.LOAD)
+    MeterReading findById(Long id);
     MeterReading findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(Account account);
     MeterReading findByAccountAndSchedule(Account account, Schedule schedule);
     Long countByScheduleAndAccount_AddressIn(Schedule sched, Collection<Address> addresses);

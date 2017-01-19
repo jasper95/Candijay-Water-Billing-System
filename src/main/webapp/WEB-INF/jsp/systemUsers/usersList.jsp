@@ -34,7 +34,7 @@
                         <datatables:table dom="t" reloadSelector="#reload-table" cssClass="table table-striped" id="users" url="/admin/system-users/get-all">
                             <datatables:column title="Username" property="username" sortable="false" sortInitDirection="none" renderFunction="custom-rendering#userListUsername"/>
                             <datatables:column title="Fullname" property="fullName" sortable="false"/>
-                            <datatables:column title="Type" property="type" cssCellClass="type" sortable="false"/>
+                            <datatables:column title="Type" property="typeToString" cssCellClass="type" sortable="false"/>
                             <datatables:column title="Status" property="status" cssCellClass="status" sortable="false"/>
                             <datatables:column title="Edit" sortable="false" renderFunction="custom-rendering#updateUser"/>
                             <dandelion:bundle excludes="jquery"/>

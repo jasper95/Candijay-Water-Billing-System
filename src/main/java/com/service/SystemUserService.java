@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface SystemUserService {
     User saveUser(User user);
+    List<Role> findRolesAllowedByUserType(String userType);
 }

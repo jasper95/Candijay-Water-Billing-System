@@ -55,19 +55,17 @@ yadcf.init(oTable_payment, [
         "filter_container_id": "acct-brgy",
         "column_number": 7,
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
-    },
-    {
+    },{
         "externally_triggered": true,
-        "filter_type": "text",
-        "filter_container_id": "or-number",
-        "column_number": 8,
-        "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
-    },
-    {
-        "externally_triggered": true,
-        "column_number" : 12,
+        "column_number" : 9,
         "filter_container_id": "payment-date",
         "filter_type": 'range_date',
         "date_format": "yyyy/mm/dd",
         "filter_reset_button_text": false
+    },{
+        "externally_triggered": true,
+        "filter_type": "text",
+        "filter_container_id": "or-number",
+        "column_number": 10,
+        "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     }], 'none');

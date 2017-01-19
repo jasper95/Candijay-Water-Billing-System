@@ -2,7 +2,10 @@ var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 function customerUrl(data, type, full){
-    return '<a href="/admin/customers/'+full.id+'/"> '+ full.lastname+', '+full.firstName+' '+full.middleName+'</a>';
+    return '<a href="/admin/customers/'+full.id+'/"> '+data+'</a>';
+};
+function customerUrlReadingList(data, type, full){
+    return '<a href="/admin/customers/'+full.account.customer.id+'/"> '+data+'</a>';
 };
 function customerListActions(data, type, full){
     return '<a type="button" href="/admin/customers/'+full.id+'/update/" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
@@ -15,10 +18,6 @@ function checkboxAccount(data, type, full){
 };
 function checkboxPayment(data, type, full){
     return full.amountPaid > 0 ? '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />' : '';
-}
-function selectAcountBtn(data, type, full){
-    var accNum = "\'"+full.number+"\'";
-    return '<a type="button" onClick="selectAccount('+accNum+')" class="btn btn-xs btn-primary"><i class="fa fa-hand-pointer-o fa-fw"></i></a>'
 };
 function toPeso(data, type, full){
     if (data == null) return '---';
@@ -30,16 +29,8 @@ function month(data, type, full){
 function checkbox(data, type, full){
     return '<input type="checkbox" name="checkboxValues" value="'+full.id+'" />';
 };
-function audit(data, type, full){
-    if(full.version == 0) return '---';
-    else return '<a type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-info-circle fa-fw"></i></a>';
-};
-function readingActions(data, type, full){
+function paymentListActions(data, type, full){
     return '<a type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
-};
-function paidDate(data, type, full){
-    if(data == null) return '---';
-    else return data.year+'/'+data.monthOfYear+'/'+data.dayOfMonth ;
 };
 function userListUsername(data, type, full){
     return (data === $('#current-user').val()) ? data+'(You)' : data;
@@ -48,7 +39,7 @@ function trueToYes(data, type, full){
     return (data) ? 'Yes' : 'No';
 };
 function activateDevice(data, type, full){
-    return (full.active) ? '': '<a type="button" onclick="activate('+full.id+')" class="btn btn-xs btn-success"><i class="fa fa-bolt fa-fw"></a>';
+    return (full.active) ? '': '<a type="button" onclick="activate('+full.id+')" class="btn btn-xs btn-success"><i class="fa fa-bolt fa-fw"></i></a>';
 };
 function editDevice(data, type, full){
     return '<a type="button" onClick="editDv('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
@@ -61,22 +52,53 @@ function activateAccount(data, type, full){
 function updateUser(data, type, full){
     return (full.username === $('#current-user').val()) ? '' : '<a type="button" onclick="updateUser('+ full.id +')" class="btn btn-xs btn-primary"><i class="fa fa-edit fa-fw"></i></a>';
 };
-function monthAndYear(data, type, full){
-    return monthNames[full.schedule.month -1]+ ' '+ full.schedule.year;
-};
-function monthAndYearPayment(data, type, full){
-    return monthNames[full.invoice.schedule.month -1]+ ' '+ full.invoice.schedule.year;
-};
 function expenseType(data, type, full){
     var type = ["", "Wage(1-15)", "Wage(16-30)", "Power Usage"];
     return type[data];
 };
-function editDiscount(data, type, full){
-    return '<a type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+function billsListActions(data, type, full){
+    if(full.status === "UNPAID") return '<a type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+    else return '';
 };
-function deleteItem(data, type, full){
-    return (full.invoice.status === "UNPAID") ? '<a type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger"><i class="fa fa-remove fa-fw"></i></a>' : '---';
-};
-function accRecentPayments(data, type, full){
+function accountRecentPayments(data, type, full){
     return '<a type="button" onClick="viewRecentPayments('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-money fa-fw"></i></a>';
-}
+};
+function recentReadingsActions(data, type, full){
+    var audit = '', del = '', edit = '', discount = '';
+    var info = '<a title="View Bill Details" type="button" onclick="viewBillDetails('+ full.invoice.id +')" class="bill-details-btn btn btn-xs btn-primary table-action-btn"><i class="fa fa-question fa-fw"></i></a>';
+    if (full.version !== 0) audit = '<a title="Input History" type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-history fa-fw"></i></a>';
+    if (full.invoice.status === "UNPAID") del = '<a title="Delete Reading" type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger table-action-btn"><i class="fa fa-remove fa-fw"></i></a>';
+    if(full.invoice.status === "UNPAID" || full.invoice.status === "DEBT"){
+        edit = '<a title="Edit Reading" type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-edit fa-fw"></i></a>';
+        discount = '<a title="Edit Discount" type="button" onClick="editDisc('+full.invoice.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+    }
+    return info+edit+discount+audit+del;
+};
+function scheduleAndStatus(data, type, full){
+    var actual_status = full.invoice.status;
+    if(actual_status === "PARTIALLYPAID" || actual_status === "FULLYPAID") actual_status = "PAID";
+    var res = monthNames[full.schedule.month -1]+ ' '+ full.schedule.year+'('+actual_status+')';
+    return '<a href="" onClick="billPrintablePreview('+full.invoice.id+'); return false"> '+ res+'</a>';
+};
+function monthAndYear(data, type, full){
+    var actual_status = full.status;
+    if(actual_status === "PARTIALLYPAID" || actual_status === "FULLYPAID") actual_status = "PAID";
+    var res = monthNames[full.schedule.month -1]+ ' '+ full.schedule.year+'('+actual_status+')';
+    return '<a href="" onClick="billPrintablePreview('+full.id+'); return false"> '+res+'</a>';
+};
+function recentBillsActions(data,type, full){
+    var discount = '', info = '<a title="View Bill Details" type="button" onclick="viewBillDetails('+ full.id +')" class="bill-details-btn btn btn-xs btn-primary table-action-btn"><i class="fa fa-question fa-fw"></i></a>';
+    if(full.status === "UNPAID" || full.status === "DEBT") discount = '<a title="Edit Discount" type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+    return info+discount;
+};
+function chooseAccount(data, type, full){
+    var accNum = "\'"+data+"\'";
+    return '<a href="" onClick="selectAccount('+accNum+'); return false">'+data+'</a>';
+};
+function readingListActions(data, type, full){
+    var audit = '', del = '', edit = '';
+    if (full.version !== 0) audit = '<a title="Input History" type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-history fa-fw"></i></a>';
+    if (full.invoice.status === "UNPAID") del = '<a title="Delete Reading" type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger table-action-btn"><i class="fa fa-remove fa-fw"></i></a>';
+    if(full.invoice.status === "UNPAID" || full.invoice.status === "DEBT") edit = '<a title="Edit Reading" type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-edit fa-fw"></i></a>';
+    return edit+audit+del;
+};

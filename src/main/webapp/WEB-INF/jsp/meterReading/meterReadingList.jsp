@@ -25,7 +25,7 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display: none;" class="container">
-            <div class="row" style="margin-bottom: 10px">
+            <div class="row">
                 <div class="col-sm-8">
                     <h2>Meter Reading</h2>
                 </div>
@@ -70,27 +70,27 @@
                 <div class="col-md-12 main">
                     <div class="table-responsive">
                         <a id="mrListReload"></a>
-                        <datatables:table deferLoading="0" deferRender="true" reloadSelector="#mrListReload" cssClass="table table-striped" dom="ltipr" id="reading" url="/admin/reading/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                        <datatables:table deferLoading="0" deferRender="true" reloadSelector="#mrListReload" cssClass="table table-striped" dom="ltipr" id="reading" url="${spring:mvcUrl('datatables-api#readings').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
-                            <datatables:column title="Acct No." name="account-number" property="account.number" filterable="true" sortable="false"/>
-                            <datatables:column title="Last Name" name="lastname" property="account.customer.lastname" sortable="false"/>
-                            <datatables:column title="First Name" name="firstname"  property="account.customer.firstName" sortable="false"/>
-                            <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" sortable="true" cssCellClass="month"/>
-                            <datatables:column title="Year" name="year" property="schedule.year" sortable="true" cssCellClass="year"/>
+                            <datatables:column title="Acct No." name="account-number" property="account.number" filterable="true" sortable="false" renderFunction="custom-rendering#accountUrl"/>
+                            <datatables:column name="lastname" property="account.customer.lastname" sortable="false" visible="false"/>
+                            <datatables:column name="firstname"  property="account.customer.firstName" sortable="false" visible="false"/>
+                            <datatables:column name="month" property="schedule.month" visible="false"/>
+                            <datatables:column name="year" property="schedule.year" visible="false" />
                             <datatables:column name="barangay" property="account.address.brgy" visible="false" sortable="false"/>
                             <datatables:column name="zone" property="account.address.locationCode" visible="false" sortable="false"/>
-                            <datatables:column title="Consumption" name="consume" property="consumption" cssCellClass="consumption" sortable="false"/>
-                            <datatables:column title="Reading" name="reading" property="readingValue" cssCellClass="reading" sortable="false"/>
-                            <datatables:column title="Status" name="invoice.status" property="invoice.status" sortable="false"/>
-                            <datatables:column title="Edit" renderFunction="custom-rendering#readingActions" searchable="false" sortable="false"/>
-                            <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
-                            <datatables:column title="Delete" sortable="false" renderFunction="custom-rendering#deleteItem"/>
+                            <datatables:column title="Name" sortable="false" property="account.customer.name" renderFunction="custom-rendering#customerUrlReadingList"/>
+                            <datatables:column title="Schedule" sortable="false" renderFunction="custom-rendering#scheduleAndStatus"/>
+                            <datatables:column title="Previous" property="previous" sortable="false"/>
+                            <datatables:column title="Present" name="reading" property="readingValue" cssCellClass="reading" sortable="false"/>
+                            <datatables:column title="Consumption" name="consume" property="consumption" cssCellClass="consumption"/>
+                            <datatables:column title="Actions" sortable="false" renderFunction="custom-rendering#readingListActions"/>
                             <datatables:extraJs bundles="mreading" placeholder="before_end_document_ready"/>
                             <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
-                            <datatables:extraJs bundles="months" placeholder="after_all"/>
                             <dandelion:bundle excludes="jquery"/>
                         </datatables:table>
                         <input type="hidden" id="row-num">
+                        <input type="hidden" id="bills-uri" value="${pageContext.servletContext.contextPath}/admin/bills/">
                     </div>
                 </div>
             </div>
@@ -104,6 +104,7 @@
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
+        <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
         <script src="${STATIC_URL}js/meter-reading/list.js"></script>
         <script src="${STATIC_URL}js/meter-reading/edit.js"></script>
         <script>

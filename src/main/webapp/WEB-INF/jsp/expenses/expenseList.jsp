@@ -47,18 +47,16 @@
             <div class="row">
                 <div class="col-md-12 main">
                     <div class="table-responsive">
-                        <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="expense" cssClass="table table-striped" url="/admin/expenses/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                        <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="expense" cssClass="table table-striped" url="${spring:mvcUrl('datatables-api#expenses').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column name="id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
                             <datatables:column title="Month" name="month" property="schedule.month" cssCellClass="month" renderFunction="custom-rendering#month" />
                             <datatables:column title="Year" name ="year" property="schedule.year" cssCellClass="year"/>
                             <datatables:column title="Amount" name="amount" property="amount" sortable="false" cssCellClass="amount" renderFunction="custom-rendering#toPeso"/>
                             <datatables:column title="Type" name="type" property="type" sortable="false" cssCellClass="type" renderFunction="custom-rendering#expenseType"/>
-                            <datatables:column title="Edit" sortable="false" renderFunction="custom-rendering#readingActions"/>
-                            <datatables:column title="Audit" sortable="false" renderFunction="custom-rendering#audit"/>
+                            <datatables:column title="Actions" renderFunction="custom-rendering#paymentListActions" sortable="false"/>
                             <dandelion:bundle excludes="jquery"/>
                             <datatables:extraJs bundles="expense" placeholder="before_end_document_ready" />
                             <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
-                            <datatables:extraJs bundles="months" placeholder="after_all"/>
                         </datatables:table>
                         <input type="hidden" id="row-num">
                     </div>

@@ -54,7 +54,7 @@
                                 <cws:select id="rd-yr" items="${yearOptions}" name="meterReading.schedule.year" label="Reading Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
                             </div>
                             <div class="col-sm-12 form-group">
-                                <cws:input id="reading-val" name="meterReading.readingValue" label="Reading value" icon="tachometer" placeholder="Enter reading" required="true" size="12"/>
+                                <cws:input id="reading-val" name="meterReading.readingValue" label="Reading value" icon="tachometer" placeholder="Enter reading" required="true" size="12" moreClasses="is-number"/>
                             </div>
                             <form:hidden path="meterReading.version" id="rd-vs"/>
                             <input type="hidden" name="readingId" id="rd-id"/>

@@ -2,6 +2,8 @@ package com.domain;
 
 import com.dao.util.AuditorDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -62,10 +64,12 @@ public class ModifiedReading implements java.io.Serializable {
         this.id = id;
     }
 
+    @JsonManagedReference
     public MeterReading getReading() {
         return reading;
     }
 
+    @JsonProperty
     public void setReading(MeterReading reading) {
         this.reading = reading;
     }

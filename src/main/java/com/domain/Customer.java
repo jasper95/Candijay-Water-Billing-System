@@ -148,6 +148,10 @@ public class Customer  implements java.io.Serializable {
         this.occupation = occupation;
     }
 
+    public String getName(){
+        return this.firstName+" "+this.lastname;
+    }
+
     @JsonBackReference
     public Set<Account> getAccounts() {
         return this.accounts;

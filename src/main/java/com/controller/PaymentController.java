@@ -7,6 +7,7 @@ package com.controller;
 
 import com.dao.springdatajpa.*;
 import com.domain.*;
+import com.forms.BillDiscountForm;
 import com.forms.Checkboxes;
 import com.forms.PaymentForm;
 import com.forms.SearchForm;
@@ -21,6 +22,8 @@ import com.service.PaymentService;
 
 import java.util.*;
 import javax.validation.Valid;
+
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
@@ -68,47 +71,53 @@ public class PaymentController {
         model.addAttribute("addressForm", new Address());
         return "payments/paymentList";
     }
-    
-    @RequestMapping(value = "/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<Payment> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
-       DataSet<Payment> dataSet = dataTableService.findWithDataTableCriterias(criterias, Payment.class);
-       return DatatablesResponse.build(dataSet, criterias);
-    }
 
-    @RequestMapping(value = "/modified/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<ModifiedPayment> findAllModifiedPayments(@DatatablesParams DatatablesCriterias criterias) {
-        DataSet<ModifiedPayment> dataSet = dataTableService.findWithDataTableCriterias(criterias, ModifiedPayment.class);
-        return DatatablesResponse.build(dataSet, criterias);
-    }
-    
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String getPaymentForm(ModelMap model){
         model.addAttribute("createOrUpdate", "Create");
         model.addAttribute("searchForm", new SearchForm());
         model.addAttribute("paymentForm", new PaymentForm());
+        model.addAttribute("billDiscountForm", new BillDiscountForm());
         return "payments/createOrUpdatePaymentForm";
     } 
     
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody HashMap processPaymentForm(@ModelAttribute("paymentForm") @Valid PaymentForm paymentForm,
-                                                    BindingResult result, @RequestParam(value="update", required = false) Long id){
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public @ResponseBody HashMap saveNewPayment(@ModelAttribute("paymentForm") @Valid PaymentForm paymentForm,
+                                                    BindingResult result){
         HashMap response = new HashMap();
-        if(id != null)
-            paymentForm.getPayment().setId(id);
-        //form is valid with no transaction constraints
-        if(!result.hasErrors())
-            result = (BindingResult)paymentService.validate(paymentForm, result);
+        result = paymentService.validate(paymentForm, result);
         if(!result.hasErrors()){
             try{
                 response.put("result", paymentService.save(paymentForm));
-            } catch(JpaOptimisticLockingFailureException e){
-                result.reject("global","This record was modified by another user. Try refreshing the page.");
             } catch(Exception e){
                 result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
             }
-        } if (result.hasErrors()) {
+        }
+        if (result.hasErrors()) {
+            response.put("status","FAILURE");
+            response.put("result",result.getAllErrors());
+            return response;
+        }
+        response.put("status","SUCCESS");
+        return response;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public @ResponseBody HashMap updatePayment(@ModelAttribute("paymentForm") @Valid PaymentForm form, BindingResult result,
+                                               @RequestParam("update") Long id){
+        HashMap response = new HashMap();
+        form.getPayment().setId(id);
+        result = paymentService.validate(form, result);
+        if(!result.hasErrors()){
+            try{
+                response.put("result", paymentService.save(form));
+            } catch (JpaOptimisticLockingFailureException e){
+                response.put("global", "This record was modified by another user. Try reloading the form.");
+            } catch(Exception e){
+                result.reject("global", "An unexpected error occurred while saving the data. Please report it to the developer.");
+            }
+        }
+        if (result.hasErrors()) {
             response.put("status","FAILURE");
             response.put("result",result.getAllErrors());
             return response;
@@ -160,37 +169,58 @@ public class PaymentController {
         return response;
     }
     
-    @RequestMapping(value="/{paymentId}/check-can-edit")
+    @RequestMapping(value="/{paymentId}")
     public @ResponseBody HashMap checkCanEdit(@PathVariable("paymentId") Long id){
         HashMap response = new HashMap();
-        try{
-            Payment payment  = paymentRepo.findById(id);
-            Invoice lastestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(payment.getAccount());
-            if(payment.getInvoice().getId().equals(lastestInvoice.getId())){
-                response.put("status", "SUCCESS");
-                response.put("payment", payment);
-                return response;
-            }
-        }catch(Exception e){
-            response.put("status", "FAILURE");
+        Payment payment  = paymentRepo.findById(id);
+        if (payment != null){
+            response.put("payment", payment);
+            response.put("status", "SUCCESS");
         }
-        response.put("status", "FAILURE");
+        else response.put("status", "FAILURE");
         return response;
     }
+
     @RequestMapping(value="/finalize-payments", method = RequestMethod.POST)
-    public @ResponseBody HashMap finalizePayments(@ModelAttribute("addressForm") @Valid Address addressForm, BindingResult result){
+    public @ResponseBody HashMap finalizePayments(@ModelAttribute("addressForm") @Valid Address addressForm, BindingResult result,
+                                                    @RequestParam(value="confirmed", required = false) Long confirmed){
         HashMap response = new HashMap();
         if(!result.hasErrors()){
             Address address = addressRepo.findByBrgy(addressForm.getBrgy());
-            List<Address> list = new ArrayList();
-            list.add(address);
-            response.put("result", paymentService.updateAccountsWithNoPayments(address));
-            response.put("status", "SUCCESS");
+            int day = LocalDateTime.now().getDayOfMonth();
+            boolean canUpdate = false;
+            if(day <= address.getDueDay()){
+                if(confirmed != null && confirmed == 1)
+                    canUpdate = true;
+            } else canUpdate = true;
+            if(canUpdate){
+                response.put("result", paymentService.updateAccountsWithNoPayments(address));
+                response.put("status", "SUCCESS");
+            } else response.put("status", "PENDING");
+            response.put("barangay", addressForm.getBrgy());
         }
         if(result.hasErrors()){
             response.put("status", "FAILURE");
             response.put("result", result.getAllErrors());
         }
         return response;
+    }
+
+    @RequestMapping(value="/recent-payments", method = RequestMethod.POST)
+    public String printRecentPayments(@RequestParam("id") Long id, ModelMap model){
+        Account account = accountRepo.findOne(id);
+        if(account == null){
+            model.put("type", "Requested page not found");
+            model.put("message","The content does not exists or might have been deleted");
+            return "errors";
+        } else {
+            model.put("ACCOUNT_NUMBER", account.getNumber());
+            model.put("ACCOUNT_NAME", account.getCustomer().toString());
+            model.put("ACCOUNT_ADDRESS", "Purok "+account.getPurok()+", "+account.getAddress().toString());
+            model.put("format", "pdf");
+            model.put("datasource", paymentService.getPreviousPaymentsDataSource(account));
+            return "rpt_previous_payments";
+        }
+
     }
 }

@@ -33,30 +33,43 @@
                         </ul>
                     </li>
                 </sec:authorize>
-                <sec:authorize access="hasAuthority('READINGS')">
-                    <li>
-                        <a href="${pageContext.servletContext.contextPath}/admin/reading/">
-                            <i class="fa fa-tachometer fa-lg"></i> Meter Reading
-                        </a>
-
-                    </li>
-                </sec:authorize>
-                <sec:authorize access="hasAuthority('TRANSACTIONS')">
+                <sec:authorize access="hasAnyAuthority('PAYMENTS', 'READINGS')">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle animate" data-toggle="dropdown">
                             <i class="fa fa-bank fa-lg"></i> Transactions <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="${pageContext.servletContext.contextPath}/admin/payments/">
-                                    <i class="fa fa-money fa-lg"></i> Payments
-                                </a>
-                            </li>
-                            <li>
-                                <a href="${pageContext.servletContext.contextPath}/admin/expenses/">
-                                    <i class="fa fa-credit-card fa-lg"></i> Expenses
-                                </a>
-                            </li>
+                            <sec:authorize access="hasAuthority('READINGS')">
+                                <li>
+                                    <a href="${pageContext.servletContext.contextPath}/admin/reading/new">
+                                        <i class="fa fa-tachometer fa-lg"></i> Create Readings
+                                    </a>
+
+                                </li>
+                                <li>
+                                    <a href="${pageContext.servletContext.contextPath}/admin/reading/">
+                                        <i class="fa fa-search fa-lg"></i> Search Readings
+                                    </a>
+
+                                </li>
+                                <li>
+                                    <a href="${pageContext.servletContext.contextPath}/admin/expenses/">
+                                        <i class="fa fa-credit-card fa-lg"></i> Expenses
+                                    </a>
+                                </li>
+                            </sec:authorize>
+                            <sec:authorize access="hasAuthority('PAYMENTS')">
+                                <li>
+                                    <a href="${pageContext.servletContext.contextPath}/admin/payments/new">
+                                        <i class="fa fa-money fa-lg"></i> Create Payments
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${pageContext.servletContext.contextPath}/admin/payments/">
+                                        <i class="fa fa-search fa-lg"></i> Search Payments
+                                    </a>
+                                </li>
+                            </sec:authorize>
                         </ul>
                     </li>
                 </sec:authorize>

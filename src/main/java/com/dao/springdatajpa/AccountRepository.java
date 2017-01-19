@@ -32,4 +32,5 @@ public interface AccountRepository extends JpaRepository<Account,Long>{
     Long countByAddressInAndStatus(Collection<Address> addresses, AccountStatus status);
     List<Account> findByAddressInAndStatusIn(Collection<Address> address, Collection<AccountStatus> statuses);
     List<Account> findByAddressInAndStatusUpdatedAndStatusIn(Collection<Address> addresses, boolean statusUpdated, Collection<AccountStatus> statuses);
+    List<Account> findByAddressAndStatusUpdatedAndStatus(Address address, boolean statusUpdated, AccountStatus status);
 }

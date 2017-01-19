@@ -25,6 +25,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name="address")
 public class Address  implements java.io.Serializable {
 
+
     @Id @GeneratedValue(strategy=IDENTITY)
     @Column(name="id", unique=true, nullable=false)
     private Long id; 

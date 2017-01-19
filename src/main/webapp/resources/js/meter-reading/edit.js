@@ -23,7 +23,7 @@ $(document).ready(function(){
                 //populate account details
                 var account = reading.account;
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
-                var address = account.address.brgy+",  Zone "+account.address.locationCode;
+                var address = "Purok "+account.purok+", "+account.address.brgy;
                 var lastReading = "Last Reading:  "+data.last_reading;
                 var status = $('#md-status');
                 if(account.status === "ACTIVE"){
@@ -38,7 +38,7 @@ $(document).ready(function(){
             else{
                 BootstrapDialog.alert({
                     title: 'ACTION DENIED',
-                    message: 'Cannot edit a reading with finalized payment.',
+                    message: data.message,
                     type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
                     closable: true, // <-- Default value is false
                     draggable: true, // <-- Default value is false
@@ -82,7 +82,7 @@ $(document).ready(function(){
                 if(result) {
                     $.getJSON($('#reading-uri').val()+'delete/'+id, function(response){
                         if(response.status === "SUCCESS"){
-                            $('#mrListReload').trigger('click');
+                            $('#fetchAccount').submit();
                         } else {
                             BootstrapDialog.alert({
                                 title: 'ACTION DENIED',
@@ -96,5 +96,5 @@ $(document).ready(function(){
                 }
             }
         });
-    }
+    };
 });

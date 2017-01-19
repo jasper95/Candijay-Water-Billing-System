@@ -30,11 +30,11 @@
                             <form id="main-form">
                                 <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                 <div class="col-sm-12 form-group">
-                                    <div class="col-sm-12 has-feedback ">
+                                    <div class="col-md-12 has-feedback ">
                                         <label class="control-label" for="category">Report Category <span style="color:red">&#42</span></label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-home fa-fw"></i></span>
-                                            <select id="category" name="brgy" autocomplete="off" class="form-control input-sm">
+                                            <select id="category" name="brgy" autocomplete="off" class="form-control input-md">
                                                 <option value="">--Select category--</option>
                                                 <option value="1">Customers Accountability</option>
                                                 <option value="2">Tables</option>

@@ -93,9 +93,8 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     @Override
     @Transactional(readOnly=true)
     public boolean isReadingPaid(MeterReading reading) {
-        Invoice invoice = invoiceRepo.findByAccountAndSchedule(reading.getAccount(), reading.getSchedule());
-        return invoice != null && !invoice.getStatus().equals(InvoiceStatus.UNPAID);
-        
+        Invoice invoice = reading.getInvoice();
+        return (!invoice.getStatus().equals(InvoiceStatus.UNPAID) && !invoice.getStatus().equals(InvoiceStatus.DEBT));
     }
 
     @Transactional(readOnly = true)
@@ -125,6 +124,8 @@ public class MeterReadingServiceImpl implements MeterReadingService{
             Account account = reading.getAccount();
             account.setStatusUpdated(true);
             device.setLastReading(device.getLastReading()-reading.getConsumption());
+            account.setPenalty(reading.getInvoice().getPenalty());
+            account.setAccountStandingBalance(account.getAccountStandingBalance().subtract(reading.getInvoice().getNetCharge()));
             mrRepo.delete(reading);
             deviceRepo.save(device);
             accountRepo.save(account);
@@ -171,7 +172,6 @@ public class MeterReadingServiceImpl implements MeterReadingService{
             else if(columnDef.getName().equals("customer.lastname"))
                 zone = columnDef.getSearch();
         }
-        System.out.println(isBrgy+" "+brgy+" "+zone);
         try{
             List<Address> addresses = new ArrayList<>();
             if(isBrgy.equals("1"))
@@ -185,7 +185,6 @@ public class MeterReadingServiceImpl implements MeterReadingService{
             results = results.subList(criterias.getStart(), offset);
             return new DataSet<>(results, accountRepo.count(), filteredCount);
         }catch (Exception e){
-            e.printStackTrace();
             return new DataSet<>(new ArrayList<>(), accountRepo.count(), (long) 0);
         }
 

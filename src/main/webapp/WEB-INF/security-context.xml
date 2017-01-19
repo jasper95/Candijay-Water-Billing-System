@@ -17,16 +17,16 @@
         <intercept-url pattern="/admin/settings/**" access="hasAuthority('SYSTEM')"/>
         <intercept-url pattern="/admin/system-users" access="hasAuthority('SYSTEM')"/>
         <intercept-url pattern="/admin/system-users/**" access="hasAuthority('SYSTEM')"/>
-        <intercept-url pattern="/admin/expenses" access="hasAuthority('TRANSACTIONS')"/>
-        <intercept-url pattern="/admin/expenses/**" access="hasAuthority('TRANSACTIONS')"/>
-        <intercept-url pattern="/admin/payments" access="hasAuthority('TRANSACTIONS')"/>
-        <intercept-url pattern="/admin/payments/**" access="hasAuthority('TRANSACTIONS')"/>
+        <intercept-url pattern="/admin/reading" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/reading/**" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/expenses" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/expenses/**" access="hasAuthority('READINGS')"/>
+        <intercept-url pattern="/admin/payments" access="hasAuthority('PAYMENTS')"/>
+        <intercept-url pattern="/admin/payments/**" access="hasAuthority('PAYMENTS')"/>
         <intercept-url pattern="/admin/reports" access="hasAuthority('REPORTS')"/>
         <intercept-url pattern="/admin/reports/**" access="hasAuthority('REPORTS')"/>
         <intercept-url pattern="/admin/bills" access="hasAuthority('REPORTS')"/>
         <intercept-url pattern="/admin/bills/**" access="hasAuthority('REPORTS')"/>
-        <intercept-url pattern="/admin/reading" access="hasAuthority('READINGS')"/>
-        <intercept-url pattern="/admin/reading/**" access="hasAuthority('READINGS')"/>
         <intercept-url pattern="/admin/customers" access="hasAuthority('ACCOUNTS')"/>
         <intercept-url pattern="/admin/customers/**" access="hasAuthority('ACCOUNTS')"/>
         <intercept-url pattern="/admin/accounts" access="hasAuthority('ACCOUNTS')"/>

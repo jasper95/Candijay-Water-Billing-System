@@ -47,6 +47,7 @@ public class User extends AuditableEntity implements java.io.Serializable, UserD
     @Column(name="status", nullable=false)
     @Enumerated(EnumType.STRING)
     private UserStatus status = UserStatus.ACTIVE;
+    @NotNull(message = "This field is required")
     @Column(name="type", nullable=false)
     @Enumerated(EnumType.STRING)
     private UserType type;
@@ -127,6 +128,10 @@ public class User extends AuditableEntity implements java.io.Serializable, UserD
 
     public void setType(UserType type) {
         this.type = type;
+    }
+
+    public String getTypeToString(){
+        return this.type.getLabel();
     }
 
     @Override

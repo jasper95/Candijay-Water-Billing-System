@@ -26,12 +26,6 @@
                                 </div>
                             </div>
                             <div class="info-wrapper">
-                                <img class="info-img" src="${STATIC_URL}img/standing_balance.png">
-                                <div class="info-text">
-                                    <span id="md-last-reading"></span>
-                                </div>
-                            </div>
-                            <div class="info-wrapper">
                                 <img class="info-img" src="${STATIC_URL}img/status.png">
                                 <div class="info-text">
                                     <span id="md-status"></span>
@@ -41,14 +35,10 @@
                         <div class="col-sm-6">
                             <jsp:include page="../postAuth/form-alerts.jsp"/>
                             <h4 class="sub-header">Payment Form</h4>
+                            <form:hidden path="payment.amountPaid" id="pm-paid"/>
+                            <form:hidden path="payment.date" id="pm-date"/>
                             <div class="col-sm-12 form-group">
                                 <cws:input id="pm-or" name="payment.receiptNumber" label="OR Number" icon="money" placeholder="Enter or no." required="false" size="12"/>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <cws:input id="pm-paid" name="payment.amountPaid" label="Amount" icon="money" placeholder="Enter amount" required="true" size="12"/>
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                <cws:input id="pm-date" name="payment.date" label="Date" icon="calendar" placeholder="Choose date" required="true" readOnly="true" size="12"/>
                             </div>
                             <input type="hidden" name="update" id="pid"/>
                             <p class="audit-info">Created on <span id="cr-time-audit"></span> by <span id="cr-user-audit"></span></p>

@@ -10,6 +10,26 @@ package com.domain.enums;
  * @author Bert
  */
 public enum UserType {
-    LIMITED,
-    SUPERUSER
+    SUPERUSER("Superuser","SUPERUSER"),
+    ENCODER("Encoder", "ENCODER"),
+    TREASURER("Treasurer", "TREASURER"),
+    REPORTS_VIEWER("Reports Viewer", "REPORTS_VIEWER"),
+    LIMITED("Limited", "LIMITED");
+
+    private String label;
+    private String value;
+
+    UserType(String label, String value){
+        this.label = label;
+        this.value = value;
+    }
+
+    public String getLabel(){
+        return this.label;
+    }
+
+    public String getValue(){
+        return this.value;
+    }
+
 }

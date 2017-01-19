@@ -44,8 +44,8 @@
                     </div>
                     <div class="col-sm-12 form-group">
                         <cws:select id="cust-gn" name="customer.gender"  items="${genderOptions}" label="Gender" placeholder="Select Gender" icon="mars-stroke"  required="true" size="3"/>
-                        <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="true" size="3"/>
-                        <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 11-digit #" required="true" size="3"/>
+                        <cws:input id="cust-mc" name="customer.familyMembersCount" label="Household Members Count" placeholder="Enter members" icon="users" required="true" size="3" moreClasses="is-number"/>
+                        <cws:input id="cust-cn" name="customer.contactNumber" label="Contact Number" icon="mobile" placeholder="Enter 11-digit #" required="true" size="3" moreClasses="is-number"/>
                         <cws:input id="cust-oc" name="customer.occupation" label="Occupation" icon="bank" placeholder="Enter occupation" required="false" size="3"/>
                     </div>
                 </div>

@@ -12,11 +12,11 @@
                         <div class="table-responsive">
                             <div id="auditReading-id" style="display: none;"></div>
                             <a id="filterButtonAuditTable"></a>
-                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="auditReading" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${pageContext.servletContext.contextPath}/admin/reading/modified/datatable-search" displayLength="3" dom="tp" >
+                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="auditReading" filterPlaceholder="none" filterSelector="#filterButtonAuditTable" serverSide="true" url="${spring:mvcUrl('datatables-api#modified-readings').build()}" displayLength="3" dom="tp" >
                                 <datatables:column property="reading.id" filterable="true" visible="false" selector="auditReading-id"/>
                                 <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
-                                <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" sortable="true" cssCellClass="month"/>
-                                <datatables:column title="Year" name="year" property="schedule.year" sortable="true" cssCellClass="year"/>
+                                <datatables:column title="Month" name="month" property="schedule.month" renderFunction="custom-rendering#month" sortable="false" cssCellClass="month"/>
+                                <datatables:column title="Year" name="year" property="schedule.year" sortable="false" cssCellClass="year"/>
                                 <datatables:column title="Consumption" name="consume" property="consumption" cssCellClass="consumption" sortable="false"/>
                                 <datatables:column title="Reading" name="reading" property="readingValue" cssCellClass="reading" sortable="false"/>
                                 <datatables:column title="Modified on" name="creationTime" property="creationTime"/>

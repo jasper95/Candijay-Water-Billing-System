@@ -73,7 +73,6 @@ public class InvoicingServiceImpl implements InvoicingService {
         total = basic.add(systemLoss.add(depreciationFund.add(others)));
         if(newInvoice.getId() == null){
             newInvoice.setAccount(reading.getAccount());
-            newInvoice.setStatus(InvoiceStatus.UNPAID);
             newInvoice.setArrears(reading.getAccount().getAccountStandingBalance());
             newInvoice.setPenalty(reading.getAccount().getPenalty());
             newInvoice.setOthers(others);
@@ -81,6 +80,7 @@ public class InvoicingServiceImpl implements InvoicingService {
             newInvoice.setReading(reading);
             total = total.add(reading.getAccount().getAccountStandingBalance().add(reading.getAccount().getPenalty()));
         } else total = total.add(newInvoice.getArrears().add(newInvoice.getPenalty()));
+        newInvoice.setStatus(InvoiceStatus.UNPAID);
         newInvoice.setNetCharge(total);
         newInvoice.setRemainingTotal(total);
         invoiceRepo.save(newInvoice);
@@ -98,6 +98,7 @@ public class InvoicingServiceImpl implements InvoicingService {
         invoice.setNetCharge((invoice.getNetCharge().add(oldDiscount)).subtract(form.getDiscount()));
         Account account = invoice.getAccount();
         account.setAccountStandingBalance(invoice.getNetCharge());
+        invoice.setRemainingTotal(invoice.getNetCharge());
         accountRepo.save(account);
         return invoiceRepo.save(invoice);
     }

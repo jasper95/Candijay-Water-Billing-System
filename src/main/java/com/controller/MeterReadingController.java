@@ -13,6 +13,7 @@ import com.dao.springdatajpa.ScheduleRepository;
 import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.forms.AccountabilityReportForm;
+import com.forms.BillDiscountForm;
 import com.forms.MeterReadingForm;
 import com.forms.SearchForm;
 import com.github.dandelion.datatables.core.ajax.DataSet;
@@ -23,6 +24,7 @@ import com.service.DataTableService;
 import com.service.FormOptionsService;
 import com.service.MeterReadingService;
 
+import java.math.BigDecimal;
 import java.util.*;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,7 @@ public class MeterReadingController {
         model.addAttribute("addressForm", new AccountabilityReportForm());
         model.addAttribute("zoneOptions", options.get("zone"));
         model.addAttribute("brgyOptions", options.get("brgy"));
+        model.addAttribute("billDiscountForm", new BillDiscountForm());
         return "meterReading/createOrUpdateMeterReading";
     }
     
@@ -141,16 +144,24 @@ public class MeterReadingController {
 
     @RequestMapping(value="/{readingId}/check-can-edit")
     public @ResponseBody HashMap updateMeterReading(@PathVariable("readingId") Long id){
-        MeterReading reading = mrRepo.findByIdWithAccount(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount());
+        MeterReading reading = mrRepo.findById(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount());
+        boolean invoiceIsDiscounted = reading.getInvoice().getDiscount().compareTo(BigDecimal.ZERO) > 0;
         HashMap response = new HashMap();
-        if(!reading.equals(lastMeterReading) || reading.getAccount().isStatusUpdated()){
+        if(!reading.equals(lastMeterReading)){
             response.put("status", "FAILED");
-            return response;
+            response.put("message", "You can only edit account\'s latest reading");
+        } else if (mrService.isReadingPaid(reading)){
+            response.put("status", "FAILED");
+            response.put("message", "You can only edit UNPAID reading.");
+        } else if (invoiceIsDiscounted){
+            response.put("status", "FAILED");
+            response.put("message", "Cannot edit reading with bill discount greater than zero.");
+        } else {
+            response.put("status", "SUCCESS");
+            response.put("reading", reading);
+            int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption(): 0;
+            response.put("last_reading",  lastReading);
         }
-        response.put("status", "SUCCESS");
-        response.put("reading", reading);
-        int lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption(): 0;
-        response.put("last_reading",  lastReading);
         return response;
     }
 
@@ -245,25 +256,5 @@ public class MeterReadingController {
             response.put("last_reading", device.getLastReading());
         }
         return response;
-    }
-    
-    @RequestMapping(value = "/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<MeterReading> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
-       DataSet<MeterReading> dataSet = dataTableService.findWithDataTableCriterias(criterias, MeterReading.class);
-       return DatatablesResponse.build(dataSet, criterias);
-    }
-
-    @RequestMapping(value = "/modified/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<ModifiedReading> findAllModifiedReading(@DatatablesParams DatatablesCriterias criterias) {
-        DataSet<ModifiedReading> dataSet = dataTableService.findWithDataTableCriterias(criterias, ModifiedReading.class);
-        return DatatablesResponse.build(dataSet, criterias);
-    }
-
-    @RequestMapping(value="/find-accounts-no-reading")
-    public @ResponseBody DatatablesResponse<Account> findAccountsWithNoReading(@DatatablesParams DatatablesCriterias criterias){
-        DataSet<Account> dataSet = mrService.findAccountsWithCustomParams(criterias);
-        return DatatablesResponse.build(dataSet, criterias);
     }
 }

@@ -193,13 +193,6 @@ public class CustomerController {
         return "redirect:/admin/customers/"+customerForm.getCustomer().getId()+"/";
     }
     
-    @RequestMapping("/datatable-search")
-    public @ResponseBody
-    DatatablesResponse<Customer> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
-       DataSet<Customer> dataSet = dataTableService.findWithDataTableCriterias(criterias, Customer.class);
-       return DatatablesResponse.build(dataSet, criterias);
-    }
-    
     @RequestMapping("/{customer_id}/accounts")
     public @ResponseBody List<Account> getAllAccounts(@PathVariable("customer_id") Long id){
         return accountRepo.getByCustomer_Id(id);

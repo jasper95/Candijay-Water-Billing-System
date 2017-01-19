@@ -20,7 +20,10 @@ $(document).ready(function(){
                     showFieldError($('#current-pw'), errors.current);
                 if(errors.new !== undefined)
                     showFieldError($('#new-pw'), errors.new);
-            }else showSuccess('#md-name-edit-form', "Password successfully updated");
+            }else{
+                cleanUpFormFields('#md-password-edit');
+                showSuccess('#md-name-edit-form', "Password successfully updated");
+            }
         })
     });
     $('#update-profile-link').click(function(){
@@ -33,8 +36,8 @@ $(document).ready(function(){
     $('#update-profile-link2').click(function(){
         $('#update-profile-link').trigger('click');
     });
-    $('input:password.pw-update').keyup(function(){
-        var rtPw =  $('#rt-new-pw').val();
+    $('#rt-new-pw').keyup(function(){
+        var rtPw =  $(this).val();
         var pw = $('#new-pw').val();
         if(rtPw.length > 0 && rtPw != pw){
             if(!$('#rt-profile-container').hasClass('has-error')){
@@ -81,4 +84,31 @@ $(document).ready(function(){
         if(code==13)
             $('#filterButton2').trigger('click');
     });
+    $('#acct-no').on("keydown", '.yadcf-filter', function (e){
+        var input = $(this).val();
+        var code = e.keyCode || e.which;
+        if(input.length == 2 && code !== 8)
+            $(this).val(input+"-");
+    });
+    $('.is-number').keydown(function (e) {
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+            return;
+        }
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+     window.realTimeCalculationHelper = function(input, reference, target_display, text_display){
+        var string_amount = input.val(), amount_paid = parseFloat(string_amount);
+        amount_paid = !isNaN(amount_paid) ? amount_paid : 0;
+        var current_balance = Number(reference.val()) ;
+        if(current_balance >= amount_paid){
+            var new_balance = current_balance - amount_paid;
+            target_display.html(text_display+new_balance);
+        }
+        else
+            input.val(string_amount.substring(0,string_amount.length-1));
+    }
 });

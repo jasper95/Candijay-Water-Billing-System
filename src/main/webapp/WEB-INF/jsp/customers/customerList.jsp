@@ -18,7 +18,7 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div id="content-loader" class="loader"></div>
         <div id="main-content" style="display:none" class="container">
-            <div class="row" style="margin-bottom: 10px">
+            <div class="row">
                 <div class="col-sm-9">
                     <h2>Customers</h2>
                 </div>
@@ -43,15 +43,15 @@
             <div class="row">
                 <div class="col-md-12 main">
                     <div class="table-responsive">
-                        <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="/admin/customers/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
-                            <datatables:column visible="false" searchable="true" filterable="true" property="lastname" sortInitDirection="asc" sortInitOrder="0"/>
-                            <datatables:column visible="false" searchable="true" property="firstName" sortInitDirection="asc" sortInitOrder="1"/>
-                            <datatables:column sortable="false" filterable="false" title="Name" renderFunction="custom-rendering#customerUrl"/>
-                            <datatables:column title="Gender" filterable="false" sortable="false" property="gender"/>
-                            <datatables:column title="Occupation" filterable="false" sortable="false" property="occupation"/>
-                            <datatables:column title="Contact" filterable="false" sortable="false" property="contactNumber"/>
-                            <datatables:column title="Members" filterable="false" sortable="false" property="familyMembersCount"/>
-                            <datatables:column filterable="false" title="Edit" renderFunction="custom-rendering#customerListActions" sortable="false"/>
+                        <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="${spring:mvcUrl('datatables-api#customers').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
+                            <datatables:column visible="false" filterable="true" property="lastname" sortInitDirection="asc" sortInitOrder="0"/>
+                            <datatables:column visible="false" property="firstName" sortInitDirection="asc" sortInitOrder="1"/>
+                            <datatables:column title="Name"  sortable="false" property="name" renderFunction="custom-rendering#customerUrl"/>
+                            <datatables:column title="Gender" sortable="false" property="gender"/>
+                            <datatables:column title="Occupation" sortable="false" property="occupation"/>
+                            <datatables:column title="Contact" sortable="false" property="contactNumber"/>
+                            <datatables:column title="Members" sortable="false" property="familyMembersCount"/>
+                            <datatables:column title="Edit" renderFunction="custom-rendering#customerListActions" sortable="false"/>
                             <datatables:extraJs bundles="customer" placeholder="before_end_document_ready" />
                             <datatables:extraJs bundles="session-timeout" placeholder="before_end_document_ready"/>
                             <dandelion:bundle excludes="jquery"/>

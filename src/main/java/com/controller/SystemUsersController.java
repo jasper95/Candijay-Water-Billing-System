@@ -10,11 +10,13 @@ import com.dao.springdatajpa.UserRepository;
 import com.domain.Role;
 import com.domain.User;
 import com.domain.enums.UserStatus;
+import com.domain.enums.UserType;
 import com.service.SystemUserService;
 
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,20 +54,15 @@ public class SystemUsersController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateFormat.setLenient(true);
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
-        binder.registerCustomEditor(Role.class, new CustomRoleEditor());
         binder.registerCustomEditor(Date.class,  new CustomDateEditor(dateFormat, true));
+        binder.setDisallowedFields("roles");
     }
-    
-    private class CustomRoleEditor extends PropertyEditorSupport{
-        @Override
-        public void setAsText(String text) throws IllegalArgumentException {
-            setValue(roleRepo.findOne(Long.valueOf(text)));
-        }      
-    }
+
 
     @RequestMapping(method=RequestMethod.GET)
     public String getSystemUsers(ModelMap model) {
         model.addAttribute("roles", roleRepo.findAll());
+        model.addAttribute("userTypes", UserType.values());
         model.addAttribute("user", new User());
         return "systemUsers/usersList";
     }
@@ -80,12 +77,11 @@ public class SystemUsersController {
     public @ResponseBody
     HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result){
         HashMap response = new HashMap();
-        if(user.getRoles().isEmpty())
-            result.reject("global", "Please select at least one role.");
         if(!result.hasErrors())
             if(userRepo.findByUsername(user.getUsername()) != null)
                 result.rejectValue("username", "", "Username already taken");
         if(!result.hasErrors()){
+            System.out.println("WAT");
             user.setPassword(encoder.encode(user.getPassword()));
             response.put("user",userService.saveUser(user));
             response.put("status", "SUCCESS");
@@ -103,8 +99,6 @@ public class SystemUsersController {
         HashMap response = new HashMap();
         int status = Integer.valueOf(params.get("updateStatus"));
         User user = userRepo.findOne(userForm.getId());
-        if(userForm.getRoles().isEmpty())
-            result.reject("global", "Please select at least one role.");
         if(!result.hasErrors()) {
             if (user != null) {
                 user.setRoles(userForm.getRoles());
@@ -112,6 +106,7 @@ public class SystemUsersController {
                     user.setStatus(UserStatus.ACTIVE);
                 else
                     user.setStatus(UserStatus.INACTIVE);
+                user.setType(userForm.getType());
                 user.setVersion(userForm.getVersion());
             } else result.reject("global", "User does not exists");
         }
@@ -145,6 +140,19 @@ public class SystemUsersController {
             }
         }
         response.put("status", "FAILURE");
+        return response;
+    }
+
+    @RequestMapping(value = "/get-allowed-roles/{userType}", method = RequestMethod.GET)
+    public @ResponseBody HashMap findAllowedRoles(@PathVariable("userType") String userType){
+        HashMap response = new HashMap();
+        List<Long> ids = userService.findRolesAllowedByUserType(userType).stream()
+                                                                        .map(Role::getId)
+                                                                       .collect(Collectors.toList());
+        if(!ids.isEmpty()){
+            response.put("status","SUCCESS");
+        } else response.put("status", "FAILURE");
+        response.put("result", ids);
         return response;
     }
 }

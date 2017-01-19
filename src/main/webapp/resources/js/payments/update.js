@@ -1,14 +1,6 @@
 $(document).ready(function(){
-
-    $("#pm-date").datepicker({ changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});
-
-    window.viewChanges = function(id){
-        $('#auditPayment-id').find('input:first').val(id);
-        $('#filterButtonAuditTable').trigger('click');
-        $('#payment-info-modal').modal('show');
-    };
     window.checkCanEdit = function (id) {
-        $.getJSON($('#payments-uri').val()+ id + "/check-can-edit", function(data) {
+        $.getJSON($('#payments-uri').val()+ id, function(data) {
             if(data.status === "SUCCESS"){
                 cleanUpFormMsgs('#md-update-form');
                 var payment = data.payment;
@@ -16,7 +8,7 @@ $(document).ready(function(){
                 $('#pm-paid').val(payment.amountPaid);
                 $('#pm-date').val(payment.date);
                 $('#pm-version').val(payment.version);
-                $('#pm-or').val(payment.receiptNumber)
+                $('#pm-or').val(payment.receiptNumber);
                 $('#ac-id').val(account.id);
                 $('#pid').val(id);
                 $('#cr-time-audit').text(payment.creationTime);
@@ -24,8 +16,7 @@ $(document).ready(function(){
                 $('#cr-user-audit').text(payment.createdByUser);
                 $('#up-user-audit').text(payment.modifiedByUser);
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
-                var address = account.address.brgy+",  Zone "+account.address.locationCode;
-                var lastDue= "Standing Balance: &#8369; "+ (payment.account.accountStandingBalance+payment.amountPaid);
+                var address = "Purok "+account.purok+", "+account.address.brgy;
                 var status = $('#md-status');
                 if(account.status === "ACTIVE"){
                     status.removeClass().addClass("label label-success");
@@ -33,13 +24,12 @@ $(document).ready(function(){
                 status.text(account.status);
                 $('#md-full-name').text(fullname);
                 $('#md-address').text(address);
-                $('#md-last-reading').html(lastDue);
                 $('#payment-form-modal').modal('show');
             }
             else BootstrapDialog.alert({
-                title: 'ACTION DENIED',
-                message: 'You can only edit payments to latest invoice',
-                type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                title: 'PAYMENT NOT FOUND',
+                message: 'Payment does not exist or might have been deleted.',
+                type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
                 closable: true, // <-- Default value is false
                 draggable: true, // <-- Default value is false
             });
@@ -51,25 +41,16 @@ $(document).ready(function(){
     $('#md-update-form').on('submit', function(e){
         e.preventDefault();
         var form = $(this);
-        cleanUpFormMsgs('#md-update-form')
-        $.post($('#payments-uri').val()+'save', form.serialize(), function(response){
+        cleanUpFormMsgs('#md-update-form');
+        $.post($('#payments-uri').val()+'update', form.serialize(), function(response){
             if(validateForm('#md-update-form' ,response)){
-                showSuccess('#md-update-form', "Payment successfully updated")
+                showSuccess('#md-update-form', "Payment successfully updated");
                 var payment = response.result;
-                var invoice = payment.invoice;
                 var row = $('#payment tbody tr:nth-child('+$('#row-num').val()+')');
-                row.find('.invoice-status').text(invoice.status);
-                row.find('.payment-amount').html('&#8369 '+payment.amountPaid);
-                row.find('.payment-date').text(payment.date);
                 row.find('.or-number').text(payment.receiptNumber);
                 $('#pm-version').val(payment.version);
-                $('#last-reading').html("Standing Balance: &#8369; "+payment.account.accountStandingBalance)
             }
         })
     });
-    limitText($('#pm-or'), 7);
-    limitText($('#or-num'), 7);
-    function limitText(field, maxChar){
-        $(field).attr('maxlength',maxChar);
-    }
+    $('#pm-or').attr('maxlength',7);
 });
