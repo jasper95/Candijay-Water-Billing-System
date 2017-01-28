@@ -25,14 +25,14 @@ yadcf.init(oTable_account, [
         "data": barangayFilters,
         "filter_type": "select",
         "filter_container_id": "acct-brgy",
-        "column_number": 4,
+        "column_number": 3,
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     },{
         "externally_triggered": true,
         "data": zoneFilters,
         "filter_type": "select",
         "filter_container_id": "acct-zone",
-        "column_number": 5,
+        "column_number": 4,
         "sort_as": "numerical",
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     }], 'none');

@@ -79,20 +79,21 @@ public class InvoicingServiceImpl implements InvoicingService {
             reading.setInvoice(newInvoice);
             newInvoice.setReading(reading);
             total = total.add(reading.getAccount().getAccountStandingBalance().add(reading.getAccount().getPenalty()));
+            newInvoice.setStatus(InvoiceStatus.UNPAID);
         } else total = total.add(newInvoice.getArrears().add(newInvoice.getPenalty()));
-        newInvoice.setStatus(InvoiceStatus.UNPAID);
         newInvoice.setNetCharge(total);
         newInvoice.setRemainingTotal(total);
-        invoiceRepo.save(newInvoice);
+        newInvoice = invoiceRepo.save(newInvoice);
         reading.getAccount().setAccountStandingBalance(total);
-        reading.getAccount().setStatusUpdated(false);
+        if(newInvoice.getStatus().equals(InvoiceStatus.UNPAID))
+            reading.getAccount().setStatusUpdated(false);
         accountRepo.save(reading.getAccount());
     }
 
     @Transactional
     @Override
     public Invoice updateDiscount(BillDiscountForm form) {
-        Invoice invoice = invoiceRepo.findOne(form.getId());
+        Invoice invoice = invoiceRepo.findOne(form.getBillId());
         BigDecimal oldDiscount = invoice.getDiscount();
         invoice.setDiscount(form.getDiscount());
         invoice.setNetCharge((invoice.getNetCharge().add(oldDiscount)).subtract(form.getDiscount()));

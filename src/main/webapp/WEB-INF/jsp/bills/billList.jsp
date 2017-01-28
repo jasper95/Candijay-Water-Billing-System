@@ -70,8 +70,8 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
-                        <form:form id="checkbox-form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped">
+                    <div class="table-responsive table">
+                        <form:form id="checkbox-form" method="POST" modelAttribute="checkboxes">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="invoice" cssClass="table table-striped" url="${spring:mvcUrl('datatables-api#bills').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                 <datatables:column name="bill-id" property="id" filterable="true" cssCellClass="id" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
                                 <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkbox">
@@ -86,7 +86,7 @@
                                 <datatables:column name ="year" property="schedule.year" visible="false"/>
                                 <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
                                 <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
-                                <datatables:column title="Status" name="status" property="status" sortable="false" visible="false"/>
+                                <datatables:column name="status" property="status" sortable="false" visible="false"/>
                                 <datatables:column title="Name" sortable="false" property="account.customer.name" renderFunction="custom-rendering#customerUrlReadingList"/>
                                 <datatables:column title="Schedule" sortable="false" renderFunction="custom-rendering#monthAndYear"/>
                                 <datatables:column title="Total Current" property="totalCurrent" sortable="false" renderFunction="custom-rendering#toPeso"/>

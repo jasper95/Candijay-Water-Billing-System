@@ -7,7 +7,6 @@ package com.controller;
 
 import com.dao.springdatajpa.InvoiceRepository;
 import com.domain.Invoice;
-import com.domain.enums.InvoiceStatus;
 import com.forms.BillDiscountForm;
 import com.forms.Checkboxes;
 import com.service.DataTableService;
@@ -95,30 +94,5 @@ public class InvoiceController {
         model.put("datasource", new JRBeanCollectionDataSource(invoices));
         model.put("format", "pdf");
         return "rpt_bill";
-    }
-
-    @RequestMapping(value="/edit-discount/{id}")
-    public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
-        Invoice invoice = invoiceRepo.findById(id),
-                latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
-        HashMap response = new HashMap();
-        if(invoice != null && invoice.equals(latestInvoice) && invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)) {
-            response.put("invoice", invoice);
-            response.put("status", "SUCCESS");
-        } else response.put("status", "FAILURE");
-        return response;
-    }
-
-    @RequestMapping(value = "/update-discount", method = RequestMethod.POST)
-    public @ResponseBody HashMap updateDiscount(@ModelAttribute("billDiscountForm") @Valid BillDiscountForm form, BindingResult result){
-        HashMap response = new HashMap();
-        if(!result.hasErrors()){
-            response.put("invoice", invoiceService.updateDiscount(form));
-            response.put("status", "SUCCESS");
-        } if(result.hasErrors()){
-            response.put("status", "FAILURE");
-            response.put("result", result.getAllErrors());
-        }
-        return response;
     }
 }

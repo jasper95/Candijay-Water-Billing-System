@@ -42,7 +42,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
+                    <div class="table-responsive table">
                         <datatables:table deferLoading="0" deferRender="true" id="customer" cssClass="table table-striped" dom="ltipr" url="${spring:mvcUrl('datatables-api#customers').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column visible="false" filterable="true" property="lastname" sortInitDirection="asc" sortInitOrder="0"/>
                             <datatables:column visible="false" property="firstName" sortInitDirection="asc" sortInitOrder="1"/>

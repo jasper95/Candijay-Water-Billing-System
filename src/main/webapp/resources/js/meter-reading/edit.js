@@ -39,9 +39,9 @@ $(document).ready(function(){
                 BootstrapDialog.alert({
                     title: 'ACTION DENIED',
                     message: data.message,
-                    type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                    closable: true, // <-- Default value is false
-                    draggable: true, // <-- Default value is false
+                    type: BootstrapDialog.TYPE_WARNING,
+                    closable: true,
+                    draggable: true,
                 });
             }
         });
@@ -69,32 +69,44 @@ $(document).ready(function(){
         $('#filter-nr').trigger('click');
     });
     window.deleteItem = function (id){
-        BootstrapDialog.confirm({
-            title: 'WARNING',
+        BootstrapDialog.show({
+            title: 'CONFIRM DELETE',
             message: 'This action could not be undo in the future. Do you really want to delete this reading?',
             type: BootstrapDialog.TYPE_WARNING,
             closable: true,
             draggable: true,
-            btnCancelLabel: 'Cancel',
-            btnOKLabel: 'Continue',
-            btnOKClass: 'btn-warning',
-            callback: function(result) {
-                if(result) {
-                    $.getJSON($('#reading-uri').val()+'delete/'+id, function(response){
-                        if(response.status === "SUCCESS"){
-                            $('#fetchAccount').submit();
-                        } else {
-                            BootstrapDialog.alert({
-                                title: 'ACTION DENIED',
-                                message: 'You can delete UNPAID latest readings only',
-                                type: BootstrapDialog.TYPE_DANGER,
-                                closable: true,
-                                draggable: true,
-                            });
-                        }
-                    });
+            onshown: function(dialog) {
+                dialog.getButton('delete-reading-ok').focus();
+            },
+            buttons : [
+                {
+                    label : 'Cancel',
+                    action: function(dialog){
+                        dialog.close();
+                    }
+                },
+                {
+                    id : 'delete-reading-ok',
+                    label: 'Delete',
+                    cssClass: 'btn-warning',
+                    action : function(dialog){
+                        dialog.close();
+                        $.getJSON($('#reading-uri').val()+'delete/'+id, function(response){
+                            if(response.status === "SUCCESS"){
+                                $('#fetchAccount').submit();
+                            } else {
+                                BootstrapDialog.alert({
+                                    title: 'ACTION DENIED',
+                                    message: 'You cannot delete paid readings',
+                                    type: BootstrapDialog.TYPE_DANGER,
+                                    closable: true,
+                                    draggable: true,
+                                });
+                            }
+                        });
+                    }
                 }
-            }
+            ]
         });
     };
 });

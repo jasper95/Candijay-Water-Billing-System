@@ -6,7 +6,6 @@
 package com.forms;
 
 import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *

@@ -4,7 +4,7 @@ var monthFilters = [{"value":1, "label":"Jan"},{"value":2, "label":"Feb"},{"valu
     {"value":10, "label":"Oct"},{"value":11, "label":"Nov"},{"value":12, "label":"Dec"}];
 var yearFilters = [];
 var zoneFilters=[1,2,3,4,5];
-var invStatFilters = ["UNPAID", "PARTIALLYPAID", "FULLYPAID"];
+var invStatFilters = ["UNPAID", "DEBT", "PARTIALLYPAID", "FULLYPAID"];
 for (var i = new Date().getFullYear(); i >= 2007; i--) {
     yearFilters.push(i);
 };

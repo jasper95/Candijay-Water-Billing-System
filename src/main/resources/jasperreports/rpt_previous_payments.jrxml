@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="06ab22e7-5711-4342-9577-fa4ab234661c">
-	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -83,10 +83,10 @@
 				<text><![CDATA[Candijay Bohol]]></text>
 			</staticText>
 			<line>
-				<reportElement x="44" y="79" width="195" height="1" uuid="09e943b4-55e7-4130-8b61-d2103bd6ba16"/>
+				<reportElement x="0" y="84" width="195" height="1" uuid="09e943b4-55e7-4130-8b61-d2103bd6ba16"/>
 			</line>
 			<textField>
-				<reportElement x="44" y="47" width="195" height="15" uuid="b7fb8273-6d01-4434-a6b0-4d5971d66a0c"/>
+				<reportElement x="0" y="52" width="195" height="15" uuid="b7fb8273-6d01-4434-a6b0-4d5971d66a0c"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10"/>
 				</textElement>
@@ -100,24 +100,24 @@
 				<text><![CDATA[PREVIOUS PAYMENTS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="44" y="80" width="195" height="15" uuid="38ccf181-eaa6-4559-9955-fcdccdb2594d"/>
+				<reportElement x="0" y="85" width="195" height="15" uuid="38ccf181-eaa6-4559-9955-fcdccdb2594d"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ACCOUNT_ADDRESS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="44" y="64" width="195" height="15" uuid="fe9182e4-bdb5-4351-9fe5-c256d35a5d1b"/>
+				<reportElement x="0" y="69" width="195" height="15" uuid="fe9182e4-bdb5-4351-9fe5-c256d35a5d1b"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ACCOUNT_NAME}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="44" y="62" width="195" height="1" uuid="2e1cff33-067a-48c2-9ea8-c6ed434daf63"/>
+				<reportElement x="0" y="67" width="195" height="1" uuid="2e1cff33-067a-48c2-9ea8-c6ed434daf63"/>
 			</line>
 			<line>
-				<reportElement x="43" y="94" width="195" height="1" uuid="0ec06206-5783-497e-8b2c-28dfc421fbee"/>
+				<reportElement x="-1" y="99" width="195" height="1" uuid="0ec06206-5783-497e-8b2c-28dfc421fbee"/>
 			</line>
 		</band>
 	</pageHeader>
@@ -270,7 +270,7 @@
 							<staticText>
 								<reportElement x="0" y="0" width="57" height="30" uuid="59e73c77-f91d-4ae0-a945-70d0aafc5962"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Remaining Due]]></text>
+								<text><![CDATA[ Due]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:tableFooter style="table 1_TH" height="30" rowSpan="1"/>

@@ -6,7 +6,7 @@ $(document).ready(function(){
     $('#apply').on('click', function(){
         var action = $('#action').val(), form = $('#form');
         if(action === '1'){
-            $.post(form.attr('action')+'//notice-of-disconnection-check', form.serialize(), function(response){
+            $.post(form.attr('action')+'/notice-of-disconnection-check', form.serialize(), function(response){
                 if(response.status === "SUCCESS"){
                     openReport('POST',form.attr('action')+"/print-notice-of-disconnection",response.result,'_blank');
                 } else showError("No account is qualified for the action");

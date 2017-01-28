@@ -13,7 +13,6 @@ import com.domain.Schedule;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.domain.enums.AccountStatus;
 import com.domain.enums.InvoiceStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -26,7 +25,6 @@ import org.springframework.data.repository.query.Param;
  * @author Bert
  */
 public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
-    Invoice findByAccountAndSchedule(Account account, Schedule schedule);
     Invoice findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(Account account);
     @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
     Invoice findTopByAccount_IdOrderBySchedule_YearDescSchedule_MonthDesc(Long id);
@@ -39,5 +37,4 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     @Query(value = "SELECT SUM(i.remaining_total) FROM Invoice i WHERE i.schedule_id = ?1", nativeQuery = true)
     BigDecimal findTotalCollectiblesBySchedule(@Param("id") Long id);
     List<Invoice> findByAccountOrderByIdDesc(Account account, Pageable pageable);
-    List<Invoice> findByStatusAndAccount_StatusAndAccount_AddressAndSchedule(InvoiceStatus invoiceStatus, AccountStatus accountStatus, Address address, Schedule schedule);
 }

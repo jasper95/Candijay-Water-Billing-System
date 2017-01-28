@@ -9,16 +9,16 @@ import java.math.BigDecimal;
  */
 public class BillDiscountForm {
     @NotNull
-    Long id;
+    Long billId;
     @Digits(fraction=2, integer=10, message = "Invalid amount") @NotNull(message="This field is required")
     BigDecimal discount;
 
-    public Long getId() {
-        return id;
+    public Long getBillId() {
+        return billId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
     public BigDecimal getDiscount() {

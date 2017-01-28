@@ -13,8 +13,7 @@ public enum UserType {
     SUPERUSER("Superuser","SUPERUSER"),
     ENCODER("Encoder", "ENCODER"),
     TREASURER("Treasurer", "TREASURER"),
-    REPORTS_VIEWER("Reports Viewer", "REPORTS_VIEWER"),
-    LIMITED("Limited", "LIMITED");
+    REPORTS_VIEWER("Reports Viewer", "REPORTS_VIEWER");
 
     private String label;
     private String value;

@@ -63,7 +63,6 @@
                                         <datatables:column title="Acct No." name="number" filterable="true" property="number" renderFunction="custom-rendering#chooseAccount" sortable="false"/>
                                         <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc" sortable="false"/>
                                         <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc" sortable="false"/>
-                                        <datatables:column name="gender" title="Gender" property="customer.gender" visible="false" sortable="false"/>
                                         <datatables:column name="address" title="Barangay" property="address.brgy" visible="false" sortable="false"/>
                                         <datatables:column name="zone" title="Zone" property="address.locationCode" visible="false" sortable="false"/>
                                         <datatables:column visible="false" property="id" />
@@ -134,7 +133,7 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Add Payment</h3>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body panel-body-custom">
                                 <form:form modelAttribute="paymentForm" method="post" id="add-payment-form">
                                     <jsp:include page="../fragments/postAuth/form-alerts.jsp"/>
                                     <form:hidden path="accountId"/>
@@ -289,6 +288,7 @@
                                     <button type="button" id="payment-history-btn" class="btn btn-default">Prev. Payments</button>
                                     <input type="hidden" id="row-num">
                                     <input type="hidden" id="acc-balance-val"/>
+                                    <input type="hidden" id="readings-uri" value="${pageContext.servletContext.contextPath}/admin/reading/">
                                     <input type="hidden" id="accounts-uri" value="${pageContext.servletContext.contextPath}/admin/accounts/">
                                     <input type="hidden" id="bills-uri" value="${pageContext.servletContext.contextPath}/admin/bills/">
                                     <input type="hidden" id="payments-uri" value="${pageContext.servletContext.contextPath}/admin/payments/">

@@ -60,6 +60,11 @@
                     <div class="col-md-3" id="reading-year">
                         <label>Reading Year</label>
                     </div>
+                    <div class="col-md-3" id="inv-st">
+                        <label>Status</label>
+                    </div>
+                </div>
+                <div class="col-sm-12">
                     <div class="pull-align-right col-md-3 vertical-center filter-btn-wrapper">
                         <a id="filterClearButton" type="button" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
                         <a id="filterButton" type="button" class="btn btn-primary list-filter-btn"><i class="fa fa-search fa-fw"></i> Search </a>
@@ -68,7 +73,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
+                    <div class="table-responsive table">
                         <a id="mrListReload"></a>
                         <datatables:table deferLoading="0" deferRender="true" reloadSelector="#mrListReload" cssClass="table table-striped" dom="ltipr" id="reading" url="${spring:mvcUrl('datatables-api#readings').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
@@ -79,6 +84,7 @@
                             <datatables:column name="year" property="schedule.year" visible="false" />
                             <datatables:column name="barangay" property="account.address.brgy" visible="false" sortable="false"/>
                             <datatables:column name="zone" property="account.address.locationCode" visible="false" sortable="false"/>
+                            <datatables:column name="status" property="invoice.status" sortable="false" visible="false"/>
                             <datatables:column title="Name" sortable="false" property="account.customer.name" renderFunction="custom-rendering#customerUrlReadingList"/>
                             <datatables:column title="Schedule" sortable="false" renderFunction="custom-rendering#scheduleAndStatus"/>
                             <datatables:column title="Previous" property="previous" sortable="false"/>
@@ -95,7 +101,6 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="../fragments/modals/reading-form.jsp"/>
         <jsp:include page="../fragments/modals/reading-info.jsp"/>
         <jsp:include page="../fragments/modals/no-reading-info.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
@@ -106,7 +111,6 @@
         <script src="${STATIC_URL}js/global.js"></script>
         <script src="${STATIC_URL}js/helpers/reports-helper.js"></script>
         <script src="${STATIC_URL}js/meter-reading/list.js"></script>
-        <script src="${STATIC_URL}js/meter-reading/edit.js"></script>
         <script>
             $(document).ready(function(){
                 $('#content-loader').hide()

@@ -16,6 +16,7 @@ import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.service.InvoicingService;
 import com.service.MeterReadingService;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,10 +123,12 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         if(reading != null && reading.getInvoice().getStatus().equals(InvoiceStatus.UNPAID) && reading.equals(lastMeterReading)){
             Device device = deviceRepo.findByOwnerAndActive(reading.getAccount(), true);
             Account account = reading.getAccount();
+            Invoice invoice = reading.getInvoice();
+            BigDecimal newBalance = account.getAccountStandingBalance().subtract(invoice.getTotalCurrent()).add(invoice.getDiscount());
             account.setStatusUpdated(true);
             device.setLastReading(device.getLastReading()-reading.getConsumption());
-            account.setPenalty(reading.getInvoice().getPenalty());
-            account.setAccountStandingBalance(account.getAccountStandingBalance().subtract(reading.getInvoice().getNetCharge()));
+            account.setPenalty(invoice.getPenalty());
+            account.setAccountStandingBalance(newBalance);
             mrRepo.delete(reading);
             deviceRepo.save(device);
             accountRepo.save(account);

@@ -4,6 +4,7 @@ var monthFilters = [{"value":1, "label":"Jan"},{"value":2, "label":"Feb"},{"valu
     {"value":10, "label":"Oct"},{"value":11, "label":"Nov"},{"value":12, "label":"Dec"}];
 var yearFilters = [];
 var zoneFilters=[1,2,3,4,5];
+var invStatFilters = ["UNPAID", "DEBT", "PARTIALLYPAID", "FULLYPAID"];
 for (var i = new Date().getFullYear(); i >= 2007; i--) {
     yearFilters.push(i);
 };
@@ -66,15 +67,11 @@ yadcf.init(oTable_reading, [
         "column_number": 7,
         "sort_as": "numerical",
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
+    },{
+        "externally_triggered": true,
+        "data": invStatFilters,
+        "filter_type": "select",
+        "filter_container_id": "inv-st",
+        "column_number": 8,
+        "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     }], 'none');
-/*
-var month = new Date().getMonth()+1;
-var year = new Date().getFullYear();
-if(month-1 === 0){
-    month = 12;
-    year--;
-} else month--;
-yadcf.exFilterColumn(oTable_reading, [
- [4, month],
- [5, year]
-]); */

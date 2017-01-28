@@ -6,27 +6,23 @@
 package com.controller;
 
 
-import com.dao.springdatajpa.AccountRepository;
-import com.dao.springdatajpa.DeviceRepository;
-import com.dao.springdatajpa.MeterReadingRepository;
-import com.dao.springdatajpa.ScheduleRepository;
+import com.dao.springdatajpa.*;
 import com.domain.*;
 import com.domain.enums.AccountStatus;
+import com.domain.enums.InvoiceStatus;
 import com.forms.AccountabilityReportForm;
 import com.forms.BillDiscountForm;
 import com.forms.MeterReadingForm;
 import com.forms.SearchForm;
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
-import com.service.DataTableService;
+
 import com.service.FormOptionsService;
+import com.service.InvoicingService;
 import com.service.MeterReadingService;
 
 import java.math.BigDecimal;
 import java.util.*;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
@@ -44,30 +40,32 @@ import org.springframework.web.bind.annotation.*;
 public class MeterReadingController {
 
     private MeterReadingService mrService;
-    private DataTableService dataTableService;
     private AccountRepository accountRepo;
     private DeviceRepository deviceRepo;
     private MeterReadingRepository mrRepo;
     private ScheduleRepository schedRepo;
     private FormOptionsService formOptionsService;
+    private InvoiceRepository invoiceRepo;
+    private InvoicingService invoiceService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder){
         binder.setAllowedFields("meterReading.readingValue", "meterReading.schedule.month", "meterReading.schedule.year",
-                                "meterReading.version", "accountId","accountNumber");
+                                "meterReading.version", "accountId","accountNumber", "billId", "discount");
     }
 
     @Autowired
-    public MeterReadingController(MeterReadingService mrService, DataTableService dataTableService, AccountRepository accountRepo,
+    public MeterReadingController(MeterReadingService mrService, AccountRepository accountRepo, InvoicingService invoiceService,
             DeviceRepository deviceRepo, MeterReadingRepository mrRepo, ScheduleRepository schedRepo,
-              FormOptionsService formOptionsService) {
+              FormOptionsService formOptionsService, InvoiceRepository invoiceRepo) {
         this.mrService = mrService;
-        this.dataTableService = dataTableService;
         this.accountRepo = accountRepo;
         this.deviceRepo = deviceRepo;
         this.mrRepo = mrRepo;
         this.schedRepo = schedRepo;
         this.formOptionsService = formOptionsService;
+        this.invoiceRepo = invoiceRepo;
+        this.invoiceService = invoiceService;
     }
     
     @RequestMapping(method=RequestMethod.GET)
@@ -206,9 +204,6 @@ public class MeterReadingController {
             //check if reading value is valid
             if(lastReading.compareTo(formReading.getReadingValue()) > 0)
                 result.rejectValue("meterReading.readingValue", "", "Invalid meter reading value");
-            //check if account is active
-            if(!account.getStatus().equals(AccountStatus.ACTIVE))
-                result.reject("global", "You can update reading to ACTIVE accounts only");
         }
         //form is valid with business constraints
         if(!result.hasErrors()){
@@ -254,6 +249,36 @@ public class MeterReadingController {
             response.put("status", "SUCCESS");
             response.put("account", account);
             response.put("last_reading", device.getLastReading());
+        }
+        return response;
+    }
+
+    @RequestMapping(value="/edit-discount/{id}")
+    public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
+        Invoice invoice = invoiceRepo.findById(id),
+                latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
+        HashMap response = new HashMap();
+        if(invoice != null && invoice.equals(latestInvoice) && (invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)) ) {
+            response.put("invoice", invoice);
+            response.put("status", "SUCCESS");
+        } else response.put("status", "FAILURE");
+        return response;
+    }
+
+    @RequestMapping(value = "/update-discount", method = RequestMethod.POST)
+    public @ResponseBody HashMap updateDiscount(@ModelAttribute("billDiscountForm") @Valid BillDiscountForm form, BindingResult result){
+        HashMap response = new HashMap();
+        if(!result.hasErrors()){
+            Invoice invoice = invoiceRepo.findOne(form.getBillId());
+            if(form.getDiscount().compareTo(invoice.getNetCharge()) > 0)
+                result.rejectValue("discount", "", "Invalid discount");
+        }
+        if(result.hasErrors()){
+            response.put("status", "FAILURE");
+            response.put("result", result.getAllErrors());
+        } else {
+            response.put("invoice", invoiceService.updateDiscount(form));
+            response.put("status", "SUCCESS");
         }
         return response;
     }

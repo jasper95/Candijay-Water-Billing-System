@@ -1,20 +1,27 @@
 $(document).ready(function(){
-    $('#md-update-form').on('submit', function(e){
+    window.viewChanges = function(id){
+        $('#auditReading-id').find('input:first').val(id);
+        $('#filterButtonAuditTable').trigger('click');
+        $('#reading-info-modal').modal('show');
+    };
+    $('#acc-tbr').on('click', function(){
+        cleanUpFormFields('#md-no-reading-info');
+        $('#no-reading-info-modal').modal('show');
+    });
+    $('#isBrgy-toggle').on('change', function(){
+        $('#md-no-reading-info div.barangay').toggle();
+        $('#md-no-reading-info div.zone').toggle();
+        if($('#isBrgy-param').val() === '0')
+            $('#isBrgy-param').val('1');
+        else
+            $('#isBrgy-param').val('0');
+    });
+    $('#md-no-reading-info').on('submit', function(e){
         e.preventDefault();
-        var form = $(this);
-        cleanUpFormMsgs('#md-update-form');
-        $.post($('#reading-uri').val()+'update', form.serialize(), function(response){
-            if(validateForm('#md-update-form', response)){
-                showSuccess('#md-update-form', "Reading successfully updated");
-                var reading = response.result;
-                var row = $('#reading tbody tr:nth-child('+$('#row-num').val()+')');
-                row.find('.year').text(reading.schedule.year);
-                row.find('.month').text(months[reading.schedule.month]);
-                row.find('.consumption').text(reading.consumption);
-                row.find('.reading').text(reading.readingValue);
-                $('#rd-vs').val(reading.version);
-            }
-        })
+        $('#brgy-prox').find('input:first').val($('#brgy-param').val());
+        $('#zone-prox').find('input:first').val($('#zone-param').val());
+        $('#isBrgy-prox').find('input:first').val($('#isBrgy-param').val());
+        $('#filter-nr').trigger('click');
     });
     window.billPrintablePreview = function(id){
         openReport('POST', $('#bills-uri').val()+'preview', {id:id}, '_blank')

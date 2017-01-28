@@ -293,6 +293,7 @@
                                     </datatables:table>
                                     <button type="button" id="payment-history-btn" class="btn btn-default">Prev. Payments</button>
                                     <input type="hidden" id="row-num">
+                                    <input type="hidden" id="readings-uri" value="${pageContext.servletContext.contextPath}/admin/reading/">
                                     <input type="hidden" id="accounts-uri" value="${pageContext.servletContext.contextPath}/admin/accounts/">
                                     <input type="hidden" id="bills-uri" value="${pageContext.servletContext.contextPath}/admin/bills/">
                                     <input type="hidden" id="payments-uri" value="${pageContext.servletContext.contextPath}/admin/payments/">

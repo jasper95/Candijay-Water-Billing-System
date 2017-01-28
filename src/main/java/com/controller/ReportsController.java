@@ -129,7 +129,9 @@ public class ReportsController {
         if(!result.hasErrors()){
             Integer type = Integer.valueOf(form.getType());
             boolean billsFlag = type.equals(1);
-            if(!billsFlag && accountRepo.countByAddressInAndStatusUpdated(addresses, true) != accountRepo.countByAddressIn(addresses))
+            Long statusUpdatedCount = accountRepo.countByAddressInAndStatusUpdated(addresses, true), accountsCount = accountRepo.countByAddressIn(addresses);
+            System.out.println(String.format("%s %s", statusUpdatedCount, accountsCount));
+            if(!billsFlag && !statusUpdatedCount.equals(accountsCount))
                 result.reject("global", "Payments not finalized for this address");
             if(result.hasErrors())
                 if(isPrintBrgy)

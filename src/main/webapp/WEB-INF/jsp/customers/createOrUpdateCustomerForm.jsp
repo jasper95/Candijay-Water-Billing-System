@@ -55,7 +55,10 @@
                     <div class="col-sm-12 form-group">
                         <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="3"/>
                         <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="3"/>
+                        <cws:input id="acc-lr" name="device.lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="3" moreClasses="is-number"/>
                         <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="3"/>
+                    </div>
+                    <div class="col-sm-12 form-group">
                         <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" size="3"/>
                     </div>
                 </div>

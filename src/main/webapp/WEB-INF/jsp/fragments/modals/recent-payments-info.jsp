@@ -12,7 +12,7 @@
                         <div class="table-responsive">
                             <div id="recent-payments-account-id" style="display: none;"></div>
                             <a id="filterRecentPayments"></a>
-                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="recentPaymentsTable" filterPlaceholder="none" filterSelector="#filterRecentPayments" serverSide="true" url="${spring:mvcUrl('datatables-api#payments').build()}" displayLength="10" dom="tp" >
+                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="recentPaymentsTable" filterPlaceholder="none" filterSelector="#filterRecentPayments" serverSide="true" url="${spring:mvcUrl('datatables-api#payments').build()}" displayLength="10" dom="tpr" >
                                 <datatables:column property="account.id" filterable="true" visible="false" selector="recent-payments-account-id"/>
                                 <datatables:column property="id" sortInitOrder="0" sortInitDirection="desc" visible="false"/>
                                 <datatables:column title="Date" property="date" sortable="false"/>

@@ -60,6 +60,15 @@ $(document).ready(function(){
 
     $.ajaxSetup({
        statusCode : {
+           403: function(){
+               BootstrapDialog.alert({
+                   title: 'Action Not Authorized',
+                   message: 'You are not authorized for this action',
+                   type: BootstrapDialog.TYPE_WARNING,
+                   closable: true,
+                   draggable: true
+               });
+           },
            405 : function(){
                BootstrapDialog.alert({
                    title: 'Session Expired',
@@ -69,7 +78,6 @@ $(document).ready(function(){
                        window.location.reload();
                    }
                });
-               console.log("global")
            }
        }
     });
@@ -103,10 +111,10 @@ $(document).ready(function(){
      window.realTimeCalculationHelper = function(input, reference, target_display, text_display){
         var string_amount = input.val(), amount_paid = parseFloat(string_amount);
         amount_paid = !isNaN(amount_paid) ? amount_paid : 0;
-        var current_balance = Number(reference.val()) ;
+        var current_balance = Number(parseFloat(reference.val())) ;
         if(current_balance >= amount_paid){
-            var new_balance = current_balance - amount_paid;
-            target_display.html(text_display+new_balance);
+            var new_balance = current_balance.toFixed(2) - amount_paid.toFixed(2);
+            target_display.html(text_display+new_balance.toFixed(2));
         }
         else
             input.val(string_amount.substring(0,string_amount.length-1));

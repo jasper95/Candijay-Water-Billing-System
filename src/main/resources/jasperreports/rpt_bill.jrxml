@@ -18,6 +18,7 @@
 	<field name="discount" class="java.math.BigDecimal"/>
 	<field name="status" class="com.domain.enums.InvoiceStatus"/>
 	<field name="remainingTotal" class="java.math.BigDecimal"/>
+	<field name="_THIS" class="com.domain.Invoice"/>
 	<group name="id" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 		<groupHeader>
@@ -44,13 +45,6 @@
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Acct. No.:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="0" width="56" height="14" uuid="d1ed088f-a76a-4d00-bc86-c561ab94b1eb"/>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Transac No.:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="5" y="121" width="70" height="13" uuid="613a0836-e75b-42a7-9afd-addff486e7c8"/>
@@ -130,18 +124,18 @@
 				<textFieldExpression><![CDATA[" "+$F{account}.getNumber()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="58" y="0" width="69" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
+				<reportElement x="1" y="3" width="122" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
 				<textElement>
-					<font fontName="SansSerif" size="8" isBold="true"/>
+					<font fontName="SansSerif" size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" "+$F{id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new org.joda.time.DateTime().toString("MM/dd/yyyy hh:mm:ss a")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="79" y="121" width="90" height="13" uuid="edce5fb7-7e6e-4b80-b6ad-3422ee483abc"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" "+$F{account}.getAddress().toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[String.format("Purok %d, %s",$F{account}.getPurok(), $F{account}.getAddress().getBrgy())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="79" y="135" width="90" height="14" uuid="cb081d5b-2798-4727-b715-bddb2ecf2294"/>
@@ -291,7 +285,7 @@
 				<text><![CDATA[Month Bill]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="388" y="69" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
+				<reportElement x="387" y="71" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -305,7 +299,7 @@
 				<textFieldExpression><![CDATA[$F{account}.getCustomer().toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="201" y="50" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
+				<reportElement x="201" y="51" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -336,10 +330,10 @@
 				<reportElement x="5" y="70" width="185" height="1" uuid="faec855b-a2ae-43bd-9523-9cca32ca0e3b"/>
 			</line>
 			<line>
-				<reportElement x="200" y="69" width="176" height="1" uuid="24c191fb-39a5-4be5-a47b-2a154ee7018b"/>
+				<reportElement x="200" y="70" width="176" height="1" uuid="24c191fb-39a5-4be5-a47b-2a154ee7018b"/>
 			</line>
 			<line>
-				<reportElement x="388" y="68" width="176" height="1" uuid="01f1bb58-d388-4690-98f7-d06d5db79b5b"/>
+				<reportElement x="388" y="70" width="176" height="1" uuid="01f1bb58-d388-4690-98f7-d06d5db79b5b"/>
 			</line>
 			<line>
 				<reportElement x="79" y="118" width="90" height="1" uuid="bd4d8e82-9b8e-4197-b062-ce7cbb6479c2"/>
@@ -401,7 +395,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["P"+$F{netCharge}.subtract($F{arrears}).add($F{discount})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["P"+$F{_THIS}.getTotalCurrent()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="202" y="97" width="85" height="14" uuid="98ec097a-acbb-4065-8322-b09f6a86ce74"/>
@@ -418,7 +412,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Remaining Balance:]]></text>
+				<text><![CDATA[Balance:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="474" y="151" width="90" height="12" uuid="dce8eeee-89fa-4b52-9484-5bebc822c8b8"/>

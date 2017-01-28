@@ -75,6 +75,7 @@ $(document).ready(function(){
                 else{
                     $('#acc-mc').val(response.meterCode);
                     $('#acc-mb').val(response.brand);
+                    $('#acc-lr').val(response.lastReading);
                 }
             }
         });

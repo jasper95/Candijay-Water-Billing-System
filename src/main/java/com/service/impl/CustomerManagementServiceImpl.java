@@ -115,6 +115,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
         Device origDevice = deviceRepo.findOne(id);
         origDevice.setBrand(device.getBrand());
         origDevice.setMeterCode(device.getMeterCode());
+        origDevice.setLastReading(device.getLastReading());
         return deviceRepo.save(origDevice);
     }
 

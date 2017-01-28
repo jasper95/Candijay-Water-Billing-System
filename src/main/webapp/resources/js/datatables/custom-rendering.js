@@ -96,9 +96,7 @@ function chooseAccount(data, type, full){
     return '<a href="" onClick="selectAccount('+accNum+'); return false">'+data+'</a>';
 };
 function readingListActions(data, type, full){
-    var audit = '', del = '', edit = '';
+    var audit = '';
     if (full.version !== 0) audit = '<a title="Input History" type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-history fa-fw"></i></a>';
-    if (full.invoice.status === "UNPAID") del = '<a title="Delete Reading" type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger table-action-btn"><i class="fa fa-remove fa-fw"></i></a>';
-    if(full.invoice.status === "UNPAID" || full.invoice.status === "DEBT") edit = '<a title="Edit Reading" type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-edit fa-fw"></i></a>';
-    return edit+audit+del;
+    return audit;
 };

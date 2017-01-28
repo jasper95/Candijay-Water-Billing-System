@@ -46,7 +46,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
+                    <div class="table-responsive table">
                         <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="expense" cssClass="table table-striped" url="${spring:mvcUrl('datatables-api#expenses').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                             <datatables:column name="id" property="id" filterable="true" visible="false" sortInitOrder="0" sortInitDirection="desc"/>
                             <datatables:column title="Month" name="month" property="schedule.month" cssCellClass="month" renderFunction="custom-rendering#month" />

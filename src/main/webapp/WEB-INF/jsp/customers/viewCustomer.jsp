@@ -17,7 +17,8 @@
 </head>
 <body>
     <jsp:include page="../fragments/postAuth/header.jsp"/>
-    <div class="container">
+    <div id="content-loader" class="loader"></div>
+    <div id="main-content" style="display: none;" class="container">
         <div class="row">
             <div class="col-sm-10 ">
                 <h2>View Customer</h2>
@@ -72,5 +73,11 @@
     <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
     <script src="${STATIC_URL}js/global.js"></script>
     <script src="${STATIC_URL}/js/customers/view.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#content-loader').hide()
+            $('#main-content').show();
+        });
+    </script>
 </body>
 </html>

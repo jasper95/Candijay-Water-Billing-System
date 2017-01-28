@@ -46,7 +46,7 @@
                             <div id="brgy-prox" class="hidden"></div>
                             <div id="zone-prox" class="hidden"></div>
                             <div id="isBrgy-prox" class="hidden"></div>
-                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="noReading" filterPlaceholder="none" filterSelector="#filter-nr" url="${pageContext.servletContext.contextPath}/admin/reading/find-accounts-no-reading" serverSide="true" displayLength="5" dom="tp">
+                            <datatables:table deferLoading="0" deferRender="true" cssClass="table table-striped" id="noReading" filterPlaceholder="none" filterSelector="#filter-nr" url="${spring:mvcUrl('datatables-api#accounts-tbr').build()}" serverSide="true" displayLength="5" dom="tpr">
                                 <datatables:column title="Acct No." name="number" property="number" sortable="false" selector="brgy-prox" filterable="true"/>
                                 <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc" selector="zone-prox" filterable="true"/>
                                 <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc" selector="isBrgy-prox" filterable="true"/>

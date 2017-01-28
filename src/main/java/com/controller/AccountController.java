@@ -66,8 +66,8 @@ public class AccountController {
      */
     @InitBinder({"accountForm", "deviceForm"})
     public void initBinder(WebDataBinder binder){
-        binder.setAllowedFields("address.brgy", "account.purok", "meterCode", "brand",
-                "device.meterCode", "device.brand");
+        binder.setAllowedFields("address.brgy", "account.purok", "meterCode", "brand", "lastReading",
+                "device.meterCode", "device.brand", "device.lastReading");
     }
 
     /**
@@ -89,9 +89,16 @@ public class AccountController {
         Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
         HashMap response = new HashMap();
         accountForm.setAddress(address);
-        // meter-code validation
-        if(deviceRepo.findByMeterCode(accountForm.getDevice().getMeterCode().trim()) != null)
-            result.rejectValue("device.meterCode", "meterCode", "Meter code already exists");
+        String meterCode = accountForm.getDevice().getMeterCode().trim(), meterBrand = accountForm.getDevice().getBrand();
+        Integer lastReading = accountForm.getDevice().getLastReading();
+        if(lastReading == null)
+            result.rejectValue("device.lastReading", "", "This field is required");
+        if(meterCode.isEmpty())
+            result.rejectValue("device.meterCode","","This field is required");
+        if(meterBrand.isEmpty())
+            result.rejectValue("device.brand","","This field is required");
+        if(!meterCode.isEmpty() && deviceRepo.findByMeterCode(meterCode) != null)
+            result.rejectValue("device.meterCode", "", "Metercode already exists");
         if(!result.hasErrors()){
             response.put("result",custService.createAccount(accountForm));
             return response;
@@ -266,6 +273,8 @@ public class AccountController {
     @RequestMapping(value="/{accountNumber}/create-device", method=RequestMethod.POST)
     public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("accountNumber") String number){
         HashMap response = new HashMap();
+        if(device.getLastReading() == null)
+            result.rejectValue("lastReading", "", "This field is required");
         if(device.getMeterCode().trim().isEmpty())
             result.rejectValue("meterCode", "", "This field is required");
         if(device.getBrand().trim().isEmpty())
@@ -296,6 +305,8 @@ public class AccountController {
         else if(deviceRepo.findByMeterCode(meterCode) != null && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
             result.rejectValue("meterCode", "", "Metercode already exists!");
         }
+        if(device.getLastReading() == null)
+            result.rejectValue("lastReading", "", "This field is required");
         if(device.getMeterCode().trim().isEmpty())
             result.rejectValue("meterCode", "", "This field is required");
         if(device.getBrand().trim().isEmpty())

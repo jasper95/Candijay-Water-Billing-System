@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a39c5c3f-b6ad-4bf6-8eb5-dc6ecdc34cd9">
-	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.zoom" value="1.6105100000000008"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -207,7 +207,7 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="60" splitType="Stretch">
+		<band height="75" splitType="Stretch">
 			<staticText>
 				<reportElement x="151" y="0" width="280" height="15" uuid="fb00c921-a781-465d-8e15-4ca765c2c146"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -216,14 +216,14 @@
 				<text><![CDATA[Candijay Water Billing System]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="151" y="30" width="280" height="14" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
+				<reportElement x="151" y="30" width="280" height="15" uuid="3dc00a1e-e342-4e61-81dc-26a45a47a9ca"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{IS_HISTORY} ? "PAYMENT HISTORY ": "COLLECTION REPORT "+$P{month}+" "+$P{year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="151" y="44" width="280" height="16" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
+				<reportElement x="151" y="44" width="280" height="15" uuid="bd041d21-e911-440a-90de-97ab5c15f384"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
@@ -234,15 +234,22 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Candijay Bohol]]></text>
 			</staticText>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="460" y="60" width="100" height="15" uuid="24bce5ff-04a2-4cda-b3f5-66150c35aa77"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="836" splitType="Stretch">
+		<band height="821" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table 8" style="table 8" x="0" y="0" width="572" height="836" uuid="98a2b1a4-7500-422e-8484-63843e93b5c0"/>
+				<reportElement key="table 8" style="table 8" x="0" y="0" width="572" height="821" uuid="98a2b1a4-7500-422e-8484-63843e93b5c0"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1" uuid="2deb792e-2922-48e2-94f8-4cd959c88a5c">
 						<datasetParameter name="IS_HISTORY">
@@ -407,7 +414,7 @@
 							<staticText>
 								<reportElement x="0" y="0" width="52" height="30" uuid="453efc77-230e-455b-9caf-729e5c6e77b5"/>
 								<textElement textAlignment="Center"/>
-								<text><![CDATA[Remaining Due]]></text>
+								<text><![CDATA[Due]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:tableFooter style="table 8_TH" height="30" rowSpan="1"/>

@@ -10,29 +10,23 @@ import com.domain.*;
 import com.domain.enums.AccountStatus;
 import com.domain.enums.InvoiceStatus;
 import com.forms.PaymentForm;
-import com.github.dandelion.datatables.core.ajax.ColumnDef;
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.service.PaymentService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.service.SettingsService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
+
 
 @Service
 public class PaymentServiceImpl implements PaymentService{
@@ -108,7 +102,9 @@ public class PaymentServiceImpl implements PaymentService{
         if(isAllowedToSetWarningToAccount(account, settings.getDebtsAllowed()))
             account.setStatus(AccountStatus.WARNING);
         else account.setStatus(AccountStatus.ACTIVE);
-        if(!isAlreadyPenalizedExcludingThisPayment(payment)) //is invoice already penalized
+        if(!payment.getDate().isAfter(invoice.getDueDate())) //is not late payment
+            account.setPenalty(BigDecimal.ZERO);
+        else if(!isAlreadyPenalizedExcludingThisPayment(payment)) //is invoice already penalized
             account.setPenalty(calculatePenalty(payment, new BigDecimal(settings.getPenalty())));
         account.setAccountStandingBalance(remainingBalance);
         account.setStatusUpdated(true);
@@ -124,22 +120,17 @@ public class PaymentServiceImpl implements PaymentService{
         return originalPayment;
     }
 
-    private static boolean isLatePayment(Payment payment){
-        return new Period(payment.getInvoice().getDueDate(), payment.getDate()).getDays() > 0;
-    }
-
     private boolean isAlreadyPenalizedExcludingThisPayment(Payment payment){
         Invoice invoice = payment.getInvoice();
         return invoice.getPayments().stream()
-                            .filter(PaymentServiceImpl::isLatePayment)
+                            .filter(e -> e.getDate().isAfter(invoice.getDueDate()))
                             .filter(e -> !e.equals(payment))
                             .findFirst()
                             .isPresent();
     }
 
     private BigDecimal calculatePenalty(Payment payment, BigDecimal penaltyRate){
-        int dayDiff = new Period(payment.getInvoice().getDueDate(), payment.getDate()).getDays();
-        if(dayDiff > 0){
+        if(payment.getDate().isAfter(payment.getInvoice().getDueDate())){
             BigDecimal totalDue = payment.getInvoice().getNetCharge(), penalty = totalDue.multiply(penaltyRate),
                     hundred = new BigDecimal(100);
             return penalty.compareTo(hundred) > 0 ? hundred : penalty;
@@ -158,8 +149,12 @@ public class PaymentServiceImpl implements PaymentService{
                 result.reject("global","Account does not exists");
             if(invoice == null)
                 result.reject("global","No existing bill for this account");
-            else if(paymentIsNew && account.getAccountStandingBalance().doubleValue() == 0)
+            else if(paymentIsNew ){
+                if(account.getAccountStandingBalance().doubleValue() == 0)
                     result.reject("global", "This account has zero standing balance");
+                else if(form.getPayment().getAmountPaid().compareTo(account.getAccountStandingBalance()) > 0)
+                    result.rejectValue("payment.amountPaid", "",  "Invalid amount");
+            }
             Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(form.getPayment().getReceiptNumber());
             if(paymentUniqueOr != null){
                 if(paymentIsNew)
@@ -170,60 +165,6 @@ public class PaymentServiceImpl implements PaymentService{
         }
         return result;
     }
-
-    /*@Transactional(readOnly=true)
-    @Override
-    public Errors validate(PaymentForm paymentForm, Errors errors) {
-        Account account = accountRepo.findOne(paymentForm.getAccountId());
-        boolean create = paymentForm.getPayment().getId() == null;
-        Payment payment = paymentForm.getPayment();
-        if(account == null)
-            errors.reject("global","Account does not exists");
-        Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
-        if(invoice == null)            
-            errors.reject("global","No existing bill for this account");
-        else{
-            //find original payment if update
-            Payment originalPayment = (create) ? null : paymentRepo.findOne(payment.getId());
-            if(account.getAccountStandingBalance().doubleValue() == 0 && create)
-                errors.reject("global", "This account has zero standing balance");
-            else{
-                //
-                boolean validAmount =  (create) ? payment.getAmountPaid().compareTo(account.getAccountStandingBalance())
-                        <=  0 : payment.getAmountPaid().compareTo(account.getAccountStandingBalance().add(originalPayment.getAmountPaid())) <= 0;
-                if(!validAmount)
-                    errors.rejectValue("payment.amountPaid","","Invalid amount");
-            }
-            if(payment.getAmountPaid().doubleValue() != 0){
-                //not debt payment checking
-                if(paymentForm.getPayment().getReceiptNumber().isEmpty()) {
-                    errors.rejectValue("payment.receiptNumber", "", "");
-                    errors.reject("global", "OR number is required unless DEBT payment");
-                }
-                else {
-                    Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(paymentForm.getPayment().getReceiptNumber());
-                    if(paymentUniqueOr != null) {
-                        if(create)
-                            errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
-                        else {
-                            if(!paymentUniqueOr.getId().equals(originalPayment.getId()))
-                                errors.rejectValue("payment.receiptNumber", "", "OR number already exists");
-                        }
-                    }
-                }
-            } else {
-                //debt payment checking
-                if(!payment.getReceiptNumber().isEmpty()){
-                    errors.rejectValue("payment.receiptNumber", "", "");
-                    errors.reject("global", "OR number should be left empty for DEBT payment");
-                }
-                int paymentCount = invoice.getPayments().size();
-                if( (create && paymentCount > 0) || (!create && paymentCount > 1) )
-                    errors.reject("global", "DEBT payment not allowed unless FIRST PAYMENT of the month.");
-            }
-        }
-        return errors;
-    }*/
 
     @Transactional(readOnly=true)
     @Override
@@ -240,12 +181,12 @@ public class PaymentServiceImpl implements PaymentService{
     @Transactional
     @Override
     public List<Account> updateAccountsWithNoPayments(Address address) {
-        List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(Arrays.asList(address), false, Arrays.asList(AccountStatus.ACTIVE));
+        List<Account> accounts = accountRepo.findByAddressInAndStatusIn(Arrays.asList(address), Arrays.asList(AccountStatus.ACTIVE));
         Settings currentSettings = settingsService.getCurrentSettings();
         List<Account> updated = new ArrayList<>();
         for(Account account: accounts){
             Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
-            if(invoice != null){
+            if(invoice != null && (invoice.getStatus().equals(InvoiceStatus.DEBT) || invoice.getStatus().equals(InvoiceStatus.UNPAID))){
                 invoice.setStatus(InvoiceStatus.DEBT);
                 account = invoice.getAccount();
                 if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed()))

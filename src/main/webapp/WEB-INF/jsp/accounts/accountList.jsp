@@ -72,7 +72,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
+                    <div class="table-responsive table">
                         <form:form id="form" modelAttribute="checkboxes" method="POST" action="${pageContext.servletContext.contextPath}/admin/accounts">
                             <datatables:table deferLoading="0" deferRender="true" dom="ltipr" cssClass="table table-striped" id="account" url="${spring:mvcUrl('datatables-api#accounts').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton">
                                 <datatables:column  sortable="false" cssCellStyle="text-align:center;" renderFunction="custom-rendering#checkboxAccount">

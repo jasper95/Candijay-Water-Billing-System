@@ -39,7 +39,7 @@
                         <h4 class="sub-header">Discount Form</h4>
                         <form:form id="discount-form" action="#" modelAttribute="billDiscountForm" role="form">
                             <jsp:include page="../postAuth/form-alerts.jsp"/>
-                            <form:hidden id="dc-id" path="id"/>
+                            <form:hidden id="dc-id" path="billId"/>
                             <div class="col-sm-12 form-group">
                                 <cws:input id="dc-val" name="discount" label="Discount" icon="money" placeholder="Enter discount" required="true" size="12" moreClasses="is-number"/>
                             </div>

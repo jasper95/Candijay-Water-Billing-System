@@ -14,6 +14,9 @@
                             <cws:input id="acc-mc" name="meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="6"/>
                             <cws:input id="acc-mb" name="brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="6"/>
                         </div>
+                        <div class="col-sm-12 form-group">
+                            <cws:input id="acc-lr" name="lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="6" moreClasses="is-number"/>
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <div class="pull-right">

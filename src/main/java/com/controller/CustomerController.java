@@ -14,10 +14,6 @@ import com.domain.Address;
 import com.domain.Customer;
 import com.forms.AccountForm;
 import com.forms.CustomerForm;
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import com.service.CustomerManagementService;
 import com.service.DataTableService;
 
@@ -79,7 +75,7 @@ public class CustomerController {
         binder.setAllowedFields("customer.lastname", "customer.firstName", "customer.middleName",
                                     "customer.gender", "customer.timestamp", "customer.birthDate",
                                     "customer.familyMembersCount", "customer.contactNumber",
-                                    "customer.occupation", "device.meterCode", "device.brand",
+                                    "customer.occupation", "device.meterCode", "device.brand", "device.lastReading",
                                     "address.brgy", "account.purok");
     }
 
@@ -102,6 +98,9 @@ public class CustomerController {
         Address address = addressRepo.findByBrgy(customerForm.getAddress().getBrgy());
         customerForm.setAddress(address);
         String meterCode = customerForm.getDevice().getMeterCode().trim(), meterBrand = customerForm.getDevice().getBrand().trim();
+        Integer lastReading = customerForm.getDevice().getLastReading();
+        if(lastReading == null)
+            result.rejectValue("device.lastReading", "", "This field is required");
         if(meterCode.isEmpty())
             result.rejectValue("device.meterCode","","This field is required");
         if(meterBrand.isEmpty())

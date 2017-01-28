@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f405f9d-6f28-4019-92f1-eea95a7e17c7">
-	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.zoom" value="1.464100000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -67,7 +67,7 @@
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="60" splitType="Stretch">
+		<band height="75" splitType="Stretch">
 			<staticText>
 				<reportElement x="111" y="0" width="361" height="15" uuid="6ee5eeeb-c085-4a47-9bbd-6c7d06cc1e01"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -94,15 +94,22 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Candijay Bohol]]></text>
 			</staticText>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="460" y="60" width="100" height="15" uuid="32bb59a7-a7c2-4729-9b4d-3a5e0954ff4c"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="836" splitType="Stretch">
+		<band height="821" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table" style="table" x="0" y="0" width="572" height="836" uuid="2a1f58ae-c0a7-4f5e-a7ac-c2f7463e7860"/>
+				<reportElement key="table" style="table" x="0" y="0" width="572" height="821" uuid="2a1f58ae-c0a7-4f5e-a7ac-c2f7463e7860"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1" uuid="e4726d97-1697-4e99-8f0e-80fe96ba596c">
 						<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}]]></dataSourceExpression>

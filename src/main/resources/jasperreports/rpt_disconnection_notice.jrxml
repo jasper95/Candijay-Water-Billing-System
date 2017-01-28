@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Notice of Disconnection" pageWidth="612" pageHeight="936" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="36" uuid="ac5d1d96-bd87-46ec-a7b0-53f4e340ca76">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="188"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="DEBTS_ALLOWED" class="java.lang.String">
 		<defaultValueExpression><![CDATA["tulo"]]></defaultValueExpression>
 	</parameter>
@@ -52,7 +52,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{address}.toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[String.format("Purok %d, %s", $F{_THIS}.getPurok(), $F{address}.getBrgy())]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="120" y="0" width="312" height="15" uuid="c91b3960-a429-4359-95c4-492790316395"/>

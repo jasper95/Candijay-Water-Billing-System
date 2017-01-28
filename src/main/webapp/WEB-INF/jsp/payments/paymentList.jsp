@@ -74,9 +74,9 @@
             </div>
             <div class="row">
                 <div class="col-md-12 main">
-                    <div class="table-responsive">
-                        <form:form id="form" method="POST" modelAttribute="checkboxes" cssClass="table table-striped" action="${spring:mvcUrl('datatables-api#payments').build()}">
-                            <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="payment" cssClass="table table-striped" url="/admin/payments/datatable-search" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton" >
+                    <div class="table-responsive table">
+                        <form:form id="form" method="POST" modelAttribute="checkboxes" action="${pageContext.servletContext.contextPath}/admin/payments">
+                            <datatables:table deferLoading="0" deferRender="true" dom="ltipr" id="payment" cssClass="table table-striped" url="${spring:mvcUrl('datatables-api#payments').build()}" serverSide="true" filterPlaceholder="none" filterSelector="#filterButton" filterClearSelector="#filterClearButton" >
                                 <datatables:column name="payment-id" property="id" filterable="true" visible="false" sortInitDirection="desc" sortInitOrder="0"/>
                                 <datatables:column sortable="false" renderFunction="custom-rendering#checkboxPayment">
                                     <datatables:columnHead>

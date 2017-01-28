@@ -1,6 +1,6 @@
 $(document).ready(function(){
     window.editDisc = function(id){
-        $.getJSON($('#bills-uri').val()+"edit-discount/"+id, function(response){
+        $.getJSON($('#readings-uri').val()+"edit-discount/"+id, function(response){
             if(response.status === "SUCCESS"){
                 cleanUpFormMsgs('#discount-form');
                 var invoice = response.invoice, account = invoice.account;
@@ -20,9 +20,9 @@ $(document).ready(function(){
                 BootstrapDialog.alert({
                     title: 'ACTION DENIED',
                     message: 'You can edit accounts\' latest unpaid invoice only.',
-                    type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                    closable: true, // <-- Default value is false
-                    draggable: true, // <-- Default value is false
+                    type: BootstrapDialog.TYPE_WARNING,
+                    closable: true,
+                    draggable: true,
                 });
             }
         });
@@ -32,11 +32,10 @@ $(document).ready(function(){
     });
     $('#discount-form').on('submit', function(e){
         e.preventDefault();
-        $.post($('#bills-uri').val()+'update-discount', $(this).serialize(), function(response){
+        $.post($('#readings-uri').val()+'update-discount', $(this).serialize(), function(response){
             cleanUpFormMsgs('#discount-form');
             if(validateForm('#discount-form', response)){
                 showSuccess('#discount-form', "Discount successfully updated.");
-                var row = $('#reading tbody tr:first');
                 $('#fetchAccount').submit();
             }
         })
