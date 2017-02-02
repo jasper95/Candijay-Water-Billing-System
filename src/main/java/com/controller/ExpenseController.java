@@ -24,16 +24,14 @@ import java.util.Map;
 @Controller
 public class ExpenseController {
 
-    private DataTableService dataTableService;
     private FormOptionsService formOptionsService;
     private ExpenseService expenseService;
     private ExpenseRepository expenseRepo;
 
     @Autowired
-    public ExpenseController(DataTableService dataTableService, FormOptionsService formOptionsService,
+    public ExpenseController(FormOptionsService formOptionsService,
                              ExpenseService expenseService, ExpenseRepository expenseRepo){
         this.formOptionsService = formOptionsService;
-        this.dataTableService = dataTableService;
         this.expenseService = expenseService;
         this.expenseRepo = expenseRepo;
     }

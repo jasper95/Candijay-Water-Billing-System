@@ -79,9 +79,13 @@ public class PaymentServiceImpl implements PaymentService{
             paymentYear --;
         } else paymentMonth --;
         //setting payment information
-        Schedule sched = schedRepo.findByMonthAndYear(paymentMonth, paymentYear);
+        Schedule schedule = schedRepo.findByMonthAndYear(paymentMonth, paymentYear);
+        if(schedule == null) {
+            schedule = new Schedule(paymentMonth, paymentYear);
+            schedule = schedRepo.save(schedule);
+        }
         account.getPayments().add(payment);
-        payment.setSchedule(sched);
+        payment.setSchedule(schedule);
         payment.setInvoice(invoice);
         payment.setAccount(account);
         payment.setInvoiceTotal(oldBalance);
@@ -90,22 +94,22 @@ public class PaymentServiceImpl implements PaymentService{
         // -- Updating invoice based on payment
         BigDecimal remainingBalance = oldBalance.subtract(payment.getAmountPaid());
         invoice = payment.getInvoice();
-        if(remainingBalance.compareTo(invoice.getNetCharge()) == 0)
-            invoice.setStatus(InvoiceStatus.DEBT);
-        else if(remainingBalance.compareTo(BigDecimal.ZERO) > 0)
-            invoice.setStatus(InvoiceStatus.PARTIALLYPAID);
-        else
-            invoice.setStatus(InvoiceStatus.FULLYPAID);
+        if(payment.getDate().isAfter(invoice.getDueDate()) && !isAlreadyPenalizedExcludingThisPayment(payment)) { //is not late payment
+            BigDecimal penalty = calculatePenalty(payment, new BigDecimal(settings.getPenalty()));
+            remainingBalance = remainingBalance.add(penalty);
+            invoice.setPenalty(penalty);
+            invoice.setNetCharge(invoice.getNetCharge().add(penalty));
+        }
         invoice.setRemainingTotal(remainingBalance);
+        if(remainingBalance.compareTo(BigDecimal.ZERO) == 0)
+            invoice.setStatus(InvoiceStatus.FULLYPAID);
+        else
+            invoice.setStatus(InvoiceStatus.PARTIALLYPAID);
         invoiceRepo.save(invoice);
         //updating account based on payment
         if(isAllowedToSetWarningToAccount(account, settings.getDebtsAllowed()))
             account.setStatus(AccountStatus.WARNING);
         else account.setStatus(AccountStatus.ACTIVE);
-        if(!payment.getDate().isAfter(invoice.getDueDate())) //is not late payment
-            account.setPenalty(BigDecimal.ZERO);
-        else if(!isAlreadyPenalizedExcludingThisPayment(payment)) //is invoice already penalized
-            account.setPenalty(calculatePenalty(payment, new BigDecimal(settings.getPenalty())));
         account.setAccountStandingBalance(remainingBalance);
         account.setStatusUpdated(true);
         accountRepo.save(account);

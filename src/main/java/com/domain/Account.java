@@ -52,8 +52,6 @@ public class Account  implements java.io.Serializable {
     private String accountType;
     @Column(name="account_standing_balance", nullable=false, precision=9)
     private BigDecimal accountStandingBalance = new BigDecimal(0.00);
-    @Column(name="penalty", nullable=false, precision=9)
-    private BigDecimal penalty = new BigDecimal(0.00);
     @Enumerated(EnumType.STRING)
     @Column(name="status", nullable=false)
     private AccountStatus status = AccountStatus.ACTIVE;
@@ -180,14 +178,6 @@ public class Account  implements java.io.Serializable {
 
     public void addMeterReading(MeterReading reading){
         meterReadings.add(reading);
-    }
-
-    public BigDecimal getPenalty() {
-        return penalty;
-    }
-
-    public void setPenalty(BigDecimal penalty) {
-        this.penalty = penalty;
     }
 
     @JsonIgnore

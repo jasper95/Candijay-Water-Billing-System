@@ -68,7 +68,7 @@ function recentReadingsActions(data, type, full){
     var info = '<a title="View Bill Details" type="button" onclick="viewBillDetails('+ full.invoice.id +')" class="bill-details-btn btn btn-xs btn-primary table-action-btn"><i class="fa fa-question fa-fw"></i></a>';
     if (full.version !== 0) audit = '<a title="Input History" type="button" onclick="viewChanges('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-history fa-fw"></i></a>';
     if (full.invoice.status === "UNPAID") del = '<a title="Delete Reading" type="button" onClick="deleteItem('+full.id+')" class="btn btn-xs btn-danger table-action-btn"><i class="fa fa-remove fa-fw"></i></a>';
-    if(full.invoice.status === "UNPAID" || full.invoice.status === "DEBT"){
+    if(full.invoice.status !== "FULLYPAID"){
         edit = '<a title="Edit Reading" type="button" onclick="checkCanEdit('+ full.id +')" class="btn btn-xs btn-primary table-action-btn"><i class="fa fa-edit fa-fw"></i></a>';
         discount = '<a title="Edit Discount" type="button" onClick="editDisc('+full.invoice.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
     }
@@ -88,7 +88,7 @@ function monthAndYear(data, type, full){
 };
 function recentBillsActions(data,type, full){
     var discount = '', info = '<a title="View Bill Details" type="button" onclick="viewBillDetails('+ full.id +')" class="bill-details-btn btn btn-xs btn-primary table-action-btn"><i class="fa fa-question fa-fw"></i></a>';
-    if(full.status === "UNPAID" || full.status === "DEBT") discount = '<a title="Edit Discount" type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
+    if(full.status !== "FULLYPAID") discount = '<a title="Edit Discount" type="button" onClick="editDisc('+full.id+')" class="btn btn-xs btn-primary"><i class="fa fa-tag fa-fw"></i></a>';
     return info+discount;
 };
 function chooseAccount(data, type, full){

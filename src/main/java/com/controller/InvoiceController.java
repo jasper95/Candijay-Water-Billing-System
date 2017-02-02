@@ -33,15 +33,10 @@ import org.springframework.web.bind.annotation.*;
 public class InvoiceController {
     
     private InvoiceRepository invoiceRepo;
-    private DataTableService dataTableService;
-    private InvoicingService invoiceService;
 
     @Autowired
-    public InvoiceController(DataTableService dataTableService, InvoiceRepository invoiceRepo,
-                             InvoicingService invoiceService) {
-        this.dataTableService = dataTableService;
+    public InvoiceController(InvoiceRepository invoiceRepo) {
         this.invoiceRepo = invoiceRepo;
-        this.invoiceService = invoiceService;
     }
     
 

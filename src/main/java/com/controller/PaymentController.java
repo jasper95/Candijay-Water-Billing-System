@@ -35,26 +35,20 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class PaymentController {
 
-    private DataTableService dataTableService;
     private PaymentService paymentService;
     private AccountRepository accountRepo;
-    private InvoiceRepository invoiceRepo;
     private FormOptionsService formOptionsService;
     private AddressRepository addressRepo;
-    private MeterReadingService mrService;
     private PaymentRepository paymentRepo;
     
     @Autowired
-    public PaymentController(DataTableService dataTableService, PaymentService paymentService, 
-                             AccountRepository accountRepo, InvoiceRepository invoiceRepo, FormOptionsService formOptionsService,
-                             AddressRepository addressRepo, MeterReadingService mrService, PaymentRepository paymentRepo) {
-        this.dataTableService = dataTableService;
+    public PaymentController(PaymentService paymentService,
+                             AccountRepository accountRepo, FormOptionsService formOptionsService,
+                             AddressRepository addressRepo, PaymentRepository paymentRepo) {
         this.paymentService = paymentService;
         this.accountRepo = accountRepo;
-        this.invoiceRepo = invoiceRepo;
         this.formOptionsService = formOptionsService;
         this.addressRepo = addressRepo;
-        this.mrService = mrService;
         this.paymentRepo = paymentRepo;
     }
 

@@ -258,10 +258,25 @@ public class MeterReadingController {
         Invoice invoice = invoiceRepo.findById(id),
                 latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
         HashMap response = new HashMap();
-        if(invoice != null && invoice.equals(latestInvoice) && (invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)) ) {
-            response.put("invoice", invoice);
+        boolean reject = false;
+        String message = "";
+        if(invoice == null){
+            reject = true;
+            message = "Bill does not exists anymore. Please load the data again.";
+        } else if(!invoice.equals(latestInvoice)) {
+            reject = true;
+            message = "Can edit latest bill for this account only.";
+        } else if (invoice.getStatus().equals(InvoiceStatus.FULLYPAID)){
+            reject = true;
+            message = "Cannot edit FULLYPAID bills.";
+        }
+        if(reject){
+            response.put("status", "FAILURE");
+            response.put("message", message);
+        } else {
             response.put("status", "SUCCESS");
-        } else response.put("status", "FAILURE");
+            response.put("invoice", invoice);
+        }
         return response;
     }
 
@@ -270,7 +285,7 @@ public class MeterReadingController {
         HashMap response = new HashMap();
         if(!result.hasErrors()){
             Invoice invoice = invoiceRepo.findOne(form.getBillId());
-            if(form.getDiscount().compareTo(invoice.getNetCharge()) > 0)
+            if(form.getDiscount().compareTo(invoice.getRemainingTotal()) > 0)
                 result.rejectValue("discount", "", "Invalid discount");
         }
         if(result.hasErrors()){

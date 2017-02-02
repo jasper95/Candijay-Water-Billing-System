@@ -59,4 +59,13 @@ $(document).ready(function(){
             }
         })
     });
+    $('#readingVal').on('keyup', function(){
+        var reading = parseInt($(this).val());
+        if(!isNaN(reading)){
+            var lastReading = parseInt($('#last-reading-reference').val());
+            var consumption = reading - lastReading;
+            $('#reading-consumption').text(consumption);
+        } else $('#reading-consumption').text(0);
+
+    });
 });

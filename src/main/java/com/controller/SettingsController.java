@@ -30,7 +30,7 @@ public class SettingsController {
     
     @Autowired
     private SettingsService settingsService;
-    static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.settings";
+    private static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.settings";
     
     @RequestMapping(method=RequestMethod.GET)
     public String getUpdateSettings(ModelMap model){

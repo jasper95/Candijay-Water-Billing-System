@@ -148,8 +148,14 @@
                                     <div class="col-md-12 form-group">
                                         <cws:select id="reading-year" items="${yearOptions}" name="meterReading.schedule.year" label="Reading Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
                                     </div>
-                                    <div class="col-md-12 form-group">
+                                    <div class="col-md-9 form-group">
                                         <cws:input id="readingVal" name="meterReading.readingValue" label="Reading value" icon="tachometer" placeholder="Enter reading" required="true" size="12" moreClasses="is-number"/>
+                                    </div>
+                                    <div>
+                                        <span><strong><em>Consumed</em></strong>:</span>
+                                        <div style="display:inline-block">
+                                           <span id="reading-consumption" style="font-size: 20px"><strong></strong></span>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -292,6 +298,7 @@
                                         <dandelion:bundle excludes="jquery"/>
                                     </datatables:table>
                                     <button type="button" id="payment-history-btn" class="btn btn-default">Prev. Payments</button>
+                                    <input type="hidden" id="last-reading-reference">
                                     <input type="hidden" id="row-num">
                                     <input type="hidden" id="readings-uri" value="${pageContext.servletContext.contextPath}/admin/reading/">
                                     <input type="hidden" id="accounts-uri" value="${pageContext.servletContext.contextPath}/admin/accounts/">

@@ -50,12 +50,11 @@ public class ReportsController {
     private AccountRepository accountRepo;
     private InvoiceRepository invoiceRepo;
     private SettingsService settingsService;
-    private MeterReadingService mrService;
 
     @Autowired
     public ReportsController(ReportService reportService, ScheduleRepository schedRepo, FormOptionsService formOptionsService,
                              AddressRepository addressRepo, AccountRepository accountRepo, InvoiceRepository invoiceRepo,
-                             SettingsService settingsService, MeterReadingService mrService){
+                             SettingsService settingsService){
         this.reportService = reportService;
         this.schedRepo = schedRepo;
         this.formOptionsService = formOptionsService;
@@ -63,7 +62,6 @@ public class ReportsController {
         this.accountRepo = accountRepo;
         this.invoiceRepo = invoiceRepo;
         this.settingsService = settingsService;
-        this.mrService = mrService;
     }
     
     @RequestMapping(method=RequestMethod.GET)

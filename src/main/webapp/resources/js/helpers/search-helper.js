@@ -19,6 +19,7 @@ $(document).ready(function(){
                     $('#filterButton').click();
                     $('.reading-ready').show();
                     $('#search-results').hide();
+                    $('#reading-consumption').text(0);
                     $('#readingVal').focus();
                     $('#amount-paid').focus();
                 } else $('#crt-mr-found').hide();
@@ -39,6 +40,7 @@ $(document).ready(function(){
         var isReading = (response.last_reading !== undefined), lastReading;
         if(isReading){
             lastReading = "Last Reading:  "+response.last_reading;
+            $('#last-reading-reference').val(response.last_reading);
         } else {
             lastReading = "Balance: &#8369; "+account.accountStandingBalance ;
             $('#acc-balance-val').val(account.accountStandingBalance);

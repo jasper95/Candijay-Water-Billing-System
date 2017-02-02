@@ -29,25 +29,16 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
     
     private CustomerRepository customerRepo;
     private AccountRepository accountRepo;
-    private TaxRepository taxRepo;
     private AddressRepository addressRepo;
-    private DataTableDao dataTableQueryHelper;
     private DeviceRepository deviceRepo;
-    private MeterReadingRepository mrRepo;
-    private PaymentRepository paymentRepo;
     
     @Autowired
     public CustomerManagementServiceImpl(CustomerRepository customerRepo, AccountRepository accountRepo, 
-            TaxRepository taxRepo, AddressRepository addressRepo, DataTableDao dataTableQueryHelper, DeviceRepository deviceRepo,
-                                         MeterReadingRepository mrRepo, PaymentRepository paymentRepo) {
+            AddressRepository addressRepo, DeviceRepository deviceRepo) {
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
-        this.taxRepo = taxRepo;
         this.addressRepo = addressRepo;
-        this.dataTableQueryHelper = dataTableQueryHelper;
         this.deviceRepo = deviceRepo;
-        this.mrRepo = mrRepo;
-        this.paymentRepo = paymentRepo;
     }
              
     @Override
@@ -90,8 +81,10 @@ public class CustomerManagementServiceImpl implements CustomerManagementService 
     @Transactional
     @Override
     public Account updateAccount(AccountForm accountForm){
-        Account account = accountForm.getAccount();
-        account.setAddress(accountForm.getAddress());
+        Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
+        Account account = accountRepo.findByNumber(accountForm.getAccount().getNumber());
+        account.setAddress(address);
+        account.setPurok(accountForm.getAccount().getPurok());
         return accountRepo.save(account);
     }
 

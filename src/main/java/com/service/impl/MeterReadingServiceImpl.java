@@ -18,6 +18,7 @@ import com.service.MeterReadingService;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,20 +35,18 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     private ScheduleRepository schedRepo;
     private AccountRepository accountRepo;
     private InvoicingService invoicingService;
-    private InvoiceRepository invoiceRepo;
     private DeviceRepository deviceRepo;
     private ModifiedReadingRepository modifiedReadingRepo;
     private AddressRepository addressRepo;
 
     @Autowired
-    public MeterReadingServiceImpl(InvoiceRepository invoiceRepo, InvoicingService invoicingService, AccountRepository accountRepo, ScheduleRepository schedRepo,
+    public MeterReadingServiceImpl(InvoicingService invoicingService, AccountRepository accountRepo, ScheduleRepository schedRepo,
                                    MeterReadingRepository mrRepo, DeviceRepository deviceRepo, ModifiedReadingRepository modifiedReadingRepo,
                                    AddressRepository addressRepo){
         this.mrRepo = mrRepo;
         this.schedRepo = schedRepo;
         this.accountRepo = accountRepo;
         this.invoicingService = invoicingService;
-        this.invoiceRepo = invoiceRepo;
         this.deviceRepo = deviceRepo;
         this.modifiedReadingRepo = modifiedReadingRepo;
         this.addressRepo = addressRepo;
@@ -127,7 +126,6 @@ public class MeterReadingServiceImpl implements MeterReadingService{
             BigDecimal newBalance = account.getAccountStandingBalance().subtract(invoice.getTotalCurrent()).add(invoice.getDiscount());
             account.setStatusUpdated(true);
             device.setLastReading(device.getLastReading()-reading.getConsumption());
-            account.setPenalty(invoice.getPenalty());
             account.setAccountStandingBalance(newBalance);
             mrRepo.delete(reading);
             deviceRepo.save(device);
@@ -149,17 +147,14 @@ public class MeterReadingServiceImpl implements MeterReadingService{
         Schedule schedule = schedRepo.findByMonthAndYear(currentMonth, currentYear);
         if(schedule == null)
             throw new Exception("No meter reading data for previous month");
-        List<MeterReading> ms = mrRepo.findByScheduleAndAccount_AddressIn(schedule, addresses);
-        List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Collections.singletonList(AccountStatus.ACTIVE)), accountsNoReading = new ArrayList();
-        List<String> num = new ArrayList<>();
-        for(MeterReading reading : ms)
-            num.add(reading.getAccount().getNumber());
-        for(Account account : accounts){
-            if(!num.contains(account.getNumber())){
-                accountsNoReading.add(account);
-            }
-        }
-        return accountsNoReading;
+        List<MeterReading> currentScheduleReadings = mrRepo.findByScheduleAndAccount_AddressIn(schedule, addresses);
+        List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Collections.singletonList(AccountStatus.ACTIVE));
+        List<String> num = currentScheduleReadings.stream()
+                            .map(e->e.getAccount().getNumber())
+                            .collect(Collectors.toList());
+        return accounts.stream()
+                        .filter(e -> !num.contains(e.getNumber()))
+                        .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

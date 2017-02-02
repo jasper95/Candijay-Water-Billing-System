@@ -35,7 +35,7 @@ $(document).ready(function(){
                                     status.removeClass().addClass("label label-success");
                                 else status.removeClass().addClass("label label-danger");
                                 status.text(account.status);
-                                $('#last-reading').html("Standing Balance: &#8369; "+ account.accountStandingBalance);
+                                $('#acc-balance-val').val(account.accountStandingBalance);
                                 $('#acc-no').find('input:first').val(account.id);
                                 $('#filterButton').trigger('click');
                                 searchAgain();

@@ -50,19 +50,17 @@ public class CustomerController {
 
     private CustomerManagementService custService;
     private CustomerRepository customerRepo;
-    static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.customerForm";
-    private DataTableService dataTableService;
+    private static final String BINDING_RESULT_NAME = "org.springframework.validation.BindingResult.customerForm";
     private AccountRepository accountRepo;
     private AddressRepository addressRepo;
     private DeviceRepository deviceRepo;
     private FormOptionsService formOptionsService;
 
     @Autowired
-    public CustomerController(CustomerManagementService custService, DataTableService dataTableService, 
+    public CustomerController(CustomerManagementService custService,
             CustomerRepository customerRepo, AccountRepository accountRepo, AddressRepository addressRepo, DeviceRepository deviceRepo,
               FormOptionsService formOptionsService) {
         this.custService = custService;
-        this.dataTableService = dataTableService;
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
         this.addressRepo = addressRepo;

@@ -40,7 +40,6 @@ public class AccountController {
     
     private DeviceRepository deviceRepo;
     private CustomerManagementService custService;
-    private DataTableService dataTableService;
     private PaymentService paymentService;
     private AccountRepository accountRepo;
     private AddressRepository addressRepo;
@@ -48,11 +47,10 @@ public class AccountController {
     private SettingsService settingsService;
 
     @Autowired
-    public AccountController(CustomerManagementService custService, DataTableService dataTableService, 
-            PaymentService paymentService, DeviceRepository deviceRepo, AccountRepository accountRepo, 
-            AddressRepository addressRepo, FormOptionsService formOptionsService, SettingsService settingsService) {
+    public AccountController(CustomerManagementService custService, PaymentService paymentService,
+                             DeviceRepository deviceRepo, AccountRepository accountRepo, AddressRepository addressRepo,
+                             FormOptionsService formOptionsService, SettingsService settingsService) {
         this.custService = custService;
-        this.dataTableService = dataTableService;
         this.paymentService = paymentService;
         this.deviceRepo = deviceRepo;
         this.accountRepo = accountRepo;
@@ -142,12 +140,8 @@ public class AccountController {
                                      BindingResult result,@PathVariable("accountNumber") String number) {
         HashMap response = new HashMap();
         if(!result.hasErrors()){
-            Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
-            accountForm.setAddress(address);
+            accountForm.getAccount().setNumber(number);
             try{
-                Account account = accountRepo.findByNumber(number);
-                account.setPurok(accountForm.getAccount().getPurok());
-                accountForm.setAccount(account);
                 response.put("result", custService.updateAccount(accountForm));
             }catch(JpaOptimisticLockingFailureException e){
                 result.reject("global","This record was modified by another user. Try refreshing the page.");

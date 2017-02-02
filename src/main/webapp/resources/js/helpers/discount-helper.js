@@ -6,7 +6,7 @@ $(document).ready(function(){
                 var invoice = response.invoice, account = invoice.account;
                 var fullname = account.customer.firstName+ " "+ account.customer.middleName+" "+ account.customer.lastname;
                 var address = account.address.brgy+",  Zone "+account.address.locationCode;
-                var invoiceDue = "Invoice Total Due: &#8369 "+invoice.netCharge;
+                var invoiceDue = "Invoice Due: &#8369 "+invoice.remainingTotal;
                 var invoiceSched = invoice.schedule.monthSymbol+" "+invoice.schedule.year;
                 $('#bill-dc-full-name').text(fullname);
                 $('#bill-dc-address').text(address);
@@ -14,12 +14,12 @@ $(document).ready(function(){
                 $('#bill-dc-date').text(invoiceSched);
                 $('#dc-id').val(invoice.id);
                 $('#dc-val').val(invoice.discount);
-                $('#bill-due-reference').val(invoice.netCharge+invoice.discount);
+                $('#bill-due-reference').val(invoice.remainingTotal+invoice.discount);
                 $('#bill-discount-form-modal').modal('show');
             } else{
                 BootstrapDialog.alert({
                     title: 'ACTION DENIED',
-                    message: 'You can edit accounts\' latest unpaid invoice only.',
+                    message: response.message,
                     type: BootstrapDialog.TYPE_WARNING,
                     closable: true,
                     draggable: true,
@@ -28,7 +28,7 @@ $(document).ready(function(){
         });
     };
     $('#dc-val').on('keyup', function(){
-        realTimeCalculationHelper($(this), $('#bill-due-reference'), $('#bill-dc-due'),"Invoice Total Due: &#8369 ");
+        realTimeCalculationHelper($(this), $('#bill-due-reference'), $('#bill-dc-due'),"Invoice Due: &#8369 ");
     });
     $('#discount-form').on('submit', function(e){
         e.preventDefault();

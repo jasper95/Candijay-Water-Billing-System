@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `account` (
   `customer_id` bigint(20) NOT NULL,
   `account_type` varchar(45) DEFAULT NULL,
   `account_standing_balance` decimal(9,2) NOT NULL DEFAULT '0.00',
-  `penalty` decimal(9,2) NOT NULL,
   `status_updated` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `number UNIQUE` (`number`),
