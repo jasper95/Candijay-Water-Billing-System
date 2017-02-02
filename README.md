@@ -28,6 +28,7 @@ Server-side:
    * Spring Data JPA
    * Hibernate
    * MySQL
+ 
 Client-side:
    * Twitter bootstrap
    * jQuery DataTables
