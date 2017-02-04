@@ -2,6 +2,7 @@
 
 This application is currently used by the Municipality of Candijay, Bohol.
 
+
 Features:
    * Manage Consumers' Information
    * Create, update, delete and view history of Readings
@@ -13,6 +14,8 @@ Features:
    * Tracking of active and inactive accounts
    * Adjusting system variables e.g. rates, consecutive debts allowed, etc.
    * System users role-based access
+
+[How it works?](https://www.scribd.com/document/338387939/Water-Billing-System-Presentation)
 
 Main Technologies Used:
 
