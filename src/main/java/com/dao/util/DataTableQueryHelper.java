@@ -32,7 +32,7 @@ public class DataTableQueryHelper implements DataTableDao{
         StringBuilder queryBuilder = new StringBuilder("SELECT p FROM "+ clazz.getName()+" p");
         queryBuilder.append(DataTableDaoUtil.getFilterQuery(criterias));
         if (criterias.hasOneSortedColumn()) {
-            List<String> orderParams = new ArrayList<String>();
+            List<String> orderParams = new ArrayList<>();
             queryBuilder.append(" ORDER BY ");
             for (ColumnDef columnDef : criterias.getSortingColumnDefs()) {
                 orderParams.add("p." + columnDef.getName() + " " + columnDef.getSortDirection());

@@ -23,6 +23,8 @@ $(document).ready(function(){
                     label: 'Pay',
                     cssClass: 'btn-warning',
                     action : function(dialog){
+                        var submitButton = $('#confirm-payment-ok'), origText = submitButton.text();
+                        changeButtonState(submitButton, true, '');
                         dialog.close();
                         $.post($('#payments-uri').val()+'new', form.serialize(), function(response){
                             cleanUpFormMsgs('#add-payment-form');
@@ -39,15 +41,18 @@ $(document).ready(function(){
                                 $('#acc-no').find('input:first').val(account.id);
                                 $('#filterButton').trigger('click');
                                 searchAgain();
+                                $('#last-reading').html("Balance: &#8369; "+account.accountStandingBalance);
                             }
+                            changeButtonState(submitButton, false, origText);
                         });
                     }
                 }
             ]
         });
     });
-    $("#date").datepicker({ maxDate : new Date, changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});
-    $("#date").datepicker("setDate", new Date());
+    var dateField = $("#date");
+    dateField.datepicker({ maxDate : new Date, changeMonth: true, changeYear: true, yearRange : '-6:+0', dateFormat: 'yy/mm/dd'});
+    dateField.datepicker("setDate", new Date());
     $('#or-num').attr('maxlength', 7);
     $('#amount-paid').on('keyup', function(){
         realTimeCalculationHelper($(this), $('#acc-balance-val'), $('#last-reading'), "Balance: &#8369; ");

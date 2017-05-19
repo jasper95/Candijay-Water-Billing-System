@@ -15,7 +15,6 @@ import com.domain.Customer;
 import com.forms.AccountForm;
 import com.forms.CustomerForm;
 import com.service.CustomerManagementService;
-import com.service.DataTableService;
 
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -89,9 +82,9 @@ public class CustomerController {
         return "customers/createOrUpdateCustomerForm";
     }
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String processCustomerForm(@ModelAttribute("customerForm") @Valid CustomerForm customerForm,  
-                                     BindingResult result,RedirectAttributes redirectAttributes,
-                                     SessionStatus status) {
+    public String processCustomerForm(@ModelAttribute("customerForm") @Valid CustomerForm customerForm,
+                                      BindingResult result, RedirectAttributes redirectAttributes,
+                                      SessionStatus status, @RequestParam("duplicateMCToggle") boolean allowDuplicateMeterCode) {
         Customer customer = null;
         Address address = addressRepo.findByBrgy(customerForm.getAddress().getBrgy());
         customerForm.setAddress(address);
@@ -103,7 +96,7 @@ public class CustomerController {
             result.rejectValue("device.meterCode","","This field is required");
         if(meterBrand.isEmpty())
             result.rejectValue("device.brand","","This field is required");
-        if(!meterCode.isEmpty() && deviceRepo.findByMeterCode(meterCode) != null)
+        if(!meterCode.isEmpty() && !allowDuplicateMeterCode && deviceRepo.countByMeterCode(meterCode) > 0)
             result.rejectValue("device.meterCode", "", "Metercode already exists");
         if(!result.hasErrors()){
             try{
@@ -148,7 +141,7 @@ public class CustomerController {
     
     @RequestMapping(value="/{customerId}/update", method=RequestMethod.GET)
     public String initUpdateForm(@PathVariable("customerId") Long id, ModelMap model){
-        HashMap genderOptions = new HashMap();
+        HashMap genderOptions = new HashMap<>();
         genderOptions.put('M', "Male");
         genderOptions.put('F', "Female");
         model.addAttribute("genderOptions", genderOptions);

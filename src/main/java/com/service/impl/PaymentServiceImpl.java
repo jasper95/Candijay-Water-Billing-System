@@ -20,6 +20,7 @@ import com.service.SettingsService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -94,12 +95,6 @@ public class PaymentServiceImpl implements PaymentService{
         // -- Updating invoice based on payment
         BigDecimal remainingBalance = oldBalance.subtract(payment.getAmountPaid());
         invoice = payment.getInvoice();
-        if(payment.getDate().isAfter(invoice.getDueDate()) && !isAlreadyPenalizedExcludingThisPayment(payment)) { //is not late payment
-            BigDecimal penalty = calculatePenalty(payment, new BigDecimal(settings.getPenalty()));
-            remainingBalance = remainingBalance.add(penalty);
-            invoice.setPenalty(penalty);
-            invoice.setNetCharge(invoice.getNetCharge().add(penalty));
-        }
         invoice.setRemainingTotal(remainingBalance);
         if(remainingBalance.compareTo(BigDecimal.ZERO) == 0)
             invoice.setStatus(InvoiceStatus.FULLYPAID);
@@ -124,21 +119,11 @@ public class PaymentServiceImpl implements PaymentService{
         return originalPayment;
     }
 
-    private boolean isAlreadyPenalizedExcludingThisPayment(Payment payment){
-        Invoice invoice = payment.getInvoice();
-        return invoice.getPayments().stream()
-                            .filter(e -> e.getDate().isAfter(invoice.getDueDate()))
-                            .filter(e -> !e.equals(payment))
-                            .findFirst()
-                            .isPresent();
-    }
-
-    private BigDecimal calculatePenalty(Payment payment, BigDecimal penaltyRate){
-        if(payment.getDate().isAfter(payment.getInvoice().getDueDate())){
-            BigDecimal totalDue = payment.getInvoice().getNetCharge(), penalty = totalDue.multiply(penaltyRate),
-                    hundred = new BigDecimal(100);
-            return penalty.compareTo(hundred) > 0 ? hundred : penalty;
-        } else return BigDecimal.ZERO;
+    @Override
+    public BigDecimal calculatePenalty(Invoice invoice, BigDecimal penaltyRate){
+        BigDecimal totalDue = invoice.getRemainingTotal(), penalty = totalDue.multiply(penaltyRate),
+                hundred = new BigDecimal(100);
+        return penalty.compareTo(hundred) > 0 ? hundred : penalty;
     }
 
     @Transactional
@@ -156,8 +141,14 @@ public class PaymentServiceImpl implements PaymentService{
             else if(paymentIsNew ){
                 if(account.getAccountStandingBalance().doubleValue() == 0)
                     result.reject("global", "This account has zero standing balance");
-                else if(form.getPayment().getAmountPaid().compareTo(account.getAccountStandingBalance()) > 0)
-                    result.rejectValue("payment.amountPaid", "",  "Invalid amount");
+                else {
+                    boolean isLatePayment = form.getPayment().getDate().isAfter(invoice.getDueDate());
+                    if(isLatePayment && invoice.getStatus().equals(InvoiceStatus.UNPAID) ){
+                        result.reject("global", "Finalize payments to add penalty.");
+                    }
+                    if(form.getPayment().getAmountPaid().compareTo(account.getAccountStandingBalance()) > 0)
+                        result.rejectValue("payment.amountPaid", "",  "Invalid amount");
+                }
             }
             Payment paymentUniqueOr = paymentRepo.findByReceiptNumber(form.getPayment().getReceiptNumber());
             if(paymentUniqueOr != null){
@@ -173,13 +164,11 @@ public class PaymentServiceImpl implements PaymentService{
     @Transactional(readOnly=true)
     @Override
     public boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed) {
-        int ctr = 0;
-        for(Invoice invoice: invoiceRepo.findByAccountOrderByIdDesc(account, new PageRequest(0, debtsAllowed))){
-            if(! (invoice.getStatus().equals(InvoiceStatus.UNPAID) || invoice.getStatus().equals(InvoiceStatus.DEBT)))
-                break;
-            else ctr++;
-        }
-        return debtsAllowed.compareTo(ctr) == 0;
+        return invoiceRepo
+                .findByAccountOrderByIdDesc(account, new PageRequest(0, debtsAllowed))
+                .stream()
+                .filter(e -> !e.getStatus().equals(InvoiceStatus.FULLYPAID))
+                .count() == debtsAllowed;
     }
 
     @Transactional
@@ -187,16 +176,33 @@ public class PaymentServiceImpl implements PaymentService{
     public List<Account> updateAccountsWithNoPayments(Address address) {
         List<Account> accounts = accountRepo.findByAddressInAndStatusIn(Arrays.asList(address), Arrays.asList(AccountStatus.ACTIVE));
         Settings currentSettings = settingsService.getCurrentSettings();
+        BigDecimal penaltyRate = new BigDecimal(currentSettings.getPenalty().toString());
         List<Account> updated = new ArrayList<>();
         for(Account account: accounts){
             Invoice invoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(account);
-            if(invoice != null && (invoice.getStatus().equals(InvoiceStatus.DEBT) || invoice.getStatus().equals(InvoiceStatus.UNPAID))){
-                invoice.setStatus(InvoiceStatus.DEBT);
+            if(invoice != null && !invoice.getStatus().equals(InvoiceStatus.FULLYPAID)){
                 account = invoice.getAccount();
-                if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed()))
+                if(invoice.getStatus().equals(InvoiceStatus.DEBT) || invoice.getStatus().equals(InvoiceStatus.UNPAID)){
+                    if(invoice.getRemainingTotal().compareTo(BigDecimal.ZERO) > 0)
+                        invoice.setStatus(InvoiceStatus.DEBT);
+                    else invoice.setStatus(InvoiceStatus.FULLYPAID);
+                    invoiceRepo.save(invoice);
+                    account.setStatusUpdated(true);
+                }
+                if(invoice.getRemainingTotal().compareTo(BigDecimal.ZERO) > 0 && invoice.getPenalty().compareTo(BigDecimal.ZERO) == 0 && (invoice.getDueDate().isEqualNow() || invoice.getDueDate().isBeforeNow())){
+                    BigDecimal penalty = calculatePenalty(invoice, penaltyRate);
+                    invoice.setPenalty(penalty);
+                    invoice.setRemainingTotal(invoice.getRemainingTotal().add(penalty));
+                    invoice.setNetCharge(invoice.getNetCharge().add(penalty));
+                    invoiceRepo.save(invoice);
+                    account = invoice.getAccount();
+                    account.setAccountStandingBalance(invoice.getRemainingTotal());
+                }
+                if(isAllowedToSetWarningToAccount(account, currentSettings.getDebtsAllowed())){
                     account.setStatus(AccountStatus.WARNING);
-                account.setStatusUpdated(true);
-                updated.add(accountRepo.save(account));
+                    updated.add(account);
+                }
+                accountRepo.save(account);
             }
         }
         return updated;

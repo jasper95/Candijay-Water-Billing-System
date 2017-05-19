@@ -12,6 +12,7 @@ import com.service.InvoicingService;
 
 import java.math.BigDecimal;
 
+import com.service.SettingsService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,34 +26,42 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvoicingServiceImpl implements InvoicingService {
 
     private InvoiceRepository invoiceRepo;
-    private SettingsRepository settingsRepo;
+    private SettingsService settingsService;
     private AccountRepository accountRepo;
 
     @Autowired
-    public InvoicingServiceImpl(InvoiceRepository invoiceRepo, MeterReadingRepository mrRepo, PaymentRepository paymentRepo,
-                                SettingsRepository settingsRepo, AccountRepository accountRepo, ScheduleRepository schedRepo, ExpenseRepository expenseRepo){
-
+    public InvoicingServiceImpl(InvoiceRepository invoiceRepo, SettingsService settingsService, AccountRepository accountRepo){
         this.invoiceRepo = invoiceRepo;
-        this.settingsRepo = settingsRepo;
+        this.settingsService = settingsService;
         this.accountRepo = accountRepo;
     }
     
+    private BigDecimal computeBasic(Integer consumption, BigDecimal basic, BigDecimal basicRate){
+        for(int i= 6; i <= consumption; i++){
+            basic = basic.add(basicRate);
+            if(i%10 == 0)
+                basicRate = basicRate.add(BigDecimal.ONE);
+            if(i == 100)
+                break;
+        }
+        if(consumption >= 100){
+            BigDecimal moreThanHundred = new BigDecimal(consumption-100);
+            basic = basic.add(basicRate.multiply(moreThanHundred));
+        }
+        return basic;
+    }
+
     @Override
     public void generateInvoiceMeterReading(MeterReading reading) {
-        Settings settings = settingsRepo.findAll().get(0);
-        BigDecimal others = new BigDecimal(settings.getPes()), 
-                    basic = new BigDecimal(settings.getBasicMinimum()),
-                    total, systemLoss = new BigDecimal(settings.getSystemLossMinimum()),
-                    depreciationFund = new BigDecimal(settings.getDepreciationFundMinimum());
+        Settings settings = settingsService.getCurrentSettings();
+        BigDecimal others = new BigDecimal(settings.getPes().toString()),
+                    basic = new BigDecimal(settings.getBasicMinimum().toString()),
+                    total, systemLoss = new BigDecimal(settings.getSystemLossMinimum().toString()),
+                    depreciationFund = new BigDecimal(settings.getDepreciationFundMinimum().toString());
         if(reading.getConsumption() > 5){
-            BigDecimal adder = new BigDecimal(settings.getBasicRate());
-            for(int i= 6; i <= reading.getConsumption(); i++){
-                basic = basic.add(adder);
-                if(i%10 == 0)
-                    adder = adder.add(BigDecimal.ONE);
-            }
-            systemLoss = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getSystemLossRate()));
-            depreciationFund = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getDepreciationFundRate()));
+            basic = computeBasic(reading.getConsumption(), basic, new BigDecimal(settings.getBasicRate().toString()));
+            systemLoss = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getSystemLossRate().toString()));
+            depreciationFund = new BigDecimal(reading.getConsumption()).multiply(new BigDecimal(settings.getDepreciationFundRate().toString()));
         }
         int month = reading.getSchedule().getMonth()+1;
         int year = reading.getSchedule().getYear();
@@ -81,10 +90,21 @@ public class InvoicingServiceImpl implements InvoicingService {
             total = total.add(reading.getAccount().getAccountStandingBalance());
             newInvoice.setStatus(InvoiceStatus.UNPAID);
         } else total = total.add(newInvoice.getArrears().add(newInvoice.getPenalty()));
-        newInvoice.setNetCharge(total);
-        newInvoice.setRemainingTotal(total);
+        if(newInvoice.getStatus().equals(InvoiceStatus.UNPAID) || newInvoice.getStatus().equals(InvoiceStatus.DEBT)){
+            newInvoice.setNetCharge(total);
+            newInvoice.setRemainingTotal(total);
+        } else {
+            BigDecimal paidAmount = newInvoice.getPayments().stream()
+                                                            .map(Payment::getAmountPaid)
+                                                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal newRemainingTotal = total.subtract(paidAmount);
+            if(newRemainingTotal.compareTo(BigDecimal.ZERO) < 0)
+                newRemainingTotal = BigDecimal.ZERO;
+            newInvoice.setNetCharge(total);
+            newInvoice.setRemainingTotal(newRemainingTotal);
+        }
         newInvoice = invoiceRepo.save(newInvoice);
-        reading.getAccount().setAccountStandingBalance(total);
+        reading.getAccount().setAccountStandingBalance(newInvoice.getRemainingTotal());
         if(newInvoice.getStatus().equals(InvoiceStatus.UNPAID))
             reading.getAccount().setStatusUpdated(false);
         accountRepo.save(reading.getAccount());

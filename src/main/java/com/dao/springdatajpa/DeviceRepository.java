@@ -16,6 +16,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface DeviceRepository extends JpaRepository<Device, Long>{
     Device findByOwnerAndActive(Account owner, boolean active);
-    Device findByMeterCode(String meterCode);
+    Long countByMeterCode(String meterCode);
     List<Device> findByOwner(Account owner);
 }

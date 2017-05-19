@@ -20,7 +20,7 @@ public class DataTableDaoUtil{
     
     public static StringBuilder getFilterQuery(DatatablesCriterias criterias){
 		StringBuilder queryBuilder = new StringBuilder();
-		List<String> paramList = new ArrayList<String>();
+		List<String> paramList = new ArrayList<>();
 		
 		/**
 		 * Step 1.1: global filtering

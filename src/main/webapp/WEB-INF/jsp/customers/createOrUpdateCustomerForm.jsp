@@ -10,6 +10,7 @@
         <link rel="icon" href="${STATIC_URL}img/cws.ico">
         <title>${createOrUpdate} Customer</title>
         <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+        <link href="${STATIC_URL}css/bootstrap-toggle.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
         <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
         <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
@@ -17,11 +18,14 @@
     </head>
     <body>
         <jsp:include page="../fragments/postAuth/header.jsp"/>
-        <div class="container">
+        <div id="content-loader" class="loader"></div>
+        <div id="main-content" style="display: none" class="container">
             <div class="row">
-                <div class="col-sm-8 col-md-10">
-                    <h2> ${createOrUpdate} Customer
-                    </h2>
+                <div class="col-sm-8">
+                    <h2> ${createOrUpdate} Customer</h2>
+                </div>
+                <div class="col-sm-4 vertical-center text-right">
+                    <button type="button" id="search-dv" class="btn btn-default">Search Device</button>
                 </div>
             </div>
             <form:form modelAttribute="customerForm" method="post" id="add-customer-form">
@@ -53,25 +57,46 @@
                 <div class="form-wrapper">
                     <h3>Account Information</h3>
                     <div class="col-sm-12 form-group">
-                        <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="3"/>
-                        <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="3"/>
-                        <cws:input id="acc-lr" name="device.lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="3" moreClasses="is-number"/>
-                        <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="3"/>
+                        <cws:select id="acc-bg" name="address.brgy" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="4"/>
+                        <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" size="4"/>
+                        <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="4"/>
                     </div>
                     <div class="col-sm-12 form-group">
-                        <cws:select id="ac-lc" name="account.purok" items="${purokOptions}" placeholder="Select Purok" label="Purok" icon="home" required="true" size="3"/>
+                        <cws:input id="acc-lr" name="device.lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="4" moreClasses="is-number"/>
+                        <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="4"/>
+                        <div class="col-sm-4">
+                            <label class="control-label" style="display:block">Duplicate Meter Code:</label>
+                            <input id="allow-dup-mc-toggle" data-width="120px" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Allowed" data-off="<i class='fa fa-remove'></i> Not Allowed">
+                        </div>
+                        <input type="hidden" name="duplicateMCToggle" id="allow-dup-mc" value="0">
                     </div>
                 </div>
             </c:if>
                 <button style="margin-right: 30px;" class="btn btn-primary btn-lg pull-right" type="submit">  Save  </button>
             </form:form>
         </div>
+        <jsp:include page="../fragments/modals/search-device-info.jsp"/>
         <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+        <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>
         <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.core.js"></script>
         <script src="${WEB_JARS}jquery-ui/1.10.3/ui/jquery.ui.datepicker.js"></script>
         <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
+        <script src="${STATIC_URL}js/helpers/search-device-helper.js"></script>
         <script src="${STATIC_URL}js/global.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#content-loader').hide()
+                $('#main-content').show();
+                $('#allow-dup-mc-toggle').on('change', function(){
+                    var mcToggle = $('#allow-dup-mc');
+                    if(mcToggle.val() === '0')
+                        mcToggle.val('1');
+                    else
+                        mcToggle.val('0');
+                });
+            });
+        </script>
     </body>
 </html>

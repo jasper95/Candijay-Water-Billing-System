@@ -77,7 +77,7 @@ public class AdminProfileController {
 
     @RequestMapping(value="/update-password", method=RequestMethod.POST)
     public @ResponseBody HashMap postEditPassword(@RequestParam Map<String, String> params){
-        HashMap response = new HashMap(), fieldErrors = new HashMap();
+        HashMap response = new HashMap<>(), fieldErrors = new HashMap<>();
         String newPassword = params.get("new"), currentPassword = params.get("current");
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = userRepo.findById(user.getId());
@@ -109,7 +109,7 @@ public class AdminProfileController {
     
     @RequestMapping(value="/update-name", method=RequestMethod.POST)
     public @ResponseBody HashMap postEditName(@RequestParam Map<String, String> params){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         String fullName = params.get("fullName");
         if(fullName == null || fullName.trim().isEmpty()){
             response.put("status", "FAILURE");
@@ -129,7 +129,7 @@ public class AdminProfileController {
     }
     @RequestMapping(value = "/get-chart-data", method = RequestMethod.POST)
     public @ResponseBody HashMap getChartData(@RequestParam("chart") Integer chartIndex){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(chartIndex != null){
             int year = LocalDateTime.now().getYear(), month = LocalDateTime.now().getMonthOfYear();
             if(month == 1)

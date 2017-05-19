@@ -82,12 +82,12 @@ public class AccountController {
     */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody HashMap processAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
-                                     BindingResult result) {
+                                     BindingResult result, @RequestParam("duplicateMCToggle") boolean allowDuplicateMeterCode) {
 
         Address address = addressRepo.findByBrgy(accountForm.getAddress().getBrgy());
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         accountForm.setAddress(address);
-        String meterCode = accountForm.getDevice().getMeterCode().trim(), meterBrand = accountForm.getDevice().getBrand();
+        String meterCode = accountForm.getDevice().getMeterCode().trim(), meterBrand = accountForm.getDevice().getBrand().trim();
         Integer lastReading = accountForm.getDevice().getLastReading();
         if(lastReading == null)
             result.rejectValue("device.lastReading", "", "This field is required");
@@ -95,7 +95,7 @@ public class AccountController {
             result.rejectValue("device.meterCode","","This field is required");
         if(meterBrand.isEmpty())
             result.rejectValue("device.brand","","This field is required");
-        if(!meterCode.isEmpty() && deviceRepo.findByMeterCode(meterCode) != null)
+        if(!meterCode.isEmpty() && !allowDuplicateMeterCode && deviceRepo.countByMeterCode(meterCode) > 0)
             result.rejectValue("device.meterCode", "", "Metercode already exists");
         if(!result.hasErrors()){
             response.put("result",custService.createAccount(accountForm));
@@ -138,7 +138,7 @@ public class AccountController {
     @RequestMapping(value="{accountNumber}/update", method=RequestMethod.POST)
     public @ResponseBody HashMap processUpdateAccountForm(@ModelAttribute("accountForm") @Valid AccountForm accountForm,
                                      BindingResult result,@PathVariable("accountNumber") String number) {
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors()){
             accountForm.getAccount().setNumber(number);
             try{
@@ -162,14 +162,14 @@ public class AccountController {
     @RequestMapping(value="/notice-of-disconnection-check", method=RequestMethod.POST)
     public @ResponseBody 
     HashMap deactivateCheck(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
-        List<Long> qualifiedList = new ArrayList();
-        HashMap response = new HashMap();
+        List<Long> qualifiedList = new ArrayList<>();
+        HashMap response = new HashMap<>();
         if(result.hasErrors())
             response.put("status","FAILURE");
         else{
             for(Long id : checkboxes.getCheckboxValues()){
                 Account account = accountRepo.findOne(id);
-                if(account.getStatus().equals(AccountStatus.WARNING))
+                if(account != null && account.getStatus().equals(AccountStatus.WARNING))
                     qualifiedList.add(id);
             }
             if(!qualifiedList.isEmpty()){
@@ -199,7 +199,7 @@ public class AccountController {
                 }
             }
         }
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(success)
             response.put("status", "SUCCESS");
         else response.put("status", "FAILURE");
@@ -222,7 +222,7 @@ public class AccountController {
                 }
             }
         }
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(success)
             response.put("status", "SUCCESS");
         else response.put("status", "FAILURE");
@@ -246,7 +246,7 @@ public class AccountController {
                 }
             }
         }
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(success)
             response.put("status", "SUCCESS");
         else response.put("status", "FAILURE");
@@ -265,15 +265,17 @@ public class AccountController {
      *  creating a new device for account web-service handler.
      */
     @RequestMapping(value="/{accountNumber}/create-device", method=RequestMethod.POST)
-    public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("accountNumber") String number){
-        HashMap response = new HashMap();
+    public @ResponseBody HashMap createDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result,
+                                              @PathVariable("accountNumber") String number, @RequestParam("duplicateMCToggle") boolean allowDuplicateMeterCode){
+        HashMap response = new HashMap<>();
+        String meterCode = device.getMeterCode().trim(), meterBrand = device.getBrand().trim();
         if(device.getLastReading() == null)
             result.rejectValue("lastReading", "", "This field is required");
-        if(device.getMeterCode().trim().isEmpty())
+        if(meterCode.isEmpty())
             result.rejectValue("meterCode", "", "This field is required");
-        if(device.getBrand().trim().isEmpty())
+        if(meterBrand.isEmpty())
             result.rejectValue("brand", "", "This field is required");
-        if(deviceRepo.findByMeterCode(device.getMeterCode().trim()) != null)
+        if(!meterCode.isEmpty() && !allowDuplicateMeterCode && deviceRepo.countByMeterCode(meterCode) > 0)
             result.rejectValue("meterCode", "", "Metercode already exists!");
         if(!result.hasErrors()){
             custService.saveNewDevice(number, device);
@@ -291,12 +293,12 @@ public class AccountController {
      */
     @RequestMapping(value="/{device_id}/edit-device", method=RequestMethod.POST)
     public @ResponseBody HashMap updateDevice(@ModelAttribute("deviceForm") @Valid Device device, BindingResult result, @PathVariable("device_id") Long id) {
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Device origDevice = deviceRepo.findOne(id);
         String meterCode = device.getMeterCode().trim();
         if (origDevice == null)
             result.reject("Device does not exist");
-        else if(deviceRepo.findByMeterCode(meterCode) != null && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
+        else if(deviceRepo.countByMeterCode(meterCode) > 0 && !origDevice.getMeterCode().equalsIgnoreCase(meterCode)) {
             result.rejectValue("meterCode", "", "Metercode already exists!");
         }
         if(device.getLastReading() == null)
@@ -321,7 +323,7 @@ public class AccountController {
      */
     @RequestMapping(value="/activate-device", method=RequestMethod.POST)
     public @ResponseBody HashMap activateDevice(@RequestParam("device_id") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Device device = deviceRepo.findOne(id);
         if(device != null){
             custService.activateDevice(device);
@@ -335,7 +337,7 @@ public class AccountController {
     */
     @RequestMapping(value="/print-notice-of-disconnection", method=RequestMethod.POST)
     public String printNoticeOfDisconnection(ModelMap map, @ModelAttribute("checkboxes") Checkboxes checkboxes){
-        List<Account> accounts = new ArrayList();
+        List<Account> accounts = new ArrayList<>();
         for(Long id : checkboxes.getCheckboxValues()){
             Account account = accountRepo.findOne(id);
             if(account != null && account.getStatus().equals(AccountStatus.WARNING))
@@ -363,7 +365,7 @@ public class AccountController {
     @RequestMapping(value="/activate-account", method = RequestMethod.POST)
     public @ResponseBody HashMap activateAccount(@RequestParam("id") Long id){
         Account account = accountRepo.findOne(id);
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(account != null){
             custService.changeAccountStatus(account, AccountStatus.ACTIVE);
             response.put("status", "SUCCESS");

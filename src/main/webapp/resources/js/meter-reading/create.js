@@ -17,6 +17,8 @@ $(document).ready(function(){
     $('#add-meterReading-form').on('submit', function(e){
         e.preventDefault();
         $('#reading-error').hide();
+        var submitButton = $('#cr-reading-submit'), origText = submitButton.text();
+        changeButtonState(submitButton, true, '');
         $.ajax({
             url: $(this).attr('action'),
             data:$(this).serialize(),
@@ -31,6 +33,7 @@ $(document).ready(function(){
                     $('#filterButton').trigger('click');
                     searchAgain();
                 }
+                changeButtonState(submitButton, false, origText);
              }
         });
     });
@@ -48,7 +51,9 @@ $(document).ready(function(){
     $('#md-update-form').on('submit', function(e){
         e.preventDefault();
         var form = $(this);
-        cleanUpFormMsgs('#md-update-form')
+        cleanUpFormMsgs('#md-update-form');
+        var submitButton = $('#up-reading-submit'), origText = submitButton.text();
+        changeButtonState(submitButton, true, '');
         $.post($('#reading-uri').val()+'update', form.serialize(), function(response){
             if(validateForm('#md-update-form' ,response)){
                 showSuccess('#md-update-form', "Reading successfully updated")
@@ -57,6 +62,7 @@ $(document).ready(function(){
                 $('#last-reading').html("Last Reading:  "+reading.readingValue);
                 $('#rd-vs').val(reading.version); //in case user submits the form again without closing the modal
             }
+            changeButtonState(submitButton, false, origText);
         })
     });
     $('#readingVal').on('keyup', function(){

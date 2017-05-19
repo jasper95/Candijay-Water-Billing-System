@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -28,7 +29,6 @@ public class Device  implements java.io.Serializable {
     
     @Id @GeneratedValue(strategy=IDENTITY)
     private Long id;
-    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="owner_id", nullable=false)
     private Account owner;
@@ -104,6 +104,7 @@ public class Device  implements java.io.Serializable {
         this.brand = brand;
     }
 
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_EMPTY)
     public Account getOwner() {
         return owner;
     }

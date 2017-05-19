@@ -233,7 +233,7 @@ public class Invoice  implements java.io.Serializable {
     }
 
     public BigDecimal getTotalCurrent(){
-        return this.depreciationFund.add(this.penalty.add(this.basic.add(this.systemLoss.add(this.others))));
+        return this.depreciationFund.add(this.basic.add(this.systemLoss.add(this.others)));
     }
 
     @Override

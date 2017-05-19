@@ -47,7 +47,7 @@
                             <label>Barangay</label>
                         </div>
                         <div class="col-md-4" id="acct-zone">
-                            <label>Zone</label>
+                            <label>Purok</label>
                         </div>
                         <div class="col-md-4 pull-align-right vertical-center filter-btn-wrapper">
                             <a id="filterClearButton2" type="button" style="padding: 6px 4px 6px 0px" class="btn btn-danger list-filter-btn"><i class="fa fa-remove fa-fw"></i> Reset </a>
@@ -68,7 +68,7 @@
                                         <datatables:column name="lastname" title="Last Name" property="customer.lastname" sortInitOrder="0" sortInitDirection="asc" sortable="false"/>
                                         <datatables:column name="firstName" title="First Name" property="customer.firstName" sortInitOrder="1" sortInitDirection="asc" sortable="false"/>
                                         <datatables:column name="address" title="Barangay" property="address.brgy" visible="false" sortable="false"/>
-                                        <datatables:column name="zone" title="Zone" property="address.locationCode" visible="false" sortable="false"/>
+                                        <datatables:column name="purok" property="purok" visible="false" sortable="false"/>
                                         <datatables:column visible="false" property="id" />
                                         <dandelion:bundle excludes="jquery"/>
                                         <datatables:callback type="info" function="autoSelectAccountCallback"/>
@@ -161,7 +161,7 @@
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
                                                 <div class="pull-right">
-                                                    <button class="btn btn-primary" type="submit">Save</button>
+                                                    <button class="btn btn-primary" id="cr-reading-submit" type="submit">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -241,12 +241,12 @@
                                         <span id="bd-pes" class="bd-val pull-right"></span>
                                     </div>
                                     <div class="bill-detail-wrapper">
-                                        <span class="bd-prop-v"><em>Penalty</em>:</span>
-                                        <span id="bd-penalty" class="bd-val pull-right"></span>
-                                    </div>
-                                    <div class="bill-detail-wrapper">
                                         <span class="bd-prop-v"><em>Total Current</em>:</span>
                                         <span id="bd-total-current1" class="bd-val pull-right"></span>
+                                    </div>
+                                    <div class="bill-detail-wrapper">
+                                        <span class="bd-prop-v"><em>Status</em>:</span>
+                                        <span id="bd-status" class="bd-val pull-right"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 bill-detail-group">
@@ -254,6 +254,10 @@
                                     <div class="bill-detail-wrapper">
                                         <span class="bd-prop-v"><em>Total Current</em>:</span>
                                         <span id="bd-total-current2" class="bd-val pull-right"></span>
+                                    </div>
+                                    <div class="bill-detail-wrapper">
+                                        <span class="bd-prop-v"><em>Penalty</em>:</span>
+                                        <span id="bd-penalty" class="bd-val pull-right"></span>
                                     </div>
                                     <div class="bill-detail-wrapper" style="color: red">
                                         <span class="bd-prop-v"><em>Arrears</em>:</span>
@@ -270,10 +274,6 @@
                                     <div class="bill-detail-wrapper" style="font-weight: 900">
                                         <span class="bd-prop-v"><em>Balance</em>:</span>
                                         <span id="bd-unpaid-due" class="bd-val pull-right"></span>
-                                    </div>
-                                    <div class="bill-detail-wrapper">
-                                        <span class="bd-prop-v"><em>Status</em>:</span>
-                                        <span id="bd-status" class="bd-val pull-right"></span>
                                     </div>
                                 </div>
                             </div>

@@ -78,3 +78,9 @@ function cleanUpFormFields(form_id){
 function showSuccess(form_id, msg){
     $(form_id).find('div.success-msg').append('<p>'+msg+'</p>').show();
 }
+
+function changeButtonState(button, disableFlag, message){
+    var text = (disableFlag) ? 'Loading...' : message;
+    button.html(text);
+    button.prop('disabled', disableFlag);
+}

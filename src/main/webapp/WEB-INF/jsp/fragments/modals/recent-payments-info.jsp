@@ -19,7 +19,7 @@
                                 <datatables:column title="OR #" property="receiptNumber" sortable="false"/>
                                 <datatables:column title="Paid" property="amountPaid" sortable="false" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Type" property="type" sortable="false"/>
-                                <datatables:column title="Cu.M" property="invoice.reading.consumption" sortable="false"/>
+                                <datatables:column title="Cu.M" property="invoice.reading.consumption" sortable="false" default="---"/>
                                 <datatables:column title="Penalty" property="invoice.penalty" sortable="false" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Discount" property="invoice.discount" sortable="false" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column title="Due" property="invoiceTotal" sortable="false" renderFunction="custom-rendering#toPeso"/>

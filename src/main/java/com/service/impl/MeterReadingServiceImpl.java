@@ -92,9 +92,9 @@ public class MeterReadingServiceImpl implements MeterReadingService{
 
     @Override
     @Transactional(readOnly=true)
-    public boolean isReadingPaid(MeterReading reading) {
+    public boolean isReadingFullyPaid(MeterReading reading) {
         Invoice invoice = reading.getInvoice();
-        return (!invoice.getStatus().equals(InvoiceStatus.UNPAID) && !invoice.getStatus().equals(InvoiceStatus.DEBT));
+        return invoice.getStatus().equals(InvoiceStatus.FULLYPAID);
     }
 
     @Transactional(readOnly = true)
@@ -119,7 +119,7 @@ public class MeterReadingServiceImpl implements MeterReadingService{
     @Override
     public boolean deleteReading(Long id) {
         MeterReading reading = mrRepo.findOne(id), lastMeterReading = mrRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(reading.getAccount());
-        if(reading != null && reading.getInvoice().getStatus().equals(InvoiceStatus.UNPAID) && reading.equals(lastMeterReading)){
+        if(reading.getInvoice().getStatus().equals(InvoiceStatus.UNPAID) && reading.equals(lastMeterReading)){
             Device device = deviceRepo.findByOwnerAndActive(reading.getAccount(), true);
             Account account = reading.getAccount();
             Invoice invoice = reading.getInvoice();

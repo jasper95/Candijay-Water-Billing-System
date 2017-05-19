@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <div class="pull-right">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" id="up-reading-submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>
                                 </div>

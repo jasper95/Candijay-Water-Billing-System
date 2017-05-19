@@ -50,7 +50,7 @@ public class InvoiceController {
     @RequestMapping(value="/{id}",method=RequestMethod.GET)
     public @ResponseBody HashMap getInvoice(@PathVariable("id") Long id){
         Invoice result = invoiceRepo.findById(id);
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         String status = (result != null) ? "SUCCESS" : "FAILURE";
         response.put("status", status);
         response.put("result", result.getReading());
@@ -61,7 +61,7 @@ public class InvoiceController {
     @RequestMapping(value="/print-check", method=RequestMethod.POST)
     public @ResponseBody
     HashMap checkInvoiceIds(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(result.hasErrors()){
             response.put("status", "FAILURE");
             response.put("errors", result.getAllErrors());
@@ -74,7 +74,7 @@ public class InvoiceController {
 
     @RequestMapping(value="/print", method=RequestMethod.POST)
     public String getBill(ModelMap modelMap, @ModelAttribute("checkboxes") Checkboxes checkboxes) {
-        List<Invoice> invoices = new ArrayList();
+        List<Invoice> invoices = new ArrayList<>();
         for(Long id : checkboxes.getCheckboxValues())
             invoices.add(invoiceRepo.findById(id));
         modelMap.put("datasource", new JRBeanCollectionDataSource(invoices));

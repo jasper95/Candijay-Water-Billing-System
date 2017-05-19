@@ -13,6 +13,7 @@ import net.sf.jasperreports.engine.JRDataSource;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,4 +27,5 @@ public interface PaymentService {
     boolean isAllowedToSetWarningToAccount(Account account, Integer debtsAllowed);
     List<Account> updateAccountsWithNoPayments(Address address);
     JRDataSource getPreviousPaymentsDataSource(Account account);
+    BigDecimal calculatePenalty(Invoice invoice, BigDecimal penaltyRate);
 }

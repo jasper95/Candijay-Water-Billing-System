@@ -1,6 +1,6 @@
 var barangayFilters=["Cogtong", "Tawid", "Can-olin", "Cadapdapan", "Tambongan",
     "Abihilan", "La Union", "Panadtaran", "Poblacion", "Boyoan", "Pagahat"];
-var zoneFilters=[1,2,3,4,5];
+var purokFilters=[1,2,3,4,5,6,7];
 yadcf.init(oTable_account, [
     {
         "externally_triggered": true,
@@ -29,7 +29,7 @@ yadcf.init(oTable_account, [
         "filter_reset_button_text": '<i class="fa fa-remove fa-fw"></i>'
     },{
         "externally_triggered": true,
-        "data": zoneFilters,
+        "data": purokFilters,
         "filter_type": "select",
         "filter_container_id": "acct-zone",
         "column_number": 4,

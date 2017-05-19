@@ -1,6 +1,12 @@
 $(document).ready(function(){
     var current = null;
     var active;
+    $('#ad-type').on('change', function(){
+        var type = $(this).val();
+        if(type == '1')
+            $('#acctblityForm div.bills-sched').show();
+        else $('#acctblityForm div.bills-sched').hide();
+    });
     $('#summary-toggle').on('change',function(){
         $('#reportForm div.barangay').toggle();
         if($('#summary-status').val() == '0')
@@ -8,8 +14,7 @@ $(document).ready(function(){
         else $('#summary-status').val('0');
     });
     $('#acctability-toggle').on('change', function(){
-        $('#acctblityForm div.barangay').toggle();
-        $('#acctblityForm div.zone').toggle();
+        $('#acctblityForm div.purok').toggle();
         if($('#print-brgy').val() === '0')
             $('#print-brgy').val('1');
         else

@@ -66,7 +66,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public JRDataSource getCollectionCollectiblesChartDataSource(Integer year) {
-        List<ChartData> list = new ArrayList();
+        List<ChartData> list = new ArrayList<>();
         for(int i= 1; i <= 12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
@@ -103,9 +103,9 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public JRDataSource getConsumptionChartDataSource(Integer year){
-        List<ChartData> list = new ArrayList();
+        List<ChartData> list = new ArrayList<>();
         for(int i = 1; i <= 12; i++){
-            Schedule sched = schedRepo.findByMonthAndYear(new Integer(i), year);
+            Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
                 String month = new DateFormatSymbols().getShortMonths()[sched.getMonth()-1];
                 BigInteger queryReading = mrRepo.findTotalConsumptionBySchedule(sched.getId());
@@ -122,11 +122,11 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public HashMap getCollectionCollectiblesExpenseDataSource(Integer year) {
-        HashMap data = new HashMap();
-        ArrayList<String> months = new ArrayList<String>();
-        ArrayList<BigDecimal> collectiblesData = new ArrayList(),
-                collectionData = new ArrayList(), wage1Data = new ArrayList(), wage2Data = new ArrayList(), powerUsageData = new ArrayList();
-        ArrayList<HashMap> datasets = new ArrayList();
+        HashMap data = new HashMap<>();
+        ArrayList<String> months = new ArrayList<>();
+        ArrayList<BigDecimal> collectiblesData = new ArrayList<>(),
+                collectionData = new ArrayList<>(), wage1Data = new ArrayList<>(), wage2Data = new ArrayList<>(), powerUsageData = new ArrayList<>();
+        ArrayList<HashMap> datasets = new ArrayList<>();
         for(int i=1; i<=12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
@@ -158,31 +158,31 @@ public class ReportServiceImpl implements ReportService {
                 }
             }
         }
-        HashMap collectionDataset = new HashMap();
+        HashMap collectionDataset = new HashMap<>();
         collectionDataset.put("label", "Collection");
         collectionDataset.put("backgroundColor", "rgba(255, 0, 0, 0.5)");
         collectionDataset.put("data", collectionData);
         collectionDataset.put("stack", 1);
         datasets.add(collectionDataset);
-        HashMap collectiblesDataset = new HashMap();
+        HashMap collectiblesDataset = new HashMap<>();
         collectiblesDataset.put("label", "Collectibles");
         collectiblesDataset.put("backgroundColor", "rgba(0, 0, 255, 0.5)");
         collectiblesDataset.put("data", collectiblesData);
         collectiblesDataset.put("stack", 2);
         datasets.add(collectiblesDataset);
-        HashMap wage1Dataset = new HashMap();
+        HashMap wage1Dataset = new HashMap<>();
         wage1Dataset.put("label", "Wage(1-15)");
         wage1Dataset.put("backgroundColor", "rgba(0, 255, 0, 0.5)");
         wage1Dataset.put("data", wage1Data);
         wage1Dataset.put("stack", 3);
         datasets.add(wage1Dataset);
-        HashMap wage2Dataset = new HashMap();
+        HashMap wage2Dataset = new HashMap<>();
         wage2Dataset.put("label", "Wage(16-30)");
         wage2Dataset.put("backgroundColor", "rgba(255, 165, 0, 0.5)");
         wage2Dataset.put("data", wage2Data);
         wage2Dataset.put("stack", 3);
         datasets.add(wage2Dataset);
-        HashMap powerUsageDataset = new HashMap();
+        HashMap powerUsageDataset = new HashMap<>();
         powerUsageDataset.put("label", "Power Usage");
         powerUsageDataset.put("backgroundColor", "rgba(128, 0, 128, 0.5)");
         powerUsageDataset.put("data", powerUsageData);
@@ -196,10 +196,10 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public HashMap getConsumptionDataSource(Integer year) {
-        HashMap data = new HashMap();
-        ArrayList<String> months = new ArrayList();
-        ArrayList<BigInteger> readings = new ArrayList();
-        ArrayList<HashMap> datasets = new ArrayList();
+        HashMap data = new HashMap<>();
+        ArrayList<String> months = new ArrayList<>();
+        ArrayList<BigInteger> readings = new ArrayList<>();
+        ArrayList<HashMap> datasets = new ArrayList<>();
         for(int i=1; i<= 12; i++){
             Schedule sched = schedRepo.findByMonthAndYear(i, year);
             if(sched != null){
@@ -211,7 +211,7 @@ public class ReportServiceImpl implements ReportService {
                 }
             }
         }
-        HashMap consumptionDataset = new HashMap();
+        HashMap consumptionDataset = new HashMap<>();
         consumptionDataset.put("label", "Water Consumption");
         consumptionDataset.put("backgroundColor", "rgba(255, 0, 0, 0.5)");
         consumptionDataset.put("data", readings);

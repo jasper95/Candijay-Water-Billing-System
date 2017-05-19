@@ -21,14 +21,17 @@ import org.springframework.stereotype.Repository;
  *
  * @author Bert
  */
-@Repository
 public interface AccountRepository extends JpaRepository<Account,Long>{
     List<Account> getByCustomer_Id(Long id);
     Account findByNumber(String number);
     Long countByStatus(AccountStatus status);
-    Long countByAddressIn(Collection<Address> address);
-    Long countByAddressInAndStatusUpdated(Collection<Address> address, boolean statusUpdated);
+    Long countByAddress(Address address);
+    Long countByAddressAndStatusUpdated(Address address, boolean statusUpdated);
     Long countByAddressInAndStatus(Collection<Address> addresses, AccountStatus status);
+    Long countByAddressAndPurokIn(Address address, Collection<Integer> puroks);
     List<Account> findByAddressInAndStatusIn(Collection<Address> address, Collection<AccountStatus> statuses);
-    List<Account> findByAddressInAndStatusUpdatedAndStatusIn(Collection<Address> addresses, boolean statusUpdated, Collection<AccountStatus> statuses);
+    List<Account> findByAddressAndStatusInOrderByPurokAsc(Address address, Collection<AccountStatus> statuses);
+    List<Account> findByAddressAndStatusUpdatedAndStatusInOrderByPurokAsc(Address address, boolean statusUpdated, Collection<AccountStatus> statuses);
+    List<Account> findByAddressAndPurokInAndStatusUpdatedAndStatusIn(Address address, Collection<Integer> puroks, boolean statusUpdated, Collection<AccountStatus> statuses);
+    List<Account> findByAddressAndPurokInAndStatusIn(Address address, Collection<Integer> puroks, Collection<AccountStatus> statuses);
 }

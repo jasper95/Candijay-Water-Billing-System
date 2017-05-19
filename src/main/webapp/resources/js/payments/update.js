@@ -42,6 +42,8 @@ $(document).ready(function(){
         e.preventDefault();
         var form = $(this);
         cleanUpFormMsgs('#md-update-form');
+        var submitButton = $('#up-payment-submit'), origText = submitButton.text();
+        changeButtonState(submitButton, true, '');
         $.post($('#payments-uri').val()+'update', form.serialize(), function(response){
             if(validateForm('#md-update-form' ,response)){
                 showSuccess('#md-update-form', "Payment successfully updated");
@@ -50,6 +52,7 @@ $(document).ready(function(){
                 row.find('.or-number').text(payment.receiptNumber);
                 $('#pm-version').val(payment.version);
             }
+            changeButtonState(submitButton, false, origText);
         })
     });
     $('#pm-or').attr('maxlength',7);

@@ -3,15 +3,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <bean id="auditingProvider" class="com.service.impl.AuditorAwareServiceImpl"/>
     <jpa:auditing auditor-aware-ref="auditingProvider" set-dates="true"/>
@@ -19,13 +19,11 @@
         <constructor-arg index="0" ref="dateTimeService"/>
     </bean>
     <jpa:repositories base-package="com.dao.springdatajpa" />
-    
-    <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-          p:location="/WEB-INF/jdbc.properties" />
+
+    <context:property-placeholder location="classpath:spring/jdbc.properties"/>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-          p:basename="classpath:resourceBundles/messages"
+          p:basename="classpath:messages/messages"
           p:defaultEncoding="UTF-8" p:useCodeAsDefaultMessage="true"/>
 
     <bean id="dataSource"
@@ -48,7 +46,7 @@
             </property>
             <property name="jpaProperties">
                 <props>
-                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                     <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
                     <prop key="hibernate.show_sql">true</prop>
                 </props>
@@ -60,6 +58,13 @@
     <context:component-scan base-package="com">
         <context:exclude-filter type="regex" expression="com.controller.*"/>
     </context:component-scan>
-    <tx:annotation-driven/> 
+    <tx:annotation-driven/>
+
+    <beans profile="dev">
+        <jdbc:initialize-database data-source="dataSource">
+            <jdbc:script location="classpath:db/init.sql"/>
+            <jdbc:script location="classpath:db/populate.sql"/>
+        </jdbc:initialize-database>
+    </beans>
 
 </beans>

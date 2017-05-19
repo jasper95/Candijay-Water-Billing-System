@@ -99,7 +99,7 @@ public class MeterReadingController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody HashMap processCustomerForm(@ModelAttribute("meterReadingForm") @Valid MeterReadingForm meterReadingForm,
                                      BindingResult result) {
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         //form is valid with no transaction constraints
         if(!result.hasErrors()){
             Account account = accountRepo.findOne(meterReadingForm.getAccountId());
@@ -144,13 +144,13 @@ public class MeterReadingController {
     public @ResponseBody HashMap updateMeterReading(@PathVariable("readingId") Long id){
         MeterReading reading = mrRepo.findById(id), lastMeterReading = mrService.findAccountLastMeterReading(reading.getAccount());
         boolean invoiceIsDiscounted = reading.getInvoice().getDiscount().compareTo(BigDecimal.ZERO) > 0;
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!reading.equals(lastMeterReading)){
             response.put("status", "FAILED");
             response.put("message", "You can only edit account\'s latest reading");
-        } else if (mrService.isReadingPaid(reading)){
+        } else if (mrService.isReadingFullyPaid(reading)){
             response.put("status", "FAILED");
-            response.put("message", "You can only edit UNPAID reading.");
+            response.put("message", "Cannot edit FULLYPAID reading.");
         } else if (invoiceIsDiscounted){
             response.put("status", "FAILED");
             response.put("message", "Cannot edit reading with bill discount greater than zero.");
@@ -165,7 +165,7 @@ public class MeterReadingController {
 
     @RequestMapping(value="/delete/{id}")
     public @ResponseBody HashMap deleteReading(@PathVariable("id") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(id != null && mrService.deleteReading(id))
             response.put("status", "SUCCESS");
         else response.put("status", "FAILURE");
@@ -175,7 +175,7 @@ public class MeterReadingController {
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public @ResponseBody HashMap processUpdate(@ModelAttribute("meterReadingForm") @Valid MeterReadingForm mForm,
                                                BindingResult result, @RequestParam("readingId") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         MeterReading reading = null, formReading = null;
         Schedule newSchedule = null;
         //form is valid with basic constraints (empty, null, etc)
@@ -188,8 +188,8 @@ public class MeterReadingController {
             Integer lastReading = (lastMeterReading != null) ? lastMeterReading.getReadingValue() - lastMeterReading.getConsumption() : 0;
             mForm.getMeterReading().setConsumption(mForm.getMeterReading().getReadingValue() - lastReading);
             //check if reading is paid
-            if(mrService.isReadingPaid(reading)){
-                result.reject("global","Cannot edit a paid reading.");
+            if(mrService.isReadingFullyPaid(reading)){
+                result.reject("global","Cannot edit a fully paid reading.");
             }
             //check if new schedule is valid
             if(newSchedule != null){
@@ -230,7 +230,7 @@ public class MeterReadingController {
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
     @ResponseBody
     public HashMap fetchAccount(@ModelAttribute("searchForm") @Valid SearchForm searchForm, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Account account = null;
         Device device = null;
         if(!result.hasErrors()) {
@@ -257,7 +257,7 @@ public class MeterReadingController {
     public @ResponseBody HashMap findBill(@PathVariable("id") Long id){
         Invoice invoice = invoiceRepo.findById(id),
                 latestInvoice = invoiceRepo.findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(invoice.getAccount());
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         boolean reject = false;
         String message = "";
         if(invoice == null){
@@ -282,10 +282,10 @@ public class MeterReadingController {
 
     @RequestMapping(value = "/update-discount", method = RequestMethod.POST)
     public @ResponseBody HashMap updateDiscount(@ModelAttribute("billDiscountForm") @Valid BillDiscountForm form, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors()){
             Invoice invoice = invoiceRepo.findOne(form.getBillId());
-            if(form.getDiscount().compareTo(invoice.getRemainingTotal()) > 0)
+            if(form.getDiscount().compareTo(invoice.getRemainingTotal().add(invoice.getDiscount())) > 0)
                 result.rejectValue("discount", "", "Invalid discount");
         }
         if(result.hasErrors()){

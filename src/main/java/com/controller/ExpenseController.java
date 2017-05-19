@@ -49,7 +49,7 @@ public class ExpenseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody HashMap saveExpense(@ModelAttribute("expenseForm") @Valid Expense expenseForm, BindingResult result,
                                              @RequestParam Map<String, String> params){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors()){
             if(params.get("update").trim().length() > 0)
                 expenseForm.setId(Long.valueOf(params.get("update")));
@@ -76,7 +76,7 @@ public class ExpenseController {
 
     @RequestMapping(value="/find", method=RequestMethod.POST)
     public @ResponseBody HashMap findExpense(@RequestParam Map<String, String> params){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Expense expense = null;
         try{
             Long id = Long.valueOf(params.get("id"));

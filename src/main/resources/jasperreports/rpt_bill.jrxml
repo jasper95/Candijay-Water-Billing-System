@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bill Report" columnCount="3" pageWidth="612" pageHeight="936" columnWidth="190" leftMargin="20" rightMargin="20" topMargin="5" bottomMargin="5" uuid="37bb78b8-8fb2-4116-b157-57699a8b3f34">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="reading" class="com.domain.MeterReading"/>
+	<field name="basic" class="java.math.BigDecimal"/>
+	<field name="systemLoss" class="java.math.BigDecimal"/>
+	<field name="depreciationFund" class="java.math.BigDecimal"/>
+	<field name="others" class="java.math.BigDecimal"/>
+	<field name="arrears" class="java.math.BigDecimal"/>
+	<field name="penalty" class="java.math.BigDecimal"/>
+	<field name="netCharge" class="java.math.BigDecimal"/>
+	<field name="account" class="com.domain.Account"/>
+	<field name="dueDate" class="org.joda.time.DateTime"/>
+	<field name="schedule" class="com.domain.Schedule"/>
+	<field name="discount" class="java.math.BigDecimal"/>
+	<field name="status" class="com.domain.enums.InvoiceStatus"/>
+	<field name="remainingTotal" class="java.math.BigDecimal"/>
+	<field name="_THIS" class="com.domain.Invoice"/>
+	<group name="id" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="224" splitType="Stretch">
+			<staticText>
+				<reportElement x="5" y="108" width="70" height="13" uuid="47c16780-d93e-46f0-912f-6007ebf5f445"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Acct. No.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="121" width="70" height="13" uuid="613a0836-e75b-42a7-9afd-addff486e7c8"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="134" width="70" height="14" uuid="aea4d366-aeab-416d-8368-10b4c3a25bd2"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Previous:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="148" width="70" height="11" uuid="7159d8f5-3912-4fc1-81d2-96025f6e2fc5"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Present:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="182" width="78" height="13" uuid="09ac231d-cdd4-4b69-9f33-200c472bd841"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Bill Rendered by:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="195" width="78" height="14" uuid="a889628d-3478-4789-9cd2-bb0de1a2040b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Sig. of Reader]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="209" width="78" height="12" uuid="2d1f4c05-a06f-4dc2-9b35-a5c4c5c59630"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Date Delivered]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="108" width="85" height="12" uuid="e9c0fd3f-5536-466d-9dcf-918bedcd117d"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Arrears:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="131" width="85" height="12" uuid="716600f2-6404-4f7e-9a3a-e56337f065e9"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Penalty:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="145" width="85" height="12" uuid="a9261f7f-1a4b-42d4-be03-f60188b00573"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[PES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="149" width="85" height="12" uuid="9ec7025c-81c2-4417-930d-6cfb462e10a0"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Due:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="79" y="108" width="90" height="13" uuid="36299d8e-efd5-4169-83b9-e8ba0e91deef"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{account}.getNumber()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="3" width="122" height="14" uuid="03eed554-c657-4e1d-bd92-da0747a30dd6"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new org.joda.time.DateTime().toString("MM/dd/yyyy hh:mm:ss a")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="121" width="90" height="13" uuid="edce5fb7-7e6e-4b80-b6ad-3422ee483abc"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[String.format("Purok %d, %s",$F{account}.getPurok(), $F{account}.getAddress().getBrgy())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="135" width="90" height="14" uuid="cb081d5b-2798-4727-b715-bddb2ecf2294"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getPrevious()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="148" width="90" height="11" uuid="e8d07f0d-f615-43eb-ad9e-84464b98fc6f"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getReadingValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="474" y="108" width="90" height="12" uuid="80022657-2db7-454d-9139-481452041a4c"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{arrears}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="474" y="131" width="90" height="12" uuid="48bb6867-a00d-4f07-975e-129b2df9b841"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{penalty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="145" width="90" height="12" uuid="976f7bee-e315-4085-8f52-bc4f3af8211e"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{others}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="474" y="150" width="90" height="12" uuid="5b23e18d-612a-4a8c-9686-7b9fda541db3"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{netCharge}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="159" width="70" height="11" uuid="49569f5c-4bef-4c67-9508-606d214c8e34"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Consumed(Cu.M):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="110" width="85" height="11" uuid="bccca2f2-1ff7-4ac3-84c7-6715ab150725"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Basic:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="120" width="85" height="12" uuid="4742cc2f-b918-44d4-a1f7-e0d1f4f3b54b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Depreciation Fund:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="133" width="85" height="11" uuid="6ff26cda-54a9-4127-8cca-7216bad51b0d"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[System loss:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="79" y="159" width="90" height="11" uuid="e5294c2f-97b4-4b7f-94da-eb7fe22b32df"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$F{reading}.getConsumption()]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="287" y="110" width="90" height="11" uuid="3420a130-35a7-4c89-805a-a196f27b3df7"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{basic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="121" width="90" height="12" uuid="18d494b2-ace2-4f8e-9bfc-33d1073dd84d"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{depreciationFund}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="133" width="90" height="11" uuid="a46169b5-4067-450a-9a87-610f178d87b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{systemLoss}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="191" width="100" height="11" uuid="a9976406-4def-4a10-a020-b58b9081f9d8"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[NOTICE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="202" width="383" height="22" uuid="9dd11829-18b3-4723-a1fa-a7953ca92ff8"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Please pay total amount in 10 days after hereof. Late charges will be added to your account and your service. Connection will be cut off without prior notice. If you settled the account please bring this with you.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="119" width="85" height="12" uuid="d2824c23-d8cc-4687-82c8-9257ab3f1d37"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Discount:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="474" y="119" width="90" height="12" uuid="bac7f451-16e1-4e83-b4f1-37f8a6e0aedd"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{discount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="137" y="33" width="312" height="15" uuid="6868a2c2-3bac-4cd3-b3d1-259858eebe04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[WATER BILL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="70" width="185" height="19" uuid="34703f4c-996b-4b8e-9b23-e70659d83321"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Name of Consumer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="201" y="70" width="176" height="19" uuid="ac883215-a2eb-4ec8-8604-00a6b63fc17a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Month Bill]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="71" width="176" height="18" uuid="86940a5c-48a4-4124-8bc2-f06f37cfe126"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<text><![CDATA[Due Date]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="5" y="51" width="185" height="20" uuid="3483b0a8-2423-4044-982f-60d79c6226f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account}.getCustomer().toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="201" y="51" width="176" height="20" uuid="ba792ff1-6194-49dd-8bdf-6bf5f8ba1454"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{schedule}.getMonthSymbol()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="388" y="51" width="176" height="19" uuid="56bf8cd7-5dea-4b14-b325-0f1cf9e9937c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dueDate}.toString("MM/dd/yyyy")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="137" y="4" width="312" height="15" uuid="ddec090f-e74d-44ae-b968-0c014586beb6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[CANDIJAY WATER BILLING SYSTEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="18" width="312" height="15" uuid="b4155b85-dc66-49c0-8ea1-6adb5e935312"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Candijay Bohol]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="70" width="185" height="1" uuid="faec855b-a2ae-43bd-9523-9cca32ca0e3b"/>
+			</line>
+			<line>
+				<reportElement x="200" y="70" width="176" height="1" uuid="24c191fb-39a5-4be5-a47b-2a154ee7018b"/>
+			</line>
+			<line>
+				<reportElement x="388" y="70" width="176" height="1" uuid="01f1bb58-d388-4690-98f7-d06d5db79b5b"/>
+			</line>
+			<line>
+				<reportElement x="79" y="118" width="90" height="1" uuid="bd4d8e82-9b8e-4197-b062-ce7cbb6479c2"/>
+			</line>
+			<line>
+				<reportElement x="79" y="130" width="90" height="1" uuid="2fc91a33-b29b-42f2-bbbd-65658ec553c0"/>
+			</line>
+			<line>
+				<reportElement x="79" y="144" width="90" height="1" uuid="8c5f38e5-024b-4924-a6b0-e3804f4c0c8b"/>
+			</line>
+			<line>
+				<reportElement x="79" y="157" width="90" height="1" uuid="223f068d-c6a0-43fa-ad44-94124c767f80"/>
+			</line>
+			<line>
+				<reportElement x="79" y="168" width="90" height="1" uuid="c238363a-af66-44e8-be87-f5c9b0464403"/>
+			</line>
+			<line>
+				<reportElement x="287" y="119" width="90" height="1" uuid="6a71b140-5679-4e1f-9c33-342b5f9087c8"/>
+			</line>
+			<line>
+				<reportElement x="287" y="131" width="90" height="1" uuid="6f10ab5a-aa56-44c9-b047-525afe60653f"/>
+			</line>
+			<line>
+				<reportElement x="287" y="142" width="90" height="1" uuid="57503a65-5add-4258-8683-61f5826dbb29"/>
+			</line>
+			<line>
+				<reportElement x="467" y="193" width="100" height="1" uuid="056fcfd5-6b86-494d-a8fa-7c5188a275e1"/>
+			</line>
+			<line>
+				<reportElement x="467" y="208" width="100" height="1" uuid="ba7fa7c9-b12b-475a-8c5c-21c5060e7e1a"/>
+			</line>
+			<line>
+				<reportElement x="467" y="219" width="100" height="1" uuid="bb5a065c-ece1-4cc6-98b9-a45bfcea578a"/>
+			</line>
+			<line>
+				<reportElement x="474" y="117" width="90" height="1" uuid="eeaab223-1a2d-410e-b2f1-51955129b614"/>
+			</line>
+			<line>
+				<reportElement x="474" y="140" width="90" height="1" uuid="a3a10008-6639-44dd-af52-e48ae9b3b3ec"/>
+			</line>
+			<line>
+				<reportElement x="287" y="154" width="90" height="1" uuid="409e03c5-23e7-4607-80a5-cd312be1b97e"/>
+			</line>
+			<line>
+				<reportElement x="474" y="160" width="90" height="1" uuid="7f78e132-e6b6-4a47-99a6-1290146a4610"/>
+			</line>
+			<staticText>
+				<reportElement x="201" y="156" width="85" height="11" uuid="b44e1ef0-23ea-43be-8cc6-60a7669e32a6"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Total Current:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="287" y="164" width="90" height="1" uuid="fba157b4-2115-4311-93ee-ff8c4183eee9"/>
+			</line>
+			<textField>
+				<reportElement x="287" y="155" width="90" height="11" uuid="ed3dd957-1f60-4b56-9446-fcf3e0b8fb81"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{_THIS}.getTotalCurrent()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="202" y="97" width="85" height="14" uuid="98ec097a-acbb-4065-8322-b09f6a86ce74"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Water Charges:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="474" y="128" width="90" height="1" uuid="c1b5ccd8-6e9b-4e30-bbc9-dcfc4130a568"/>
+			</line>
+			<staticText>
+				<reportElement x="388" y="160" width="85" height="12" uuid="7b5e7378-0351-45c5-b7bd-b0056c2179d7"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="474" y="160" width="90" height="12" uuid="dce8eeee-89fa-4b52-9484-5bebc822c8b8"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P"+$F{remainingTotal}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="474" y="169" width="90" height="1" uuid="23ecdeb6-208c-437f-be52-cefd1feebf21"/>
+			</line>
+			<staticText>
+				<reportElement x="387" y="95" width="85" height="14" uuid="67c9e294-b2da-41f9-9af6-4ecc049f3153"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Add:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="95" width="84" height="14" uuid="081a1696-7486-4d1a-a8c1-4429e98dc0cb"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reading Details:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="472" y="0" width="100" height="14" uuid="5e3ec6c4-4b16-4190-ab18-6d66a06add8e"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

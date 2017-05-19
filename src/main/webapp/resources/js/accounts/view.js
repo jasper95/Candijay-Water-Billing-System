@@ -51,10 +51,12 @@ $(document).ready(function(){
         cleanUpFormFields('#device-form');
         cleanUpFormMsgs('#device-form');
         $('#device-action-url').val($('#acct-base-url').val()+'/create-device');
+        $('#dv-dup-toggle').show();
     });
     window.editDv = function(device_id){
         cleanUpFormMsgs('#device-form');
         populateDeviceForm(device_id);
+        $('#dv-dup-toggle').hide();
         $('#device-action').empty().append('Update');
         $('#device-form-modal').modal('show');
         $('#device-action-url').val($('#all-acct-base-url').val()+'/'+device_id+'/edit-device');
@@ -80,4 +82,11 @@ $(document).ready(function(){
             }
         });
     }
+    $('#allow-dup-mc-toggle').on('change', function(){
+        var mcToggle = $('#allow-dup-mc');
+        if(mcToggle.val() === '0')
+            mcToggle.val('1');
+        else
+            mcToggle.val('0');
+    });
 });

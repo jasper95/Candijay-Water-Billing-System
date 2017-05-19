@@ -63,9 +63,14 @@ public class DataTableServiceImpl implements DataTableService{
                     ModifiedReading modifiedReading = (ModifiedReading) a;
                     Hibernate.initialize(modifiedReading.getReading());
                 }
+            } else if(!results.isEmpty() && results.get(0) instanceof Device){
+                for (T a: results){
+                    Device device = (Device) a;
+                    Hibernate.initialize(device.getOwner());
+                }
             }
-            return new DataSet<T>(results, count, countFiltered);
+            return new DataSet<>(results, count, countFiltered);
         }
-        else return new DataSet<T>(new ArrayList(), count, Long.valueOf(0));
+        else return new DataSet<>(new ArrayList<>(), count, 0L);
     }
 }

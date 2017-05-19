@@ -20,7 +20,6 @@ import com.service.FormOptionsService;
 import java.util.*;
 import javax.validation.Valid;
 
-import com.service.MeterReadingService;
 import com.service.ReportService;
 import com.service.SettingsService;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -76,12 +75,12 @@ public class ReportsController {
         model.addAttribute("typeOptionsReport", options.get("typeReport"));
         model.addAttribute("typeOptionsChart", options.get("typeChart"));
         model.addAttribute("typeOptionsAcctblty", options.get("acctblty"));
-        model.addAttribute("zoneOptions", options.get("zone"));
+        model.addAttribute("purokOptions", options.get("purok"));
         return "reports/report";
     }
 
     public HashMap validationResponse(BindingResult result, Object form){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors()){
             response.put("status", "SUCCESS");
             response.put("result", form);
@@ -108,34 +107,33 @@ public class ReportsController {
 
     @RequestMapping(value="/validate-accountability-form", method=RequestMethod.POST)
     public @ResponseBody HashMap validateAccountabilityForm(@ModelAttribute("addressForm") @Valid  AccountabilityReportForm form, BindingResult result){
-        List<Address> addresses = new ArrayList();
-        boolean isPrintBrgy = form.getPrintBrgy().equals(1);
-        if(!result.hasErrors()){
-            if(isPrintBrgy){
-                if(form.getBarangay().isEmpty())
-                    result.rejectValue("barangay", "", "This field is required");
-                else
-                    addresses.add(addressRepo.findByBrgy(form.getBarangay()));
-            } else {
-                if(form.getZone() == null)
-                    result.rejectValue("zone", "", "This field is required");
-                else
-                    addresses = addressRepo.findByLocationCode(form.getZone());
 
-            }
-        }
         if(!result.hasErrors()){
-            Integer type = Integer.valueOf(form.getType());
-            boolean billsFlag = type.equals(1);
-            Long statusUpdatedCount = accountRepo.countByAddressInAndStatusUpdated(addresses, true), accountsCount = accountRepo.countByAddressIn(addresses);
-            System.out.println(String.format("%s %s", statusUpdatedCount, accountsCount));
-            if(!billsFlag && !statusUpdatedCount.equals(accountsCount))
-                result.reject("global", "Payments not finalized for this address");
-            if(result.hasErrors())
-                if(isPrintBrgy)
+            boolean isPrintBrgy = form.getPrintBrgy().equals(1);
+            boolean billsFlag = form.getType().equals(1);
+            Address address = addressRepo.findByBrgy(form.getBarangay());
+            if(!isPrintBrgy && form.getPuroks().isEmpty())
+                result.reject("global", "Check at least one purok");
+            else if(!isPrintBrgy && accountRepo.countByAddressAndPurokIn(address, form.getPuroks()) == 0)
+                result.reject("global", "No accounts in this address.");
+            if(billsFlag && form.getMonth() == null)
+                result.rejectValue("month", "", "This field is required");
+            if(billsFlag && form.getYear() == null)
+                result.rejectValue("year", "", "This field is required");
+            if(!result.hasErrors() && billsFlag){
+                if(schedRepo.findByMonthAndYear(form.getMonth(), form.getYear()) == null){
+                    result.reject("global", "No data avaialable for selected schedule");
+                    result.rejectValue("month", "", "");
+                    result.rejectValue("year", "", "");
+                }
+            }
+            if(!result.hasErrors() && !billsFlag){
+                Long statusUpdatedCount = accountRepo.countByAddressAndStatusUpdated(address, true), accountsCount = accountRepo.countByAddress(address);
+                if(!statusUpdatedCount.equals(accountsCount)) {
+                    result.reject("global", "Payments not finalized for this address");
                     result.rejectValue("barangay", "", "");
-                else
-                    result.rejectValue("zone", "", "");
+                }
+            }
         }
         return validationResponse(result, form);
     }
@@ -146,24 +144,32 @@ public class ReportsController {
     }
 
     @RequestMapping(value="/print-accountability", method=RequestMethod.POST)
-    public String getAccountabilityReport(ModelMap model, @RequestParam Map<String,String> params){
+    public String getAccountabilityReport(ModelMap model, @RequestParam Map<String,String> params,
+                                          @RequestParam(value="puroks", required = false) List<Integer> puroks){
         boolean isPrintBrgy = Integer.valueOf(params.get("printBrgy")) == 1;
         Integer type = Integer.valueOf(params.get("type"));
-        List<Address> addresses = new ArrayList();
-        if(isPrintBrgy)
-            addresses.add(addressRepo.findByBrgy(params.get("barangay")));
-        else addresses = addressRepo.findByLocationCode(Integer.valueOf(params.get("zone")));
+        Address address = addressRepo.findByBrgy(params.get("barangay"));
         JRBeanCollectionDataSource dataSource;
         String viewName;
         if(type == 1) {
-            List<Account> accounts = accountRepo.findByAddressInAndStatusIn(addresses, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
-            List<Invoice> invoices = new ArrayList();
-            for (Account account : accounts)
-                invoices.add(invoiceRepo.findTopByAccount_IdOrderBySchedule_YearDescSchedule_MonthDesc(account.getId()));
+            List<Account> accounts;
+            if(isPrintBrgy)
+                accounts = accountRepo.findByAddressAndStatusInOrderByPurokAsc(address, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
+            else accounts =  accountRepo.findByAddressAndPurokInAndStatusIn(address, puroks, Arrays.asList(AccountStatus.ACTIVE, AccountStatus.WARNING));
+            List<Invoice> invoices = new ArrayList<>();
+            Schedule schedule = schedRepo.findByMonthAndYear(Integer.valueOf(params.get("month")), Integer.valueOf(params.get("year")));
+            for (Account account : accounts){
+                Invoice invoice = invoiceRepo.findTopByAccountAndSchedule(account, schedule);
+                if(invoice != null)
+                    invoices.add(invoice);
+            }
             dataSource = new JRBeanCollectionDataSource(invoices);
             viewName = "rpt_bill";
         } else {
-            List<Account> accounts = accountRepo.findByAddressInAndStatusUpdatedAndStatusIn(addresses, true, Arrays.asList(AccountStatus.WARNING));
+            List<Account> accounts;
+            if(isPrintBrgy)
+                accounts = accountRepo.findByAddressAndStatusUpdatedAndStatusInOrderByPurokAsc(address, true, Arrays.asList(AccountStatus.WARNING));
+            else accounts = accountRepo.findByAddressAndPurokInAndStatusUpdatedAndStatusIn(address, puroks, true, Arrays.asList(AccountStatus.WARNING));
             dataSource = new JRBeanCollectionDataSource(accounts);
             model.put("DEBTS_ALLOWED", EnglishNumberToWords.covertIntNumberToBisaya(settingsService.getCurrentSettings().getDebtsAllowed()));
             viewName = "rpt_disconnection_notice";
@@ -173,7 +179,7 @@ public class ReportsController {
         } else {
             model.put("type", "No data available for this report");
             if(type == 1)
-                model.put("message", "Not finished encoding meter reading for this address.");
+                model.put("message", "No bills found for this schedule.");
             else
                 model.put("message", "No account in this address that has WARNING status.");
 
@@ -195,11 +201,11 @@ public class ReportsController {
         String barangay = (summary.equals(1)) ? "Summary" : params.get("barangay");
         if(type.equals(1)){
             datasource = (JRBeanCollectionDataSource)reportService.getCollectiblesDataSource(barangay, sched);
-            viewName = "rpt_table2";
+            viewName = "rpt_collectibles";
         }
         else if(type.equals(2)) {
             datasource = (JRBeanCollectionDataSource)reportService.getCollectionDataSource(barangay, sched);
-            viewName = "rpt_payment_history";
+            viewName = "rpt_collection";
             map.put("IS_HISTORY", false);
         } else {
             map.put("type", "Invalid Parameter(s)");

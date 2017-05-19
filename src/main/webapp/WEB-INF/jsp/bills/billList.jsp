@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
-                        <label>Zone</label>
+                        <label>Purok</label>
                     </div>
                     <div class="col-md-3" id="reading-month">
                         <label>Month</label>
@@ -85,7 +85,7 @@
                                 <datatables:column name="month" property="schedule.month" visible="false"/>
                                 <datatables:column name ="year" property="schedule.year" visible="false"/>
                                 <datatables:column name="brgy" property="account.address.brgy" visible="false"/>
-                                <datatables:column name="zone" property="account.address.locationCode" visible="false"/>
+                                <datatables:column name="purok" property="account.purok" visible="false"/>
                                 <datatables:column name="status" property="status" sortable="false" visible="false"/>
                                 <datatables:column title="Name" sortable="false" property="account.customer.name" renderFunction="custom-rendering#customerUrlReadingList"/>
                                 <datatables:column title="Schedule" sortable="false" renderFunction="custom-rendering#monthAndYear"/>

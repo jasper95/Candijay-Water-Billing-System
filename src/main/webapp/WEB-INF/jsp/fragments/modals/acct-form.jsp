@@ -16,11 +16,16 @@
                         </div>
                         <c:if test="${accountForm.account.id == null}">
                             <div class="col-sm-12 form-group">
-                                <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="6"/>
                                 <cws:input id="acc-mb" name="device.brand" label="Meter Brand" icon="tachometer" placeholder="Enter meter brand" required="true" size="6"/>
+                                <cws:input id="acc-lr" name="device.lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="6"/>
                             </div>
                             <div class="col-sm-12 form-group">
-                                <cws:input id="acc-lr" name="device.lastReading" label="Last Reading" icon="tachometer" placeholder="Enter last reading" required="true" size="6"/>
+                                <cws:input id="acc-mc" name="device.meterCode" label="Meter Code" icon="tachometer" placeholder="Enter meter code" required="true" size="6"/>
+                                <div class="col-sm-6">
+                                    <label class="control-label" style="display:block">Duplicate Meter Code:</label>
+                                    <input id="allow-dup-mc-toggle" data-width="120px" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Allowed" data-off="<i class='fa fa-remove'></i> Not Allowed">
+                                </div>
+                                <input type="hidden" name="duplicateMCToggle" id="allow-dup-mc" value="0">
                             </div>
                         </c:if>
                         <div class="form-group">

@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/admin/api/datatables", name="datatables-api", headers = "x-requested-with=XMLHttpRequest")
-public class DataTablesApiController {
+public class DatatablesApiController {
 
     private DataTableService dataTableService;
     private MeterReadingService mrService;
 
     @Autowired
-    public DataTablesApiController(DataTableService dataTableService, MeterReadingService mrService){
+    public DatatablesApiController(DataTableService dataTableService, MeterReadingService mrService){
         this.dataTableService = dataTableService;
         this.mrService = mrService;
     }
@@ -51,7 +51,7 @@ public class DataTablesApiController {
         return DatatablesResponse.build(dataSet, criterias);
     }
 
-    @RequestMapping(value = "readings/accounts-no-reading", name="accounts-tbr")
+    @RequestMapping(value = "/readings/accounts-no-reading", name="accounts-tbr")
     public DatatablesResponse<Account> getAccountsNoReadingDataTable(@DatatablesParams DatatablesCriterias criterias){
         DataSet<Account> dataSet = mrService.findAccountsWithCustomParams(criterias);
         return DatatablesResponse.build(dataSet, criterias);
@@ -76,8 +76,15 @@ public class DataTablesApiController {
     }
 
     @RequestMapping(value = "/payments", name="payments")
-    public DatatablesResponse<Payment> findAllForDataTablesFullSpring(@DatatablesParams DatatablesCriterias criterias) {
+    public DatatablesResponse<Payment> getPaymentsDataTable(@DatatablesParams DatatablesCriterias criterias) {
         DataSet<Payment> dataSet = dataTableService.findWithDataTableCriterias(criterias, Payment.class);
+        return DatatablesResponse.build(dataSet, criterias);
+    }
+
+    @RequestMapping(value = "/devices", name="devices")
+    public DatatablesResponse<Device> getDeviceDataTable(@DatatablesParams DatatablesCriterias criterias) {
+        System.out.println("wews");
+        DataSet<Device> dataSet = dataTableService.findWithDataTableCriterias(criterias, Device.class);
         return DatatablesResponse.build(dataSet, criterias);
     }
 }

@@ -24,7 +24,7 @@ import org.springframework.validation.Errors;
 public interface MeterReadingService {
     MeterReading findAccountLastMeterReading(Account account);
     MeterReading saveMeterReading(MeterReadingForm form);
-    boolean isReadingPaid(MeterReading reading);
+    boolean isReadingFullyPaid(MeterReading reading);
     boolean isDoneReadingAddressIn(Collection<Address> addresses) throws Exception;
     boolean deleteReading(Long id);
     List<Account> findAccountsWithNoLatestReading(List<Address> addresses) throws Exception;

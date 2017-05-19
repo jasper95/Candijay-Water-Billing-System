@@ -20,8 +20,10 @@
         <jsp:include page="../fragments/postAuth/header.jsp"/>
         <div class="container">
             <div class="row">
+                <div style="text-align: right"  class="col-sm-3">
+                    <h2>Print Reports</h2>
+                </div>
                 <div class="col-sm-6 col-centered">
-                    <h2>Generate Reports</h2>
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Reports Form</h3>
@@ -53,13 +55,26 @@
                                 <div class="col-sm-12 form-group barangay">
                                     <cws:select id="ad-barangay" name="barangay" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="12"/>
                                 </div>
-                                <div class="col-sm-12 form-group zone" style="display:none;">
-                                    <cws:select id="ad-zone" name="zone" label="Zone" icon="home" required="true" placeholder="Select zone" items2="${zoneOptions}" size="12"/>
+                                <div class="col-sm-12 form-group bills-sched" style="display: none">
+                                    <cws:select id="ad-year" items="${yearOptions}" name="year" label="Year" icon="calendar" required="true" placeholder="Select year" size="6"/>
+                                    <cws:select id="ad-month" name="month" label="Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="6"/>
+                                </div>
+                                <div class="col-sm-12 form-group purok" style="display:none;">
+                                    <div class="col-sm-12 checkbox-container">
+                                        <label class="control-label block" style="display: block;">Purok <span style="color:red">*</span></label>
+                                        <c:forEach var="purok" items="${purokOptions}">
+                                            <div class="checkbox-items">
+                                                <label class="checkbox-inline">
+                                                    <form:checkbox path="puroks" value="${purok}" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-remove'></i>"/> <label>${purok}</label>
+                                                </label>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
                                 </div>
                                 <div class="col-sm-12 form-group">
                                     <div class="col-sm-4">
-                                        <label class="control-label" style="display:block">Print By</label>
-                                        <input id="acctability-toggle" type="checkbox" checked data-width="100px" data-toggle="toggle" data-on="Barangay" data-off="Zone" data-onstyle="warning" data-offstyle="info">
+                                        <label class="control-label" style="display:block">Print By Purok</label>
+                                        <input id="acctability-toggle" data-width="100px" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i> Enabled" data-off="<i class='fa fa-remove'></i> Disabled">
                                     </div>
                                 </div>
                             </form:form>
@@ -69,10 +84,8 @@
                                     <cws:select id="rp-type" name="type" label="Report Type" icon="bar-chart" required="true" placeholder="Select type" size="12" items="${typeOptionsReport}"/>
                                 </div>
                                 <div class="col-sm-12 form-group">
-                                    <cws:select id="rp-year" items="${yearOptions}" name="year" label="Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
-                                </div>
-                                <div class="col-sm-12 form-group">
-                                    <cws:select id="rp-month" name="month" label="Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="12"/>
+                                    <cws:select id="rp-year" items="${yearOptions}" name="year" label="Year" icon="calendar" required="true" placeholder="Select year" size="6"/>
+                                    <cws:select id="rp-month" name="month" label="Month" icon="calendar" required="true" placeholder="Select month" items="${monthOptions}" size="6"/>
                                 </div>
                                 <div class="col-sm-12 form-group barangay">
                                     <cws:select id="rp-barangay" name="barangay" items2="${brgyOptions}" placeholder="Select brgy" label="Barangay" icon="home" required="true" size="12"/>
@@ -86,10 +99,8 @@
                             </form:form>
                             <form:form modelAttribute="chartForm" id="chartForm" cssStyle="display:none">
                                 <div class="col-sm-12 form-group">
-                                    <cws:select id="ch-type" name="type" label="Report Type" icon="bar-chart" required="true" placeholder="Select type" size="12" items="${typeOptionsChart}"/>
-                                </div>
-                                <div class="col-sm-12 form-group">
-                                    <cws:select id="ch-year" items="${yearOptions}" name="year" label="Year" icon="calendar" required="true" placeholder="Select year" size="12"/>
+                                    <cws:select id="ch-type" name="type" label="Report Type" icon="bar-chart" required="true" placeholder="Select type" size="6" items="${typeOptionsChart}"/>
+                                    <cws:select id="ch-year" items="${yearOptions}" name="year" label="Year" icon="calendar" required="true" placeholder="Select year" size="6"/>
                                 </div>
                             </form:form>
                             <input type="hidden" value="${pageContext.servletContext.contextPath}/admin/reports" id="form-action"/>

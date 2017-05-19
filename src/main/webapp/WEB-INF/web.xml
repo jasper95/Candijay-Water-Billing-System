@@ -3,8 +3,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            /WEB-INF/applicationContext.xml
-            /WEB-INF/security-context.xml
+            classpath:spring/application-context.xml
+            classpath:spring/security-context.xml
         </param-value>
     </context-param>
     <listener>
@@ -24,6 +24,11 @@
             <param-name>throwExceptionIfNoHandlerFound</param-name>
             <param-value>true</param-value>
         </init-param>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/dispatcher-servlet.xml</param-value>
+        </init-param>
+
         <load-on-startup>1</load-on-startup>
     </servlet>
     

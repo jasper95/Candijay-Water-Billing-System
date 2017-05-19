@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="col-md-3" id="acct-zone">
-                        <label>Zone</label>
+                        <label>Purok</label>
                     </div>
                     <div class="col-md-3" id="acct-status">
                         <label>Status</label>
@@ -87,7 +87,7 @@
                                 <datatables:column name="balance" title="Balance" property="accountStandingBalance" renderFunction="custom-rendering#toPeso"/>
                                 <datatables:column name="contact" title="Contact" property="customer.contactNumber" sortable="false"/>
                                 <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
-                                <datatables:column name="zone" title="Zone" property="address.locationCode" sortable="false"/>
+                                <datatables:column name="purok" title="Purok" property="purok" sortable="false"/>
                                 <datatables:column name="status" title="Status" property="status" sortable="false"/>
                                 <datatables:column title="Payments" sortable="false" renderFunction="custom-rendering#accountRecentPayments"/>
                                 <datatables:column visible="false" property="id" />

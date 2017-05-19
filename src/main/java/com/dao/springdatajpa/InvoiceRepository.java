@@ -27,8 +27,6 @@ import org.springframework.data.repository.query.Param;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     Invoice findTopByAccountOrderBySchedule_YearDescSchedule_MonthDesc(Account account);
     @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
-    Invoice findTopByAccount_IdOrderBySchedule_YearDescSchedule_MonthDesc(Long id);
-    @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
     Invoice findById(Long id);
     @EntityGraph(attributePaths = {"account"}, type= EntityGraph.EntityGraphType.LOAD)
     List<Invoice> findByScheduleAndAccount_AddressAndStatusNotOrderByAccount_Customer_LastnameAscAccount_Customer_FirstNameAsc(Schedule sched, Address address, InvoiceStatus status);
@@ -37,4 +35,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
     @Query(value = "SELECT SUM(i.remaining_total) FROM Invoice i WHERE i.schedule_id = ?1", nativeQuery = true)
     BigDecimal findTotalCollectiblesBySchedule(@Param("id") Long id);
     List<Invoice> findByAccountOrderByIdDesc(Account account, Pageable pageable);
+    @EntityGraph(attributePaths = {"account", "reading"}, type= EntityGraph.EntityGraphType.LOAD)
+    Invoice findTopByAccountAndSchedule(Account account, Schedule schedule);
 }

@@ -10,6 +10,7 @@
     <link rel="icon" href="${STATIC_URL}img/cws.ico">
     <title>View Customer</title>
     <link href="${STATIC_URL}css/bootstrap.min.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="${STATIC_URL}css/bootstrap-dialog.min.css" rel="stylesheet">
     <link href="${STATIC_URL}css/admin.css" rel="stylesheet">
     <link href="${STATIC_URL}css/font-awesome.min.css" rel="stylesheet">
@@ -51,8 +52,7 @@
         <h3>Accounts</h3>
         <div class="col-md-12 main">
             <div class="table-responsive">
-                <datatables:table dom="t" cssClass="table table-striped" reloadSelector="#reload" id="accounts"
-                                  url="${pageContext.servletContext.contextPath}/admin/customers/${customerForm.customer.id}/accounts">
+                <datatables:table dom="t" cssClass="table table-striped" reloadSelector="#reload" id="accounts" url="${pageContext.servletContext.contextPath}/admin/customers/${customerForm.customer.id}/accounts">
                     <datatables:column name="id" property="id" visible="false" sortInitDirection="false"/>
                     <datatables:column renderFunction="custom-rendering#accountUrl" title="Acct No." name="number" property="number" sortable="false" sortInitDirection="false"/>
                     <datatables:column name="address" title="Barangay" property="address.brgy" sortable="false"/>
@@ -64,15 +64,21 @@
             </div>
         </div>
         <input type="hidden" id="context-path" value="${pageContext.servletContext.contextPath}"/>
-        <button type="button" style="margin-top: 20px" class="btn btn-default pull-right" data-toggle="modal" data-target="#acct-form-modal"> Add Account </button>
+        <div style="padding-top: 10px" class="col-sm-12 text-right">
+            <button type="button" id="search-dv" style="margin-left: 10px" class="btn btn-default">Search Device</button>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#acct-form-modal"> Add Account </button>
+        </div>
     </div>
     <jsp:include page="../fragments/modals/acct-form.jsp"/>
+    <jsp:include page="../fragments/modals/search-device-info.jsp"/>
     <script src="${WEB_JARS}jquery/2.0.3/jquery.min.js"></script>
     <script src="${STATIC_URL}js/bootstrap.min.js"></script>
+    <script src="${STATIC_URL}js/bootstrap-toggle.min.js"></script>
     <script src="${STATIC_URL}js/bootstrap-dialog.min.js"></script>
     <script src="${STATIC_URL}js/helpers/form-validation.js"></script>
     <script src="${STATIC_URL}js/global.js"></script>
-    <script src="${STATIC_URL}/js/customers/view.js"></script>
+    <script src="${STATIC_URL}js/customers/view.js"></script>
+    <script src="${STATIC_URL}js/helpers/search-device-helper.js"></script>
     <script>
         $(document).ready(function(){
             $('#content-loader').hide()

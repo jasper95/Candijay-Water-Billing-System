@@ -75,7 +75,7 @@ public class SystemUsersController {
     @RequestMapping(value="/save", method=RequestMethod.POST)
     public @ResponseBody
     HashMap processUserForm(@ModelAttribute("user") @Valid User user, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors())
             if(userRepo.findByUsername(user.getUsername()) != null)
                 result.rejectValue("username", "", "Username already taken");
@@ -95,7 +95,7 @@ public class SystemUsersController {
     
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public @ResponseBody HashMap postUpdate(@ModelAttribute("user") User userForm, BindingResult result, @RequestParam Map<String, String> params){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         int status = Integer.valueOf(params.get("updateStatus"));
         User user = userRepo.findOne(userForm.getId());
         if(!result.hasErrors()) {
@@ -129,7 +129,7 @@ public class SystemUsersController {
 
     @RequestMapping(value="/find/{id}", method=RequestMethod.GET)
     public @ResponseBody HashMap findUser(@PathVariable("id") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(id != null){
             User user = userRepo.findById(id);
             if( user != null){
@@ -144,7 +144,7 @@ public class SystemUsersController {
 
     @RequestMapping(value = "/get-allowed-roles/{userType}", method = RequestMethod.GET)
     public @ResponseBody HashMap findAllowedRoles(@PathVariable("userType") String userType){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         List<Long> ids = userService.findRolesAllowedByUserType(userType).stream()
                                                                         .map(Role::getId)
                                                                        .collect(Collectors.toList());

@@ -11,11 +11,9 @@ import com.forms.BillDiscountForm;
 import com.forms.Checkboxes;
 import com.forms.PaymentForm;
 import com.forms.SearchForm;
-import com.service.DataTableService;
-import com.service.FormOptionsService;
-import com.service.MeterReadingService;
-import com.service.PaymentService;
+import com.service.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 import javax.validation.Valid;
 
@@ -74,7 +72,7 @@ public class PaymentController {
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody HashMap saveNewPayment(@ModelAttribute("paymentForm") @Valid PaymentForm paymentForm,
                                                     BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         result = paymentService.validate(paymentForm, result);
         if(!result.hasErrors()){
             try{
@@ -95,7 +93,7 @@ public class PaymentController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody HashMap updatePayment(@ModelAttribute("paymentForm") @Valid PaymentForm form, BindingResult result,
                                                @RequestParam("update") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         form.getPayment().setId(id);
         result = paymentService.validate(form, result);
         if(!result.hasErrors()){
@@ -119,7 +117,7 @@ public class PaymentController {
     @RequestMapping(value="/print-check", method=RequestMethod.POST)
     public @ResponseBody
     HashMap paymentIdsCheck(@ModelAttribute("checkboxes") @Valid Checkboxes checkboxes, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(result.hasErrors()){
             response.put("status", "FAILURE");
             response.put("errors", result.getAllErrors());
@@ -132,18 +130,17 @@ public class PaymentController {
 
     @RequestMapping(value="/history", method=RequestMethod.POST)
     public String printHistory(ModelMap model, @ModelAttribute("checkboxes") Checkboxes checkboxes){
-        List<Long> ids = new ArrayList();
-        for(Long id: checkboxes.getCheckboxValues())
-            ids.add(id);
+        List<Long> ids = new ArrayList<>();
+        ids.addAll(checkboxes.getCheckboxValues());
         model.put("datasource", paymentService.paymentHistoryDataSource(ids));
         model.put("IS_HISTORY", true);
         model.put("format", "pdf");
-        return "rpt_payment_history";
+        return "rpt_collection";
     }
 
     @RequestMapping(value="/fetchAccount", method=RequestMethod.POST)
     public @ResponseBody HashMap getaccountAndInvoiceData(@ModelAttribute("searchForm") @Valid SearchForm form, BindingResult result){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Account account = null;
         if(!result.hasErrors())
             account = accountRepo.findByNumber(form.getAccountNumber());
@@ -161,7 +158,7 @@ public class PaymentController {
     
     @RequestMapping(value="/{paymentId}")
     public @ResponseBody HashMap checkCanEdit(@PathVariable("paymentId") Long id){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         Payment payment  = paymentRepo.findById(id);
         if (payment != null){
             response.put("payment", payment);
@@ -174,7 +171,7 @@ public class PaymentController {
     @RequestMapping(value="/finalize-payments", method = RequestMethod.POST)
     public @ResponseBody HashMap finalizePayments(@ModelAttribute("addressForm") @Valid Address addressForm, BindingResult result,
                                                     @RequestParam(value="confirmed", required = false) Long confirmed){
-        HashMap response = new HashMap();
+        HashMap response = new HashMap<>();
         if(!result.hasErrors()){
             Address address = addressRepo.findByBrgy(addressForm.getBrgy());
             int day = LocalDateTime.now().getDayOfMonth();

@@ -23,7 +23,7 @@ $(document).ready(function(){
                     $('#reload').trigger('click');
             }
         });
-    }
+    };
     $('#acct-form').on('submit', function(e){
         e.preventDefault();
         cleanUpFormMsgs('#acct-form');
@@ -33,5 +33,12 @@ $(document).ready(function(){
                 window.location = $('#context-path').val()+'/admin/accounts/'+response.result.number
             }
         });
-    })
+    });
+    $('#allow-dup-mc-toggle').on('change', function(){
+        var mcToggle = $('#allow-dup-mc');
+        if(mcToggle.val() === '0')
+            mcToggle.val('1');
+        else
+            mcToggle.val('0');
+    });
 });
